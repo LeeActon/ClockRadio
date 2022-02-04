@@ -41,8 +41,7 @@ class ClockRadio:
                         break
 
             now = datetime.datetime.now()
-            sweep = (math.floor(now.second / 5) % 2) == 0
-            self.clockFace.update(now, sweep)
+            self.clockFace.update(now)
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
@@ -57,7 +56,7 @@ class ClockRadio:
     def main(self, argv):
 
        try:
-           opts, args = getopt.getopt(argv,"c:h:m:s:t:",["clockFace=","hour=", "minute=", "second=", "ticks=", "help"])
+           opts, args = getopt.getopt(argv,"c:h:m:s:t:",["clockFace=","hour=", "minute=", "second=", "ticks=", "sweep", "help"])
        except getopt.GetoptError:
            self.printHelp()
            sys.exit(2)
@@ -76,6 +75,8 @@ class ClockRadio:
                self.clockFace.setSecondHandColor(eval(arg))
            elif opt in ("-t", "--tick"):
                self.clockFace.setTickColor(eval(arg))
+           elif opt == "--sweep":
+               self.clockFace.setSweep(True)
 
        self.run()
 

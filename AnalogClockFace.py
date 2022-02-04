@@ -19,6 +19,7 @@ class AnalogClockFace(Widget.Widget):
     innerHubColor = (0,0,0)
     outerHubColor = (255,0,0)
     tickColor = (0,0,255)
+    sweep = False
 
     def __init__(self, surface):
         super().__init__(surface)
@@ -41,10 +42,10 @@ class AnalogClockFace(Widget.Widget):
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
 
-    def update(self, time, sweep):
+    def update(self, time):
 
         s = time.second
-        if sweep:
+        if self.sweep:
             s += (time.microsecond/1000000)
         a_s = s / 60.0 * 360.0
 
@@ -109,6 +110,9 @@ class AnalogClockFace(Widget.Widget):
     def setBackground(self, image):
         self.clockFaceBackground = pygame.image.load(image)
 
+    def setSweep(self, sweep):
+        self.sweep = sweep
+
     def setHourHandColor(self, color):
         self.hourHandColor = color
 
@@ -140,7 +144,7 @@ class AnalogClockFace(Widget.Widget):
                     if event.key == pygame.K_ESCAPE:
                         self._running = False
                         break
-            self.update(datetime.datetime.now(), True)
+            self.update(datetime.datetime.now())
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
