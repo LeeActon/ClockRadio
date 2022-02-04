@@ -118,8 +118,14 @@ class AnalogClockFace(Widget.Widget):
     def setSecondHandColor(self, color):
         self.secondHandColor = color
 
+    def setInnerHubColor(self, color):
+        self.InnerHubColor = color
+
     def setOuterHubColor(self, color):
         self.outerHubColor = color
+
+    def setTickColor(self, color):
+        self.tickColor = color
 
     def run(self):
         self._running = True

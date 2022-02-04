@@ -1,6 +1,7 @@
 #!/usr/bin/env python3
 
 import datetime
+import getopt
 import math
 import os
 import signal
@@ -50,6 +51,34 @@ class ClockRadio:
         self._running = False
         print("\nExiting!...\n")
 
+    def printHelp(self):
+       print('main.py -c <clockface> -h <hour color> -m <minute color> -s <second color> -t <tick color>')
+
+    def main(self, argv):
+
+       try:
+           opts, args = getopt.getopt(argv,"c:h:m:s:t:",["clockFace=","hour=", "minute=", "second=", "ticks=", "help"])
+       except getopt.GetoptError:
+           self.printHelp()
+           sys.exit(2)
+
+       for opt, arg in opts:
+           if opt == '--help':
+               self.printHelp()
+               sys.exit()
+           elif opt in ("-c", "--clockFace"):
+               self.clockFace.setBackground(arg)
+           elif opt in ("-h", "--hour"):
+               self.clockFace.setHourHandColor(eval(arg))
+           elif opt in ("-m", "--minute"):
+               self.clockFace.setMinuteHandColor(eval(arg))
+           elif opt in ("-s", "--second"):
+               self.clockFace.setSecondHandColor(eval(arg))
+           elif opt in ("-t", "--tick"):
+               self.clockFace.setTickColor(eval(arg))
+
+       self.run()
+
 if __name__ == "__main__":
-    clockRadio = ClockRadio()
-    clockRadio.run()
+   clockRadio = ClockRadio()
+   clockRadio.main(sys.argv[1:])
