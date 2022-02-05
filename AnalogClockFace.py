@@ -11,13 +11,12 @@ import Widget
 import SurfaceHelper
 
 class AnalogClockFace(Widget.Widget):
-    clockFaceBackground = None
     tickColor = (0,0,255)
 
     def __init__(self, surface):
         super().__init__(surface)
 
-        self.backColor = (0,0,0)
+        self.backColor = None
 
         # For some reason the canvas needs a 7px vertical offset
         # circular screens are weird...
@@ -41,32 +40,24 @@ class AnalogClockFace(Widget.Widget):
 
         super().update()
 
-        if self.clockFaceBackground != None:
+        for s in range(60):
+            a = 360 / 60.0 * s
+            start = self._get_point(self.center, a, self._marks - 5)
+            end = self._get_point(self.center, a, self._marks + 5)
+            self._line(self.tickColor, start, end, 3)
 
-            self.surface.blit(self.clockFaceBackground, (0,0))
+        for s in range(12):
+            a = 360 / 12.0 * s
+            x, y = self._get_point(self.center, a, self._marks)
 
-        else:
+            r = 5
+            if s % 3 == 0:
+                r = 10
 
-            for s in range(60):
-                a = 360 / 60.0 * s
-                end = self._get_point(self.center, a, self._marks + 5)
-                self._line(self.tickColor, self.center, end, 3)
+            x = int(x)
+            y = int(y)
 
-            if (self.backColor != None):
-                self._circle(self.backColor, self.center, self._marks - 5)
-
-            for s in range(12):
-                a = 360 / 12.0 * s
-                x, y = self._get_point(self.center, a, self._marks)
-
-                r = 5
-                if s % 3 == 0:
-                    r = 10
-
-                x = int(x)
-                y = int(y)
-
-                self._circle(self.tickColor, (x, y), r)
+            self._circle(self.tickColor, (x, y), r)
 
     def setTickColor(self, color):
         self.tickColor = color
@@ -96,4 +87,6 @@ class AnalogClockFace(Widget.Widget):
 if __name__ == "__main__":
     surface = SurfaceHelper.OpenSurface()
     clockFace = AnalogClockFace(surface)
+    clockFace.setBackColor((0,0,0))
+    clockFace.setTickColor((0,0,192))
     clockFace.run()
