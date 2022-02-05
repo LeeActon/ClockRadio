@@ -1,0 +1,16 @@
+{
+    "backgroundImage": "New Clock Face.png",
+    "AnalogClockHands": 
+        {
+        "sweep": "True",
+        "hourColor": "(192,0,0)",
+        "minuteColor": "(0,0,192)",
+        "secondColor": "(0,0,192)"
+        },
+    "XAnalogClockTickMarks": 
+        {
+        "quarterHourColor": "(255,0,0)",
+        "hourColor": "(0,0,192)",
+        "minuteColor": "(0,0,192)"
+        }
+}

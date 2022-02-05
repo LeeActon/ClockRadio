@@ -11,9 +11,9 @@ import Widget
 import SurfaceHelper
 
 class AnalogClockHands(Widget.Widget):
-    hourHandColor = (255,255,255)
-    minuteHandColor = (255,255,255)
-    secondHandColor = (255,0,0)
+    hourColor = (255,255,255)
+    minuteColor = (255,255,255)
+    secondColor = (255,0,0)
     innerHubColor = (0,0,0)
     outerHubColor = (255,0,0)
     sweep = False
@@ -34,6 +34,17 @@ class AnalogClockHands(Widget.Widget):
 
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
+
+    def loadSettings(self, settings):
+        for key, value in settings.items():
+            if key == 'hourColor':
+                self.setHourColor(eval(value))
+            elif key == 'minuteColor':
+                self.setMinuteColor(eval(value))
+            elif key == 'secondColor':
+                self.setSecondColor(eval(value))
+            elif key == 'sweep':
+                self.sweep = (value == "True")
 
     def update(self, time):
 
@@ -67,9 +78,9 @@ class AnalogClockHands(Widget.Widget):
         point_hour_end = self._get_point(self.center, a_h, self.hourHandLength)
 
         # Draw the second, minute and hour hands
-        self._line(self.hourHandColor, point_hour_start, point_hour_end, 11)
-        self._line(self.minuteHandColor, point_minute_start, point_minute_end, 6)
-        self._line(self.secondHandColor, point_second_start, point_second_end, 3)
+        self._line(self.hourColor, point_hour_start, point_hour_end, 11)
+        self._line(self.minuteColor, point_minute_start, point_minute_end, 6)
+        self._line(self.secondColor, point_second_start, point_second_end, 3)
 
         # Draw the hub
         self._circle(self.outerHubColor, self.center, 20)
@@ -78,14 +89,14 @@ class AnalogClockHands(Widget.Widget):
     def setSweep(self, sweep):
         self.sweep = sweep
 
-    def setHourHandColor(self, color):
-        self.hourHandColor = color
+    def setHourColor(self, color):
+        self.hourColor = color
 
-    def setMinuteHandColor(self, color):
-        self.minuteHandColor = color
+    def setMinuteColor(self, color):
+        self.minuteColor = color
 
-    def setSecondHandColor(self, color):
-        self.secondHandColor = color
+    def setSecondColor(self, color):
+        self.secondColor = color
 
     def setInnerHubColor(self, color):
         self.InnerHubColor = color
@@ -125,7 +136,7 @@ if __name__ == "__main__":
     surface = SurfaceHelper.OpenSurface()
     clockHands = AnalogClockHands(surface)
     clockHands.backcolor = (0,0,0)
-    clockHands.setHourHandColor((0,0,255))
-    clockHands.setMinuteHandColor((0,255,0))
-    clockHands.setSecondHandColor((255,0,0))
+    clockHands.setHourColor((0,0,255))
+    clockHands.setMinuteColor((0,255,0))
+    clockHands.setSecondColor((255,0,0))
     clockHands.run()

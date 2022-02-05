@@ -11,7 +11,9 @@ import Widget
 import SurfaceHelper
 
 class AnalogClockFace(Widget.Widget):
-    tickColor = (0,0,255)
+    quarterHourColor = (0,0,255)
+    hourColor = (0,0,192)
+    minuteColor = (0,192,192)
 
     def __init__(self, surface):
         super().__init__(surface)
@@ -36,6 +38,15 @@ class AnalogClockFace(Widget.Widget):
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
 
+    def loadSettings(self, settings):
+        for key, value in settings.items():
+            if key == 'quarterHourColor':
+                self.setQuarterHourColor(eval(value))
+            elif key == 'hourColor':
+                self.setHourColor(eval(value))
+            elif key == 'minuteColor':
+                self.setMinuteColor(eval(value))
+
     def update(self):
 
         super().update()
@@ -44,23 +55,29 @@ class AnalogClockFace(Widget.Widget):
             a = 360 / 60.0 * s
             start = self._get_point(self.center, a, self._marks - 5)
             end = self._get_point(self.center, a, self._marks + 5)
-            self._line(self.tickColor, start, end, 3)
+            self._line(self.minuteColor, start, end, 3)
 
         for s in range(12):
             a = 360 / 12.0 * s
             x, y = self._get_point(self.center, a, self._marks)
 
-            r = 5
-            if s % 3 == 0:
-                r = 10
-
             x = int(x)
             y = int(y)
 
-            self._circle(self.tickColor, (x, y), r)
+            if s % 3 == 0:
+                self._circle(self.quarterHourColor, (x, y), 10)
+            else:
+                self._circle(self.hourColor, (x, y), 5)
 
-    def setTickColor(self, color):
-        self.tickColor = color
+
+    def setQuarterHourColor(self, color):
+        self.quarterHourColor = color
+
+    def setHourColor(self, color):
+        self.hourColor = color
+
+    def setMinuteColor(self, color):
+        self.minuteColor = color
 
     def run(self):
         self._running = True

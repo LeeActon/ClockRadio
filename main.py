@@ -2,6 +2,7 @@
 
 import datetime
 import getopt
+import json
 import math
 import os
 import signal
@@ -20,24 +21,42 @@ class ClockRadio:
     clockImage = None
     clockFace = None
     clockHands = None
+    settings = None
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
 
-        self.clockFace = AnalogClockFace.AnalogClockFace(self.surface)
-
-        self.clockImage = ImageWidget.ImageWidget(self.surface)
-        self.clockImage.loadImage('New Clock Face.png')
-
         self.clockHands = AnalogClockHands.AnalogClockHands(self.surface)
-        self.clockHands.setHourHandColor((0,0,0))
-        self.clockHands.setMinuteHandColor((0,0,0))
-        self.clockHands.setSecondHandColor((192,0,0))
+        self.clockHands.setHourColor((0,0,0))
+        self.clockHands.setMinuteColor((0,0,0))
+        self.clockHands.setSecondColor((192,0,0))
         self.clockHands.setOuterHubColor((192,0,0))
+
+    def loadSettings(self):
+        f = open('settings.json')
+
+        settings = json.load(f)
+
+        for key, value in settings.items():
+            if key == 'backgroundImage':
+                if self.clockImage == None:
+                    self.clockImage = ImageWidget.ImageWidget(self.surface)
+                self.clockImage.loadImage(value)
+            elif key == 'AnalogClockHands':
+                if self.clockHands == None:
+                    self.clockHands = AnalogClockHands.AnalogClockHands(self.surface)
+                self.clockHands.loadSettings(value)
+            elif key == 'AnalogClockTickMarks':
+                if self.clockFace == None:
+                    self.clockFace = AnalogClockFace.AnalogClockFace(self.surface)
+                self.clockFace.loadSettings(value)
 
     def run(self):
         self._running = True
         _clock = pygame.time.Clock()
         signal.signal(signal.SIGINT, self._exit)
+
+        self.loadSettings()
+
         while self._running:
             for event in pygame.event.get():
                 if event.type == pygame.QUIT:
@@ -69,7 +88,7 @@ class ClockRadio:
     def main(self, argv):
 
        try:
-           opts, args = getopt.getopt(argv,"b:f:h:m:s:t:",["backColor=", "face=","hour=", "minute=", "second=", "ticks=", "sweep", "help"])
+           opts, args = getopt.getopt(argv,"b:f:h:m:s:",["backColor=", "face=","hour=", "minute=", "second=", "sweep", "help"])
        except getopt.GetoptError:
            self.printHelp()
            sys.exit(2)
@@ -82,13 +101,11 @@ class ClockRadio:
                self.clockImage.loadImage(arg)
                self.clockFace = None
            elif opt in ("-h", "--hour"):
-               self.clockHands.setHourHandColor(eval(arg))
+               self.clockHands.setHourColor(eval(arg))
            elif opt in ("-m", "--minute"):
-               self.clockHands.setMinuteHandColor(eval(arg))
+               self.clockHands.setMinuteColor(eval(arg))
            elif opt in ("-s", "--second"):
-               self.clockHands.setSecondHandColor(eval(arg))
-           elif opt in ("-t", "--tick"):
-               self.clockFace.setTickColor(eval(arg))
+               self.clockHands.setSecondColor(eval(arg))
            elif opt in ("-b", "--backColor"):
                self.clockFace.setBackColor(eval(arg))
            elif opt == "--sweep":
