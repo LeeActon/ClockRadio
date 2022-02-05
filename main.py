@@ -11,20 +11,24 @@ import time
 import pygame
 
 import AnalogClockFace
+import AnalogClockHands
 import SurfaceHelper
 
 class ClockRadio:
     surface = None
     clockFace = None
+    clockHands = None
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
 
         self.clockFace = AnalogClockFace.AnalogClockFace(self.surface)
         self.clockFace.setBackground('New Clock Face.png')
-        self.clockFace.setHourHandColor((0,0,0))
-        self.clockFace.setMinuteHandColor((0,0,0))
-        self.clockFace.setSecondHandColor((255,0,0))
-        self.clockFace.setOuterHubColor((255,0,0))
+
+        self.clockHands = AnalogClockHands.AnalogClockHands(self.surface)
+        self.clockHands.setHourHandColor((0,0,0))
+        self.clockHands.setMinuteHandColor((0,0,0))
+        self.clockHands.setSecondHandColor((255,0,0))
+        self.clockHands.setOuterHubColor((255,0,0))
 
     def run(self):
         self._running = True
@@ -41,7 +45,8 @@ class ClockRadio:
                         break
 
             now = datetime.datetime.now()
-            self.clockFace.update(now)
+            self.clockFace.update()
+            self.clockHands.update(now)
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
@@ -68,15 +73,15 @@ class ClockRadio:
            elif opt in ("-c", "--clockFace"):
                self.clockFace.setBackground(arg)
            elif opt in ("-h", "--hour"):
-               self.clockFace.setHourHandColor(eval(arg))
+               self.clockHands.setHourHandColor(eval(arg))
            elif opt in ("-m", "--minute"):
-               self.clockFace.setMinuteHandColor(eval(arg))
+               self.clockHands.setMinuteHandColor(eval(arg))
            elif opt in ("-s", "--second"):
-               self.clockFace.setSecondHandColor(eval(arg))
+               self.clockHands.setSecondHandColor(eval(arg))
            elif opt in ("-t", "--tick"):
                self.clockFace.setTickColor(eval(arg))
            elif opt == "--sweep":
-               self.clockFace.setSweep(True)
+               self.clockHands.setSweep(True)
 
        self.run()
 

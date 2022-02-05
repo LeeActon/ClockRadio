@@ -12,17 +12,12 @@ import SurfaceHelper
 
 class AnalogClockFace(Widget.Widget):
     clockFaceBackground = None
-    backgroundColor = (0, 0, 0)
-    hourHandColor = (255,255,255)
-    minuteHandColor = (255,255,255)
-    secondHandColor = (255,0,0)
-    innerHubColor = (0,0,0)
-    outerHubColor = (255,0,0)
     tickColor = (0,0,255)
-    sweep = False
 
     def __init__(self, surface):
         super().__init__(surface)
+
+        self.backColor = (0,0,0)
 
         # For some reason the canvas needs a 7px vertical offset
         # circular screens are weird...
@@ -42,45 +37,22 @@ class AnalogClockFace(Widget.Widget):
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
 
-    def update(self, time):
+    def update(self):
 
-        s = time.second
-        if self.sweep:
-            s += (time.microsecond/1000000)
-        a_s = s / 60.0 * 360.0
+        super().update()
 
-        a_m = time.minute / 60.0 * 360.0
-        a_m += (time.second / 60.0) * (360.0 / 60)
+        if self.clockFaceBackground != None:
 
-        a_h = (time.hour % 12) / 12.0 * 360.0
-        a_h += (time.minute / 60.0) * (360.0 / 12)
+            self.surface.blit(self.clockFaceBackground, (0,0))
 
-        a_s += 90
-        a_m += 90
-        a_h += 90
-
-        a_s %= 360
-        a_m %= 360
-        a_h %= 360
-
-        point_second_start = self._get_point(self.center, a_s, 10)
-        point_second_end = self._get_point(self.center, a_s, self._marks - 30)
-
-        point_minute_start = self._get_point(self.center, a_m, 10)
-        point_minute_end = self._get_point(self.center, a_m, self._marks - 60)
-
-        point_hour_start = self._get_point(self.center, a_h, 10)
-        point_hour_end = self._get_point(self.center, a_h, self._marks - 90)
-
-        if self.clockFaceBackground == None:
-            self._circle(self.backgroundColor, self.center, self._radius, antialias=False)
+        else:
 
             for s in range(60):
                 a = 360 / 60.0 * s
                 end = self._get_point(self.center, a, self._marks + 5)
                 self._line(self.tickColor, self.center, end, 3)
 
-            self._circle(self.backgroundColor, self.center, self._marks - 5)
+            self._circle(self.backColor, self.center, self._marks - 5)
 
             for s in range(12):
                 a = 360 / 12.0 * s
@@ -95,41 +67,15 @@ class AnalogClockFace(Widget.Widget):
 
                 self._circle(self.tickColor, (x, y), r)
 
-        else:
-            self.surface.blit(self.clockFaceBackground, (0,0))
-
-        # Draw the second, minute and hour hands
-        self._line(self.hourHandColor, point_hour_start, point_hour_end, 11)
-        self._line(self.minuteHandColor, point_minute_start, point_minute_end, 6)
-        self._line(self.secondHandColor, point_second_start, point_second_end, 3)
-
-        # Draw the hub
-        self._circle(self.outerHubColor, self.center, 20)
-        self._circle(self.innerHubColor, self.center, 10)
 
     def setBackground(self, image):
         self.clockFaceBackground = pygame.image.load(image)
-
-    def setSweep(self, sweep):
-        self.sweep = sweep
-
-    def setHourHandColor(self, color):
-        self.hourHandColor = color
-
-    def setMinuteHandColor(self, color):
-        self.minuteHandColor = color
-
-    def setSecondHandColor(self, color):
-        self.secondHandColor = color
-
-    def setInnerHubColor(self, color):
-        self.InnerHubColor = color
-
-    def setOuterHubColor(self, color):
-        self.outerHubColor = color
+        self.backColor = None
 
     def setTickColor(self, color):
         self.tickColor = color
+        self.backColor = (0,0,0)
+        self.clockFaceBackground = None
 
     def run(self):
         self._running = True
@@ -144,7 +90,7 @@ class AnalogClockFace(Widget.Widget):
                     if event.key == pygame.K_ESCAPE:
                         self._running = False
                         break
-            self.update(datetime.datetime.now())
+            self.update()
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps

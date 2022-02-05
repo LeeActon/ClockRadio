@@ -5,6 +5,7 @@ from pygame import gfxdraw
 
 class Widget:
     surface = None
+    backcolor = None
     def __init__(self, surface):
         self.surface = surface
 
@@ -61,8 +62,9 @@ class Widget:
         gfxdraw.aapolygon(self.surface, (tl, tr, br, bl), color)
         gfxdraw.filled_polygon(self.surface, (tl, tr, br, bl), color)
 
-    def Update():
-        pass
+    def update(self):
+        if self.backcolor != None:
+            self.surface.fill(self.backcolor)
 
 if __name__ == "__main__":
     clockRadio = ClockRadio()
