@@ -11,11 +11,22 @@ import Widget
 import SurfaceHelper
 
 class AnalogClockHands(Widget.Widget):
-    hourColor = (255,255,255)
-    minuteColor = (255,255,255)
+    hourColor = (0,0,255)
+    minuteColor = (0,255,0)
     secondColor = (255,0,0)
-    innerHubColor = (0,0,0)
-    outerHubColor = (255,0,0)
+    hourHubColor = None
+    minuteHubColor = None
+    secondHubColor = None
+
+    hourWidth = 11
+    hourLength = -110
+    hourHubRadius = 20
+    minuteWidth = 6
+    minuteLength = -80
+    minuteHubRadius = 20
+    secondWidth = 3
+    secondLength = -50
+    secondHubRadius = 10
     sweep = False
 
     def __init__(self, surface):
@@ -25,12 +36,6 @@ class AnalogClockHands(Widget.Widget):
         # circular screens are weird...
         self.center = (240, 247)
         self._radius = 240
-
-        self.hourHandLength = self._radius - 110
-        self.minuteHandLength = self._radius - 80
-        self.secondHandLength = self._radius - 50
-
-        #self._origin = pygame.math.Vector2(*self.center)
 
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
@@ -43,12 +48,33 @@ class AnalogClockHands(Widget.Widget):
                 self.setMinuteColor(eval(value))
             elif key == 'secondColor':
                 self.setSecondColor(eval(value))
+            elif key == 'hourHubColor':
+                self.setHourHubColor(eval(value))
+            elif key == 'minuteHubColor':
+                self.setMinuteHubColor(eval(value))
+            elif key == 'secondHubColor':
+                self.setSecondHubColor(eval(value))
+            elif key == 'hourHubRadius':
+                self.setHourHubRadius(eval(value))
+            elif key == 'minuteHubRadius':
+                self.setMinuteHubRadius(eval(value))
+            elif key == 'secondHubRadius':
+                self.setSecondHubRadius(eval(value))
+            elif key == 'hourLength':
+                self.setHourLength(eval(value))
+            elif key == 'minuteLength':
+                self.setMinuteLength(eval(value))
+            elif key == 'secondLength':
+                self.setSecondLength(eval(value))
             elif key == 'sweep':
                 self.sweep = (value == "True")
 
     def update(self, time):
 
         super().update()
+
+        # Compute the angle of each hand
+
         s = time.second
         if self.sweep:
             s += (time.microsecond/1000000)
@@ -68,23 +94,23 @@ class AnalogClockHands(Widget.Widget):
         a_m %= 360
         a_h %= 360
 
-        point_second_start = self._get_point(self.center, a_s, 10)
-        point_second_end = self._get_point(self.center, a_s, self.secondHandLength)
+        # Compute the start and end points of each hand based on their angle
+        point_second_start = self._get_point(self.center, a_s, self.secondHubRadius)
+        point_second_end = self._get_point(self.center, a_s, self.getSecondLength())
 
-        point_minute_start = self._get_point(self.center, a_m, 10)
-        point_minute_end = self._get_point(self.center, a_m, self.minuteHandLength)
+        point_minute_start = self._get_point(self.center, a_m, self.minuteHubRadius)
+        point_minute_end = self._get_point(self.center, a_m, self.getMinuteLength())
 
-        point_hour_start = self._get_point(self.center, a_h, 10)
-        point_hour_end = self._get_point(self.center, a_h, self.hourHandLength)
+        point_hour_start = self._get_point(self.center, a_h, self.hourHubRadius)
+        point_hour_end = self._get_point(self.center, a_h, self.getHourLength())
 
-        # Draw the second, minute and hour hands
-        self._line(self.hourColor, point_hour_start, point_hour_end, 11)
-        self._line(self.minuteColor, point_minute_start, point_minute_end, 6)
-        self._line(self.secondColor, point_second_start, point_second_end, 3)
-
-        # Draw the hub
-        self._circle(self.outerHubColor, self.center, 20)
-        self._circle(self.innerHubColor, self.center, 10)
+        # Draw the hands and their hubs
+        self._line(self.hourColor, point_hour_start, point_hour_end, self.hourWidth)
+        self._circle(self.getHourHubColor(), self.center, self.hourHubRadius)
+        self._line(self.minuteColor, point_minute_start, point_minute_end, self.minuteWidth)
+        self._circle(self.getMinuteHubColor(), self.center, self.minuteHubRadius)
+        self._line(self.secondColor, point_second_start, point_second_end, self.secondWidth)
+        self._circle(self.getSecondHubColor(), self.center, self.secondHubRadius)
 
     def setSweep(self, sweep):
         self.sweep = sweep
@@ -98,12 +124,62 @@ class AnalogClockHands(Widget.Widget):
     def setSecondColor(self, color):
         self.secondColor = color
 
-    def setInnerHubColor(self, color):
-        self.InnerHubColor = color
+    def setHourHubColor(self, color):
+        self.hourHubColor = color
 
-    def setOuterHubColor(self, color):
-        self.outerHubColor = color
+    def getHourHubColor(self):
+        if self.hourHubColor == None:
+            return self.hourColor
+        return self.hourHubColor
 
+    def setMinuteHubColor(self, color):
+        self.minuteHubColor = color
+
+    def getMinuteHubColor(self):
+        if self.minuteHubColor == None:
+            return self.minuteColor
+        return self.minuteHubColor
+
+    def setSecondHubColor(self, color):
+        self.secondHubColor = color
+
+    def getSecondHubColor(self):
+        if self.secondHubColor == None:
+            return self.secondColor
+        return self.secondHubColor
+
+    def setHourLength(self, length):
+        self.hourLength = length
+
+    def getHourLength(self):
+        if self.hourLength < 0:
+            return self._radius + self.hourLength
+        return self.hourLength
+
+    def setMinuteLength(self, length):
+        self.minuteLength = length
+
+    def getMinuteLength(self):
+        if self.minuteLength < 0:
+            return self._radius + self.minuteLength
+        return self.minuteLength
+
+    def setSecondLength(self, length):
+        self.secondLength = length
+
+    def getSecondLength(self):
+        if self.secondLength < 0:
+            return self._radius + self.secondLength
+        return self.secondLength
+
+    def setHourHubRadius(self, radius):
+        self.hourHubRadius = radius
+
+    def setMinuteHubRadius(self, radius):
+        self.minuteHubRadius = radius
+
+    def setSecondHubRadius(self, radius):
+        self.secondHubRadius = radius
 
     _running = False
     def _exit(self, sig, frame):

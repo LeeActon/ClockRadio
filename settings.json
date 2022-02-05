@@ -3,11 +3,14 @@
     "AnalogClockHands": 
         {
         "sweep": "True",
-        "hourColor": "(192,0,0)",
-        "minuteColor": "(0,0,192)",
-        "secondColor": "(0,0,192)"
+        "hourColor": "(0,192,0)",
+        "hourHubRadius": "20",
+        "minuteHubColor": "(0,0,192)",
+        "minuteHubRadius": "15",
+        "secondColor": "(192,0,0)",
+        "secondHubRadius": "10"
         },
-    "XAnalogClockTickMarks": 
+    "-AnalogClockTickMarks": 
         {
         "quarterHourColor": "(255,0,0)",
         "hourColor": "(0,0,192)",

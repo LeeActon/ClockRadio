@@ -29,7 +29,6 @@ class ClockRadio:
         self.clockHands.setHourColor((0,0,0))
         self.clockHands.setMinuteColor((0,0,0))
         self.clockHands.setSecondColor((192,0,0))
-        self.clockHands.setOuterHubColor((192,0,0))
 
     def loadSettings(self):
         f = open('settings.json')
