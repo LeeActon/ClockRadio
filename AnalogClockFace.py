@@ -52,7 +52,8 @@ class AnalogClockFace(Widget.Widget):
                 end = self._get_point(self.center, a, self._marks + 5)
                 self._line(self.tickColor, self.center, end, 3)
 
-            self._circle(self.backColor, self.center, self._marks - 5)
+            if (self.backColor != None):
+                self._circle(self.backColor, self.center, self._marks - 5)
 
             for s in range(12):
                 a = 360 / 12.0 * s
@@ -67,15 +68,8 @@ class AnalogClockFace(Widget.Widget):
 
                 self._circle(self.tickColor, (x, y), r)
 
-
-    def setBackground(self, image):
-        self.clockFaceBackground = pygame.image.load(image)
-        self.backColor = None
-
     def setTickColor(self, color):
         self.tickColor = color
-        self.backColor = (0,0,0)
-        self.clockFaceBackground = None
 
     def run(self):
         self._running = True

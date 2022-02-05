@@ -9,6 +9,9 @@ class Widget:
     def __init__(self, surface):
         self.surface = surface
 
+    def setBackColor(self, color):
+        self.backColor = color
+
     def _get_point(self, origin, angle, distance):
         r = math.radians(angle)
         cos = math.cos(r)
