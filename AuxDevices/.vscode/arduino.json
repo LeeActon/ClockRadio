@@ -1,0 +1,5 @@
+{
+    "board": "adafruit:avr:itsybitsy32u4_3V",
+    "sketch": "AuxDevices.ino",
+    "port": "COM4"
+}
