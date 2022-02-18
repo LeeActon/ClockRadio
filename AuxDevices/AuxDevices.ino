@@ -11,39 +11,39 @@ void DebugMessage(char* szMessage);
 
 ButtonDebouncer buttons[6];
 
-RotaryEncoderEx *pRotaryEncoder1;
+RotaryEncoderEx* pRotaryEncoder1;
 
 void rotaryEncoder1PinAInterrupt()
-{
+	{
 	if (pRotaryEncoder1 != NULL)
 		{
 		pRotaryEncoder1->tickA();
 		}
-}
+	}
 void rotaryEncoder1PinBInterrupt()
-{
+	{
 	if (pRotaryEncoder1 != NULL)
 		{
 		pRotaryEncoder1->tickB();
 		}
-}
+	}
 
-RotaryEncoderEx *pRotaryEncoder2;
+RotaryEncoderEx* pRotaryEncoder2;
 
 void rotaryEncoder2PinAInterrupt()
-{
+	{
 	if (pRotaryEncoder2 != NULL)
 		{
 		pRotaryEncoder2->tickA();
 		}
-}
+	}
 void rotaryEncoder2PinBInterrupt()
-{
+	{
 	if (pRotaryEncoder2 != NULL)
 		{
 		pRotaryEncoder2->tickB();
 		}
-}
+	}
 
 int favoriteChannels[] =
 	{
@@ -205,7 +205,7 @@ void loop()
 			}
 		}
 
-    pRotaryEncoder1->tick();
+	pRotaryEncoder1->tick();
 
 	long position1 = pRotaryEncoder1->getPosition();
 	long delta1 = position1 - prevPosition1;
@@ -217,7 +217,7 @@ void loop()
 		fmTuner.addVolume((int)delta1);
 		}
 
-    pRotaryEncoder2->tick();
+	pRotaryEncoder2->tick();
 
 	int position2 = pRotaryEncoder2->getPosition();
 	int delta2 = position2 - prevPosition2;
@@ -232,7 +232,7 @@ void loop()
 
 void HandleSerialInput()
 	{
-	char buffer[80+1];
+	char buffer[80 + 1];
 
 	int cb = Serial.readBytesUntil('\n', buffer, sizeof(buffer));
 	if (cb > 0)

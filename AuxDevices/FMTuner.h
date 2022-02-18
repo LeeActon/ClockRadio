@@ -13,13 +13,13 @@
 class FMTuner : public Si4703
 	{
 	private:
-		Stream *pStream = NULL;
+		Stream* pStream = NULL;
 		int volume;
 		int channel;
 
 	public:
-		FMTuner(Stream *pStream, int resetPin, int sdioPin, int sclkPin, int interrupt)
-            : Si4703(resetPin, sdioPin, sclkPin, interrupt)
+		FMTuner(Stream* pStream, int resetPin, int sdioPin, int sclkPin, int interrupt)
+			: Si4703(resetPin, sdioPin, sclkPin, interrupt)
 			{
 			this->pStream = pStream;
 			this->volume = -1;
@@ -119,10 +119,10 @@ class FMTuner : public Si4703
 
 		bool getMute()
 			{
-				// Si4703's mute is opposite of what you'd expect.
-				// It's true if mute is disabled.
-				// So we invert it to make more sense.
-				return !Si4703::getMute();
+			// Si4703's mute is opposite of what you'd expect.
+			// It's true if mute is disabled.
+			// So we invert it to make more sense.
+			return !Si4703::getMute();
 			}
 
 		void toggleMono()
@@ -138,29 +138,29 @@ class FMTuner : public Si4703
 
 		void reportFrequency()
 			{
-				if (this->pStream != NULL)
+			if (this->pStream != NULL)
+				{
+				int whole = this->channel / 100;
+				int frac = this->channel % 100;
+				this->pStream->print("Frequency : ");
+				this->pStream->print(whole);
+				this->pStream->print(".");
+				this->pStream->print(frac);
+				this->pStream->print(" Mhz, Strengh : ");
+				this->pStream->print(this->getRSSI());
+				if (this->getST())
 					{
-					int whole = this->channel / 100;
-					int frac = this->channel % 100;
-					this->pStream->print("Frequency : ");
-					this->pStream->print(whole);
-					this->pStream->print(".");
-					this->pStream->print(frac);
-					this->pStream->print(" Mhz, Strengh : ");
-					this->pStream->print(this->getRSSI());
-					if (this->getST())
-						{
-						this->pStream->print(", stereo");
-						}
-					this->pStream->println();
+					this->pStream->print(", stereo");
 					}
+				this->pStream->println();
+				}
 			}
 
 		int getChannel()
 			{
 			return this->channel;
 			}
-		
+
 		void syncChannel()
 			{
 			this->channel = Si4703::getChannel();
@@ -176,8 +176,8 @@ class FMTuner : public Si4703
 
 		void incChannel()
 			{
-				Si4703::incChannel();
-				syncChannel();
+			Si4703::incChannel();
+			syncChannel();
 			}
 
 		void decChannel()
@@ -244,12 +244,12 @@ class FMTuner : public Si4703
 				}
 			}
 
-	void reportAll()
-		{
-		if (this->pStream != NULL)
+		void reportAll()
 			{
-		    reportFrequency();
-			reportVolume();
+			if (this->pStream != NULL)
+				{
+				reportFrequency();
+				reportVolume();
+				}
 			}
-		}
 	};
