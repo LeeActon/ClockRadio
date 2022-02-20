@@ -1,4 +1,6 @@
 
+// Uses Silicon Labs Si4703 Arduino Library
+// see: https://github.com/mkhuthir/Si4703
 #include <Si4703.h>
 #include <Wire.h>
 #include <EEPROM.h>
@@ -79,7 +81,7 @@ class FMTuner : public Si4703
 			{
 			if (this->pStream != NULL)
 				{
-				this->pStream->print("Volume : ");
+				this->pStream->print("V : ");
 				this->pStream->print(this->volume);
 				if (getMute())
 					{
@@ -142,11 +144,11 @@ class FMTuner : public Si4703
 				{
 				int whole = this->channel / 100;
 				int frac = this->channel % 100;
-				this->pStream->print("Frequency : ");
+				this->pStream->print("F : ");
 				this->pStream->print(whole);
 				this->pStream->print(".");
 				this->pStream->print(frac);
-				this->pStream->print(" Mhz, Strengh : ");
+				this->pStream->print(" Mhz, S : ");
 				this->pStream->print(this->getRSSI());
 				if (this->getST())
 					{

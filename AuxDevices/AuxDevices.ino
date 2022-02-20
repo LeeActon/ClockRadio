@@ -145,24 +145,6 @@ void setup()
 	digitalWrite(R_RST, HIGH);  // Bring Si4703 out of reset with SDIO set to low and SEN pulled high with on-board resistor
 	DebugPulse(1);
 #endif
-#if 0
-	// Set IO pins directions
-	pinMode(R_RST, OUTPUT);    // Reset pin
-	pinMode(R_SDIO, OUTPUT);    // I2C data IO pin
-	DebugPulse(1);
-	digitalWrite(R_RST, HIGH);  // Bring Si4703 out of reset with SDIO set to low and SEN pulled high with on-board resistor
-	delay(1);                     // Delay to allow pins to settle
-	DebugPulse(1);
-
-	// Set communcation mode to 2-Wire
-	digitalWrite(R_SDIO, LOW);   // A low SDIO indicates a 2-wire interface
-	digitalWrite(R_RST, LOW);   // Put Si4703 into reset
-	delay(1);                     // Delay to allow pins to settle
-	DebugPulse(1);
-	digitalWrite(R_RST, HIGH);  // Bring Si4703 out of reset with SDIO set to low and SEN pulled high with on-board resistor
-	delay(1);                     // Allow Si4703 to come out of reset
-	DebugPulse(1);
-#endif
 	DebugMessage("Before fmTuner.start()");
 	DebugPulse(2);
 	fmTuner.start();          // Power Up Device
@@ -195,39 +177,18 @@ void loop()
 
 	for (int i = 0; i < 6; i++)
 		{
-		if (buttons[i].Poll())
-			{
-			Serial.print("B");
-			Serial.print(i);
-			Serial.print(" : ");
-			Serial.print(buttons[i].getState());
-			Serial.println();
-			}
+		buttons[i].reportButton(&Serial, i);
 		}
 
 	pRotaryEncoder1->tick();
 
-	long position1 = pRotaryEncoder1->getPosition();
-	long delta1 = position1 - prevPosition1;
-	if (delta1 != 0)
-		{
-		Serial.print("rotary encoder 1 : ");
-		Serial.println(delta1);
-		prevPosition1 = position1;
-		fmTuner.addVolume((int)delta1);
-		}
+	int delta = pRotaryEncoder1->reportDelta(&Serial, 1);
+	if (delta != 0)
+		fmTuner.addVolume((int)delta);
 
-	pRotaryEncoder2->tick();
-
-	int position2 = pRotaryEncoder2->getPosition();
-	int delta2 = position2 - prevPosition2;
-	if (delta2 != 0)
-		{
-		Serial.print("rotary encoder 2 : ");
-		Serial.println(delta2);
-		prevPosition2 = position2;
-		fmTuner.addVolume((int)delta2);
-		}
+	delta = pRotaryEncoder2->reportDelta(&Serial, 2);
+	if (delta != 0)
+		fmTuner.addVolume((int)delta);
 	}
 
 void HandleSerialInput()

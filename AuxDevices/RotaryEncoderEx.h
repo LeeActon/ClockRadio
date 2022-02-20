@@ -1,5 +1,5 @@
 
-// RotaryEncoder library 1.5.2
+// Uses RotaryEncoder library 1.5.2
 // see: https://github.com/mathertel/RotaryEncoder
 #include <RotaryEncoder.h>
 
@@ -16,9 +16,12 @@ class RotaryEncoderEx : public RotaryEncoder
 	public:
 		PinState pinStateA;
 		PinState pinStateB;
+		long prevPosition;
 
 		RotaryEncoderEx(int pinA, int pinB, LatchMode mode, void (*pinAISR)(void), void (*pinBISR)(void)) : RotaryEncoder(pinA, pinB, mode)
 			{
+			this->prevPosition = 0;
+
 			this->pinStateA.pinNumber = pinA;
 			this->pinStateA.pinInterrupt = digitalPinToInterrupt(this->pinStateA.pinNumber);
 			this->pinStateA.interruptCount = 0;
@@ -60,6 +63,23 @@ class RotaryEncoderEx : public RotaryEncoder
 			RotaryEncoder::tick();
 			this->pinStateB.interruptCount++;
 			this->pinStateB.value = digitalRead(this->pinStateB.pinNumber);
+			}
+
+		int reportDelta(Stream *pStream, int id)
+			{
+			long position = this->getPosition();
+			long delta = (int) (position - this->prevPosition);
+			if (delta != 0)
+				{
+				pStream->print("R ");
+				pStream->print(id);
+				pStream->print(" : ");
+				pStream->print(delta);
+				pStream->println();
+				this->prevPosition = position;
+				}
+
+			return delta;
 			}
 
 		void reportPin(Stream* pStream, PinState* pState, char* szPin)
