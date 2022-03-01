@@ -46,7 +46,7 @@ class ButtonDebouncer
 			{
 			if (this->Poll())
 				{
-				pStream->print("B");
+				pStream->print("B ");
 				pStream->print(id);
 				pStream->print(" : ");
 				pStream->print(this->getState());

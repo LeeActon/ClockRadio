@@ -5,6 +5,7 @@ import getopt
 import json
 import math
 import os
+import serial
 import signal
 import sys
 import time
@@ -22,6 +23,8 @@ class ClockRadio:
     clockFace = None
     clockHands = None
     settings = None
+    auxDevices = None
+
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
 
@@ -55,6 +58,7 @@ class ClockRadio:
         signal.signal(signal.SIGINT, self._exit)
 
         self.loadSettings()
+        self.auxDevices = serial.Serial('/dev/ttyACM0', 115200)
 
         while self._running:
             for event in pygame.event.get():
@@ -66,6 +70,9 @@ class ClockRadio:
                         self._running = False
                         break
 
+            if self.auxDevices.in_waiting > 0:
+                self.handleAuxInput()
+
             now = datetime.datetime.now()
             if self.clockImage != None:
                 self.clockImage.update()
@@ -76,6 +83,51 @@ class ClockRadio:
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
+
+    def handleAuxInput(self):
+        line = self.auxDevices.readline().decode('utf-8').strip()
+        print(line);
+        if len(line) > 0:
+            ch = line[0]
+        if (ch == '*'):
+            # Just debug spew
+            x = 1
+        elif (ch == '.'):
+            self.auxDevices.write('\n'.encode('utf-8'))
+        elif (ch == 'B'):
+            # Button pressed/released report
+            # B <n> : <s>
+            # where <n> is the button number
+            #       <s> is state (0 - not pressed, 1 - pressed)
+            x = 1
+        elif (ch == 'R'):
+            # Rotary Encoder changed report
+            # R <n> : <d>
+            # where <n> is the encoder number\
+            #       <d> is the amount the encoder has changed
+            p = line.split(' ')
+            if len(p) == 4:
+                if p[1] == '1':
+                    v = int(p[3])
+                    if (v > 0):
+                        self.auxDevices.write('v+1\n'.encode('utf-8'))
+                    else:
+                        self.auxDevices.write('v-1\n'.encode('utf-8'))
+
+        elif (ch == 'V'):
+            # Volume report
+            # V: <v>[, mute][, mono]
+            # where <v> is the current volume
+            #       optional "mute" indcates output is muted
+            #       optional "mono" indcates output is forced to mono
+            x = 1
+        elif (ch == 'F'):
+            # Frequency report
+            # F: <f> MHz, <s>[, stereo]
+            # where <f> is the megahertz of the tuned station
+            #       <s> is the signal strength
+            #       optional "stereo" indicates the tuner has detected a stereo signal
+            x = 1
 
     def _exit(self, sig, frame):
         self._running = False

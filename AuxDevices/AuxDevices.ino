@@ -103,7 +103,7 @@ void HandleSerialInput(char* sz);
 
 FMTuner fmTuner(&Serial, R_RST, R_SDIO, R_SCLK, R_INT);
 
-#define DEBUG_PIN 13
+#define DEBUG_PIN 8
 
 void DebugMessage(char* szMessage)
 	{
@@ -111,26 +111,30 @@ void DebugMessage(char* szMessage)
 	Serial.println(szMessage);
 	}
 
-// the setup function runs once when you press reset or power the board
-int pinAInt = NOT_AN_INTERRUPT;
-int pinBInt = NOT_AN_INTERRUPT;
 void setup()
 	{
-	pRotaryEncoder1 = new RotaryEncoderEx(5, 7, RotaryEncoder::LatchMode::TWO03, rotaryEncoder1PinAInterrupt, rotaryEncoder1PinBInterrupt);
-	pRotaryEncoder2 = new RotaryEncoderEx(0, 1, RotaryEncoder::LatchMode::FOUR3, rotaryEncoder2PinAInterrupt, rotaryEncoder2PinBInterrupt);
+	Serial.begin(115200);       // start serial
+	Serial.println();
+	Serial.println("Started");
+
+	// Wait for input before going any further.
+	// Makes debugging easier.
+	while (!Serial.available())
+		{
+
+		Serial.println(".");
+		delay(1000);
+		}
+
+	pRotaryEncoder1 = new RotaryEncoderEx(0, 1, RotaryEncoder::LatchMode::TWO03, rotaryEncoder1PinAInterrupt, rotaryEncoder1PinBInterrupt);
+	pRotaryEncoder2 = new RotaryEncoderEx(5, 7, RotaryEncoder::LatchMode::FOUR3, rotaryEncoder2PinAInterrupt, rotaryEncoder2PinBInterrupt);
 
 	pinMode(DEBUG_PIN, OUTPUT);
 	digitalWrite(DEBUG_PIN, LOW);
 	DebugPulse(1);
 	pinMode(R_RST, OUTPUT);
-	PulsePin(R_RST, 10);
 	pinMode(R_SDIO, OUTPUT);
-	PulsePin(R_SDIO, 10);
 	pinMode(R_SCLK, OUTPUT);
-	PulsePin(R_SCLK, 10);
-
-	Serial.begin(115200);       // start serial
-	Serial.println();
 
 	buttons[0].Init(A0);
 	buttons[1].Init(A1);
@@ -138,21 +142,6 @@ void setup()
 	buttons[3].Init(A3);
 	buttons[4].Init(A4);
 	buttons[5].Init(A5);
-#if 1
-	DebugPulse(1);
-	pinMode(R_RST, OUTPUT);    // Reset pin
-	pinMode(R_SDIO, OUTPUT);    // I2C data IO pin
-	digitalWrite(R_RST, HIGH);  // Bring Si4703 out of reset with SDIO set to low and SEN pulled high with on-board resistor
-	DebugPulse(1);
-#endif
-	DebugMessage("Before fmTuner.start()");
-	DebugPulse(2);
-	fmTuner.start();          // Power Up Device
-	DebugPulse(3);
-	DebugMessage("After fmTuner.start()");
-	DebugPulse(4);
-	fmTuner.reportAll();
-	DebugPulse(5);
 	}
 
 void DebugPulse(int count)
@@ -167,7 +156,6 @@ void PulsePin(int pin, int microSeconds)
 	digitalWrite(pin, LOW);
 	}
 
-// the loop function runs over and over again until power down or reset
 long prevPosition1 = -999;
 long prevPosition2 = -999;
 void loop()
@@ -181,14 +169,10 @@ void loop()
 		}
 
 	pRotaryEncoder1->tick();
+	pRotaryEncoder1->reportDelta(&Serial, 1);
 
-	int delta = pRotaryEncoder1->reportDelta(&Serial, 1);
-	if (delta != 0)
-		fmTuner.addVolume((int)delta);
-
-	delta = pRotaryEncoder2->reportDelta(&Serial, 2);
-	if (delta != 0)
-		fmTuner.addVolume((int)delta);
+	pRotaryEncoder2->tick();
+	pRotaryEncoder2->reportDelta(&Serial, 2);
 	}
 
 void HandleSerialInput()
@@ -207,10 +191,39 @@ void HandleSerialInput(char* sz)
 	{
 	char command = *sz++;
 
+	// Commands:
+	//     P) Power
+	//     v) Volume: v[+|-][<n>]
+	//     m) Mute on/off
+	//     s) Stero on/off
+	//     f) Frequency: f{[+\-]|[<n>]}
+	//     p) Preset: p<n>
+	//     S) Scan: S{+|-}
+	//     ?) Print all info
 	switch (command)
 		{
+		case 'P':
+			// Power on
+			{
+			DebugMessage("Before fmTuner.start()");
+			DebugPulse(2);
+			fmTuner.start();          // Power Up Device
+#if 0
+			while (fmTuner.getShadow2() ==0)
+				{
+				DebugMessage("repeat fmTuner.start()");
+				fmTuner.start();          // Power Up Device
+				}
+#endif
+			DebugPulse(3);
+			DebugMessage("After fmTuner.start()");
+			DebugPulse(4);
+			fmTuner.reportAll();
+			DebugPulse(5);
+			}
+			break;
 		case 'v':
-			// Volume: v{+,-}{n}
+			// Volume: v[+,-][n]
 			{
 			int sign = 0;
 			int n = 0;
@@ -241,61 +254,53 @@ void HandleSerialInput(char* sz)
 				}
 			}
 			break;
-
-		case '+':
-			// Increment Volume
-			{
-			fmTuner.addVolume(1);
-			}
-			break;
-		case '-':
-			// Decrement Volume
-			{
-			fmTuner.addVolume(-1);
-			}
-			break;
 		case 'm':
-			// Mute/Unmute volume
+			// Mute on/off
 			{
 			fmTuner.toggleMute();
 			}
 			break;
 		case 's':
-			// Set Mono/Sterio"
+			// Stereo on/off
 			{
 			fmTuner.toggleMono();
 			}
 			break;
-		case 'u':
-			// Tune Frequency up
+		case 'f':
+			// Frequency: f{[+\-]|[<n>]}
 			{
-			fmTuner.incChannel();
-			}
-			break;
-		case 'd':
-			// Tune Frequency down
-			{
-			fmTuner.decChannel();
-			}
-			break;
-		case 'n':
-			// Channel Seek next
-			{
-			if (!fmTuner.seekUp())
+			if (sz[0] == '+')
 				{
-				DebugMessage("Error: Seek failure or band limit reached!!");
+				fmTuner.incChannel();
+				}
+			else if (sz[0] == '+')
+				{
+				fmTuner.decChannel();
+				}
+			else
+				{
+				//UNDONE: parse frequency
 				}
 			}
 			break;
-		case 'l':
-			// Channel Seek last
+		case 'S':
+			// Scan: S{+|-}
 			{
-			if (!fmTuner.seekDown())
+			if (sz[0] == '+')
 				{
-				DebugMessage("Error: Seek failure or band limit reached!!");
+				if (!fmTuner.seekUp())
+					{
+					DebugMessage("Error: Seek failure or band limit reached!!");
+					}
+				}
+			else if (sz[0] == '-')
+				{
+				if (!fmTuner.seekDown())
+					{
+					DebugMessage("Error: Seek failure or band limit reached!!");
+					}
 				}
 			}
-			break;
 		case 'p':
 			{
 			int i = atoi(sz);
@@ -305,11 +310,6 @@ void HandleSerialInput(char* sz)
 				i = 9;
 
 			fmTuner.setChannel(favoriteChannels[i]);
-			}
-			break;
-		case 'r':             // Listen for RDS Data
-			{
-			// TODO:
 			}
 			break;
 
