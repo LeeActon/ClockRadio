@@ -13,14 +13,14 @@ class ButtonDebouncer
 			{
 			this->pinNumber = pinNumber;
 			pinMode(pinNumber, INPUT_PULLUP);
-			this->prevState = digitalRead(this->pinNumber);
+			this->prevState = (digitalRead(this->pinNumber) == 0);
 			this->debouncing = false;
 			this->timeout = 0;
 			}
 
 		bool Poll()
 			{
-			this->state = digitalRead(this->pinNumber);
+			this->state = (digitalRead(this->pinNumber) == 0);
 
 			if (this->state != this->prevState)
 				{

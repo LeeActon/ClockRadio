@@ -86,14 +86,15 @@ class ClockRadio:
 
     def handleAuxInput(self):
         line = self.auxDevices.readline().decode('utf-8').strip()
-        print(line);
+        parts = line.split()
+        print(f'<-- {line} - {parts}')
         if len(line) > 0:
             ch = line[0]
         if (ch == '*'):
             # Just debug spew
             x = 1
         elif (ch == '.'):
-            self.auxDevices.write('\n'.encode('utf-8'))
+            self.sendAuxDevices('')
         elif (ch == 'B'):
             # Button pressed/released report
             # B <n> : <s>
@@ -105,14 +106,13 @@ class ClockRadio:
             # R <n> : <d>
             # where <n> is the encoder number\
             #       <d> is the amount the encoder has changed
-            p = line.split(' ')
-            if len(p) == 4:
-                if p[1] == '1':
-                    v = int(p[3])
+            if len(parts) == 4:
+                if parts[1] == '1':
+                    v = int(parts[3])
                     if (v > 0):
-                        self.auxDevices.write('v+1\n'.encode('utf-8'))
+                        self.sendAuxDevices('v+1')
                     else:
-                        self.auxDevices.write('v-1\n'.encode('utf-8'))
+                        self.sendAuxDevices('v-1')
 
         elif (ch == 'V'):
             # Volume report
@@ -135,6 +135,11 @@ class ClockRadio:
 
     def printHelp(self):
        print('main.py -c <clockface> -h <hour color> -m <minute color> -s <second color> -t <tick color>')
+
+    def sendAuxDevices(self, s):
+        print(f'--> {s}')
+        self.auxDevices.write(s.encode('utf-8'))
+        self.auxDevices.write('\n'.encode('utf-8'))
 
     def main(self, argv):
 
