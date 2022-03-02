@@ -3,7 +3,7 @@ import math
 import pygame
 from pygame import gfxdraw
 
-class Widget:
+class Layer:
     surface = None
     backcolor = None
     def __init__(self, surface):

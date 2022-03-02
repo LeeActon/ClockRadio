@@ -14,7 +14,7 @@ import pygame
 
 import AnalogClockFace
 import AnalogClockHands
-import ImageWidget
+import ImageLayer
 import SurfaceHelper
 
 class ClockRadio:
@@ -41,7 +41,7 @@ class ClockRadio:
         for key, value in settings.items():
             if key == 'backgroundImage':
                 if self.clockImage == None:
-                    self.clockImage = ImageWidget.ImageWidget(self.surface)
+                    self.clockImage = ImageLayer.ImageLayer(self.surface)
                 self.clockImage.loadImage(value)
             elif key == 'AnalogClockHands':
                 if self.clockHands == None:

@@ -3,10 +3,10 @@ import sys
 import signal
 import pygame
 
-import Widget
+import Layer
 import SurfaceHelper
 
-class ImageWidget(Widget.Widget):
+class ImageLayer(Layer.Layer):
     image = None
 
     def __init__(self, surface):
@@ -53,5 +53,5 @@ class ImageWidget(Widget.Widget):
 
 if __name__ == "__main__":
     surface = SurfaceHelper.OpenSurface()
-    imageWidget = ImageWidget(surface)
-    imageWidget.run()
+    imageLayer = ImageLayer(surface)
+    imageLayer.run()
