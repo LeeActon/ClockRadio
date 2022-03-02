@@ -16,6 +16,7 @@ import AnalogClockFace
 import AnalogClockHands
 import ImageLayer
 import SurfaceHelper
+import Page
 
 class ClockRadio:
     surface = None
@@ -24,6 +25,7 @@ class ClockRadio:
     clockHands = None
     settings = None
     auxDevices = None
+    page = None
 
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
@@ -32,6 +34,8 @@ class ClockRadio:
         self.clockHands.setHourColor((0,0,0))
         self.clockHands.setMinuteColor((0,0,0))
         self.clockHands.setSecondColor((192,0,0))
+
+        self.page = Page.Page()
 
     def loadSettings(self):
         f = open('settings.json')
@@ -92,7 +96,7 @@ class ClockRadio:
             ch = line[0]
         if (ch == '*'):
             # Just debug spew
-            x = 1
+            pass
         elif (ch == '.'):
             self.sendAuxDevices('')
         elif (ch == 'B'):
@@ -100,7 +104,13 @@ class ClockRadio:
             # B <n> : <s>
             # where <n> is the button number
             #       <s> is state (0 - not pressed, 1 - pressed)
-            x = 1
+            if (self.page != None):
+                buttonId = int(parts[1])
+                state = int(parts[3])
+                if state != 0:
+                    self.page.handleButtonDown(buttonId)
+                else:
+                    self.page.handleButtonUp(buttonId)
         elif (ch == 'R'):
             # Rotary Encoder changed report
             # R <n> : <d>
@@ -120,14 +130,14 @@ class ClockRadio:
             # where <v> is the current volume
             #       optional "mute" indcates output is muted
             #       optional "mono" indcates output is forced to mono
-            x = 1
+            pass
         elif (ch == 'F'):
             # Frequency report
             # F: <f> MHz, <s>[, stereo]
             # where <f> is the megahertz of the tuned station
             #       <s> is the signal strength
             #       optional "stereo" indicates the tuner has detected a stereo signal
-            x = 1
+            pass
 
     def _exit(self, sig, frame):
         self._running = False
