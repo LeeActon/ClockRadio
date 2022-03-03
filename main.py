@@ -17,12 +17,11 @@ import AnalogClockHands
 import ImageLayer
 import SurfaceHelper
 import Page
+import ClockPage
 
 class ClockRadio:
     surface = None
-    clockImage = None
-    clockFace = None
-    clockHands = None
+    clockPage = None
     settings = None
     auxDevices = None
     page = None
@@ -30,12 +29,9 @@ class ClockRadio:
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
 
-        self.clockHands = AnalogClockHands.AnalogClockHands(self.surface)
-        self.clockHands.setHourColor((0,0,0))
-        self.clockHands.setMinuteColor((0,0,0))
-        self.clockHands.setSecondColor((192,0,0))
+        self.clockPage = ClockPage.ClockPage(self.surface)
 
-        self.page = Page.Page()
+        self.page = self.clockPage
 
     def loadSettings(self):
         f = open('settings.json')
@@ -43,25 +39,15 @@ class ClockRadio:
         settings = json.load(f)
 
         for key, value in settings.items():
-            if key == 'backgroundImage':
-                if self.clockImage == None:
-                    self.clockImage = ImageLayer.ImageLayer(self.surface)
-                self.clockImage.loadImage(value)
-            elif key == 'AnalogClockHands':
-                if self.clockHands == None:
-                    self.clockHands = AnalogClockHands.AnalogClockHands(self.surface)
-                self.clockHands.loadSettings(value)
-            elif key == 'AnalogClockTickMarks':
-                if self.clockFace == None:
-                    self.clockFace = AnalogClockFace.AnalogClockFace(self.surface)
-                self.clockFace.loadSettings(value)
+            if key == 'clock':
+                if (self.clockPage != None):
+                    self.clockPage.loadSettings(value)
 
     def run(self):
         self._running = True
         _clock = pygame.time.Clock()
         signal.signal(signal.SIGINT, self._exit)
 
-        self.loadSettings()
         self.auxDevices = serial.Serial('/dev/ttyACM0', 115200)
 
         while self._running:
@@ -77,13 +63,9 @@ class ClockRadio:
             if self.auxDevices.in_waiting > 0:
                 self.handleAuxInput()
 
-            now = datetime.datetime.now()
-            if self.clockImage != None:
-                self.clockImage.update()
-            if self.clockFace != None:
-                self.clockFace.update()
-            if self.clockHands != None:
-                self.clockHands.update(now)
+            if self.clockPage != None:
+                now = datetime.datetime.now()
+                self.clockPage.update(now)
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
@@ -159,23 +141,22 @@ class ClockRadio:
            self.printHelp()
            sys.exit(2)
 
+       self.loadSettings()
        for opt, arg in opts:
            if opt == '--help':
                self.printHelp()
                sys.exit()
            elif opt in ("-f", "--face"):
-               self.clockImage.loadImage(arg)
-               self.clockFace = None
+               self.clockPage.loadBackgroundImage(arg)
+               self.clockPage.clockFace = None
            elif opt in ("-h", "--hour"):
-               self.clockHands.setHourColor(eval(arg))
+               self.clockPage.clockHands.setHoursColor(eval(arg))
            elif opt in ("-m", "--minute"):
-               self.clockHands.setMinuteColor(eval(arg))
+               self.clockPage.clockHands.setMinutesColor(eval(arg))
            elif opt in ("-s", "--second"):
-               self.clockHands.setSecondColor(eval(arg))
-           elif opt in ("-b", "--backColor"):
-               self.clockFace.setBackColor(eval(arg))
+               self.clockPage.clockHands.setSecondsColor(eval(arg))
            elif opt == "--sweep":
-               self.clockHands.setSweep(True)
+               self.clockPage.clockHands.setSweep(True)
 
        self.run()
 

@@ -11,22 +11,22 @@ import Layer
 import SurfaceHelper
 
 class AnalogClockHands(Layer.Layer):
-    hourColor = (0,0,255)
-    minuteColor = (0,255,0)
-    secondColor = (255,0,0)
-    hourHubColor = None
-    minuteHubColor = None
-    secondHubColor = None
+    hoursColor = (0,0,255)
+    minutesColor = (0,255,0)
+    secondsColor = (255,0,0)
+    hoursHubColor = None
+    minutesHubColor = None
+    secondsHubColor = None
 
-    hourWidth = 11
-    hourLength = -110
-    hourHubRadius = 20
-    minuteWidth = 6
-    minuteLength = -80
-    minuteHubRadius = 20
-    secondWidth = 3
-    secondLength = -50
-    secondHubRadius = 10
+    hoursWidth = 11
+    hoursLength = -110
+    hoursHubRadius = 20
+    minutesWidth = 6
+    minutesLength = -80
+    minutesHubRadius = 20
+    secondsWidth = 3
+    secondsLength = -50
+    secondsHubRadius = 10
     sweep = False
 
     def __init__(self, surface):
@@ -42,30 +42,30 @@ class AnalogClockHands(Layer.Layer):
 
     def loadSettings(self, settings):
         for key, value in settings.items():
-            if key == 'hourColor':
-                self.setHourColor(eval(value))
-            elif key == 'minuteColor':
-                self.setMinuteColor(eval(value))
-            elif key == 'secondColor':
-                self.setSecondColor(eval(value))
-            elif key == 'hourHubColor':
-                self.setHourHubColor(eval(value))
-            elif key == 'minuteHubColor':
-                self.setMinuteHubColor(eval(value))
-            elif key == 'secondHubColor':
-                self.setSecondHubColor(eval(value))
-            elif key == 'hourHubRadius':
-                self.setHourHubRadius(eval(value))
-            elif key == 'minuteHubRadius':
-                self.setMinuteHubRadius(eval(value))
-            elif key == 'secondHubRadius':
-                self.setSecondHubRadius(eval(value))
-            elif key == 'hourLength':
-                self.setHourLength(eval(value))
-            elif key == 'minuteLength':
-                self.setMinuteLength(eval(value))
-            elif key == 'secondLength':
-                self.setSecondLength(eval(value))
+            if key == 'hoursColor':
+                self.setHoursColor(eval(value))
+            elif key == 'minutesColor':
+                self.setMinutesColor(eval(value))
+            elif key == 'secondsColor':
+                self.setSecondsColor(eval(value))
+            elif key == 'hoursHubColor':
+                self.setHoursHubColor(eval(value))
+            elif key == 'minutesHubColor':
+                self.setMinutesHubColor(eval(value))
+            elif key == 'secondsHubColor':
+                self.setSecondsHubColor(eval(value))
+            elif key == 'hoursHubRadius':
+                self.setHoursHubRadius(eval(value))
+            elif key == 'minutesHubRadius':
+                self.setMinutesHubRadius(eval(value))
+            elif key == 'secondsHubRadius':
+                self.setSecondsHubRadius(eval(value))
+            elif key == 'hoursLength':
+                self.setHoursLength(eval(value))
+            elif key == 'minutesLength':
+                self.setMinutesLength(eval(value))
+            elif key == 'secondsLength':
+                self.setSecondsLength(eval(value))
             elif key == 'sweep':
                 self.sweep = (value == "True")
 
@@ -80,11 +80,11 @@ class AnalogClockHands(Layer.Layer):
             s += (time.microsecond/1000000)
         a_s = s / 60.0 * 360.0
 
-        a_m = time.minute / 60.0 * 360.0
+        a_m = time.minute/ 60.0 * 360.0
         a_m += (time.second / 60.0) * (360.0 / 60)
 
         a_h = (time.hour % 12) / 12.0 * 360.0
-        a_h += (time.minute / 60.0) * (360.0 / 12)
+        a_h += (time.minute/ 60.0) * (360.0 / 12)
 
         a_s += 90
         a_m += 90
@@ -95,91 +95,91 @@ class AnalogClockHands(Layer.Layer):
         a_h %= 360
 
         # Compute the start and end points of each hand based on their angle
-        point_second_start = self._get_point(self.center, a_s, self.secondHubRadius)
-        point_second_end = self._get_point(self.center, a_s, self.getSecondLength())
+        secondsStartPoint = self._get_point(self.center, a_s, self.secondsHubRadius)
+        secondsEndPoint = self._get_point(self.center, a_s, self.getSecondsLength())
 
-        point_minute_start = self._get_point(self.center, a_m, self.minuteHubRadius)
-        point_minute_end = self._get_point(self.center, a_m, self.getMinuteLength())
+        minutesStartPoint = self._get_point(self.center, a_m, self.minutesHubRadius)
+        minutesEndPoint = self._get_point(self.center, a_m, self.getMinutesLength())
 
-        point_hour_start = self._get_point(self.center, a_h, self.hourHubRadius)
-        point_hour_end = self._get_point(self.center, a_h, self.getHourLength())
+        hoursStartPoint = self._get_point(self.center, a_h, self.hoursHubRadius)
+        hoursEndPoint = self._get_point(self.center, a_h, self.getHoursLength())
 
         # Draw the hands and their hubs
-        self._line(self.hourColor, point_hour_start, point_hour_end, self.hourWidth)
-        self._circle(self.getHourHubColor(), self.center, self.hourHubRadius)
-        self._line(self.minuteColor, point_minute_start, point_minute_end, self.minuteWidth)
-        self._circle(self.getMinuteHubColor(), self.center, self.minuteHubRadius)
-        self._line(self.secondColor, point_second_start, point_second_end, self.secondWidth)
-        self._circle(self.getSecondHubColor(), self.center, self.secondHubRadius)
+        self._line(self.hoursColor, hoursStartPoint, hoursEndPoint, self.hoursWidth)
+        self._circle(self.getHoursHubColor(), self.center, self.hoursHubRadius)
+        self._line(self.minutesColor, minutesStartPoint, minutesEndPoint, self.minutesWidth)
+        self._circle(self.getMinutesHubColor(), self.center, self.minutesHubRadius)
+        self._line(self.secondsColor, secondsStartPoint, secondsEndPoint, self.secondsWidth)
+        self._circle(self.getSecondsHubColor(), self.center, self.secondsHubRadius)
 
     def setSweep(self, sweep):
         self.sweep = sweep
 
-    def setHourColor(self, color):
-        self.hourColor = color
+    def setHoursColor(self, color):
+        self.hoursColor = color
 
-    def setMinuteColor(self, color):
-        self.minuteColor = color
+    def setMinutesColor(self, color):
+        self.minutesColor = color
 
-    def setSecondColor(self, color):
-        self.secondColor = color
+    def setSecondsColor(self, color):
+        self.secondsColor = color
 
-    def setHourHubColor(self, color):
-        self.hourHubColor = color
+    def setHoursHubColor(self, color):
+        self.hoursHubColor = color
 
-    def getHourHubColor(self):
-        if self.hourHubColor == None:
-            return self.hourColor
-        return self.hourHubColor
+    def getHoursHubColor(self):
+        if self.hoursHubColor == None:
+            return self.hoursColor
+        return self.hoursHubColor
 
-    def setMinuteHubColor(self, color):
-        self.minuteHubColor = color
+    def setMinutesHubColor(self, color):
+        self.minutesHubColor = color
 
-    def getMinuteHubColor(self):
-        if self.minuteHubColor == None:
-            return self.minuteColor
-        return self.minuteHubColor
+    def getMinutesHubColor(self):
+        if self.minutesHubColor == None:
+            return self.minutesColor
+        return self.minutesHubColor
 
-    def setSecondHubColor(self, color):
-        self.secondHubColor = color
+    def setSecondsHubColor(self, color):
+        self.secondsHubColor = color
 
-    def getSecondHubColor(self):
-        if self.secondHubColor == None:
-            return self.secondColor
-        return self.secondHubColor
+    def getSecondsHubColor(self):
+        if self.secondsHubColor == None:
+            return self.secondsColor
+        return self.secondsHubColor
 
-    def setHourLength(self, length):
-        self.hourLength = length
+    def setHoursLength(self, length):
+        self.hoursLength = length
 
-    def getHourLength(self):
-        if self.hourLength < 0:
-            return self._radius + self.hourLength
-        return self.hourLength
+    def getHoursLength(self):
+        if self.hoursLength < 0:
+            return self._radius + self.hoursLength
+        return self.hoursLength
 
-    def setMinuteLength(self, length):
-        self.minuteLength = length
+    def setMinutesLength(self, length):
+        self.minutesLength = length
 
-    def getMinuteLength(self):
-        if self.minuteLength < 0:
-            return self._radius + self.minuteLength
-        return self.minuteLength
+    def getMinutesLength(self):
+        if self.minutesLength < 0:
+            return self._radius + self.minutesLength
+        return self.minutesLength
 
-    def setSecondLength(self, length):
-        self.secondLength = length
+    def setSecondsLength(self, length):
+        self.secondsLength = length
 
-    def getSecondLength(self):
-        if self.secondLength < 0:
-            return self._radius + self.secondLength
-        return self.secondLength
+    def getSecondsLength(self):
+        if self.secondsLength < 0:
+            return self._radius + self.secondsLength
+        return self.secondsLength
 
-    def setHourHubRadius(self, radius):
-        self.hourHubRadius = radius
+    def setHoursHubRadius(self, radius):
+        self.hoursHubRadius = radius
 
-    def setMinuteHubRadius(self, radius):
-        self.minuteHubRadius = radius
+    def setMinutesHubRadius(self, radius):
+        self.minutesHubRadius = radius
 
-    def setSecondHubRadius(self, radius):
-        self.secondHubRadius = radius
+    def setSecondsHubRadius(self, radius):
+        self.secondsHubRadius = radius
 
     _running = False
     def _exit(self, sig, frame):
@@ -212,7 +212,7 @@ if __name__ == "__main__":
     surface = SurfaceHelper.OpenSurface()
     clockHands = AnalogClockHands(surface)
     clockHands.backcolor = (0,0,0)
-    clockHands.setHourColor((0,0,255))
-    clockHands.setMinuteColor((0,255,0))
-    clockHands.setSecondColor((255,0,0))
+    clockHands.setHoursColor((0,0,255))
+    clockHands.setMinutesColor((0,255,0))
+    clockHands.setSecondsColor((255,0,0))
     clockHands.run()
