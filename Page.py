@@ -29,6 +29,9 @@ class Page:
             nextButton.pageDown = curButton
             curButton = nextButton
 
+    def handleRotary(self, rotaryId, value):
+        print(f"Rotary {rotaryId} = {value}")
+
     def handleButton(self, buttonId, state):
         if (state != 0):
             self.handleButtonDown(buttonId)

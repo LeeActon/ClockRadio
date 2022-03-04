@@ -75,6 +75,7 @@ class ClockRadio:
             _clock.tick(30)  # Aim for 30fps
 
     def handleAuxInput(self):
+        page = Page.getCurrentPage()
         line = self.auxDevices.readline().decode('utf-8').strip()
         parts = line.split()
         print(f'<-- {line} - {parts}')
@@ -90,23 +91,21 @@ class ClockRadio:
             # B <n> : <s>
             # where <n> is the button number
             #       <s> is state (0 - not pressed, 1 - pressed)
-            page = Page.getCurrentPage()
-            if (page != None):
-                buttonId = int(parts[1])
-                state = int(parts[3])
-                page.handleButton(buttonId, state)
+            if len(parts) == 4:
+                if (page != None):
+                    buttonId = int(parts[1])
+                    state = int(parts[3])
+                    page.handleButton(buttonId, state)
         elif (ch == 'R'):
             # Rotary Encoder changed report
             # R <n> : <d>
             # where <n> is the encoder number\
             #       <d> is the amount the encoder has changed
             if len(parts) == 4:
-                if parts[1] == '1':
-                    v = int(parts[3])
-                    if (v > 0):
-                        self.sendAuxDevices('v+1')
-                    else:
-                        self.sendAuxDevices('v-1')
+                if (page != None):
+                    rotaryId = int(parts[1])
+                    value = int(parts[3])
+                    page.handleRotary(rotaryId, value)
 
         elif (ch == 'V'):
             # Volume report
