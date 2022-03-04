@@ -1,40 +1,20 @@
+currentPage = None
+
+def getCurrentPage():
+    return Page.currentPage
+
+def setCurrentPage(page):
+    Page.currentPage = page
+
+def updateCurrentPage():
+    if Page.currentPage != None:
+        Page.currentPage.update()
 
 class Page:
-
-    def handleEnterButtonDown(self):
-        print("Enter Pressed");
-
-    def handleUpButtonDown(self):
-        print("Up Pressed");
-
-    def handleDownButtonDown(self):
-        print("Down Pressed");
-
-    def handleLeftButtonDown(self):
-        print("Left Pressed");
-
-    def handleRightButtonDown(self):
-        print("Right Pressed");
-
-
-    def handleEnterButtonUp(self):
-        print("Enter Released");
-
-    def handleUpButtonUp(self):
-        print("Up Released");
-
-    def handleDownButtonUp(self):
-        print("Down Released");
-
-    def handleLeftButtonUp(self):
-        print("Left Released");
-
-    def handleRightButtonUp(self):
-        print("Right Released");
-
-
-    buttonDownHandlers = [handleEnterButtonDown, handleUpButtonDown, handleLeftButtonDown, handleDownButtonDown, handleRightButtonDown]
-    buttonUpHandlers = [handleEnterButtonUp, handleUpButtonUp, handleLeftButtonUp, handleDownButtonUp, handleRightButtonUp]
+    pageUp = None
+    pageDown = None
+    pageLeft = None
+    pageRight = None
 
     def __init__(self):
         pass
@@ -42,10 +22,79 @@ class Page:
     def __delete__(self):
         pass
 
+    def linkUp(self, buttons):
+        curButton = self
+        for nextButton in buttons:
+            curButton.pageUp = nextButton
+            nextButton.pageDown = curButton
+            curButton = nextButton
+
+    def handleButton(self, buttonId, state):
+        if (state != 0):
+            self.handleButtonDown(buttonId)
+        else:
+            self.handleButtonUp(buttonId)
+
     def handleButtonDown(self, buttonId):
-        if (buttonId >= 0 and buttonId < len(self.buttonDownHandlers)):
-            self.buttonDownHandlers[buttonId](self)
+        if buttonId == 0:
+            self.handleEnterButtonDown()
+        elif buttonId == 1:
+            self.handleUpButtonDown()
+        elif buttonId == 2:
+            self.handleLeftButtonDown()
+        elif buttonId == 3:
+            self.handleDownButtonDown()
+        elif buttonId == 4:
+            self.handleRightButtonDown()
 
     def handleButtonUp(self, buttonId):
-        if (buttonId >= 0 and buttonId < len(self.buttonUpHandlers)):
-            self.buttonUpHandlers[buttonId](self)
+        if buttonId == 0:
+            self.handleEnterButtonUp()
+        elif buttonId == 1:
+            self.handleUpButtonUp()
+        elif buttonId == 2:
+            self.handleLeftButtonUp()
+        elif buttonId == 3:
+            self.handleDownButtonUp()
+        elif buttonId == 4:
+            self.handleRightButtonUp()
+
+    def handleEnterButtonDown(self):
+        print("Enter Pressed")
+
+    def handleUpButtonDown(self):
+        print("Up Pressed")
+
+    def handleDownButtonDown(self):
+        print("Down Pressed")
+
+    def handleLeftButtonDown(self):
+        print("Left Pressed")
+
+    def handleRightButtonDown(self):
+        print("Right Pressed")
+
+    def handleEnterButtonUp(self):
+        print("Enter Released")
+
+    def handleUpButtonUp(self):
+        print("Up Released")
+        if self.pageUp != None:
+            print(self)
+            print(self.pageUp)
+            Page.currentPage = self.pageUp
+
+    def handleDownButtonUp(self):
+        print("Down Released")
+        if self.pageDown != None:
+            Page.currentPage = self.pageDown
+
+    def handleLeftButtonUp(self):
+        print("Left Released")
+        if self.pageLeft != None:
+            Page.currentPage = self.pageLeft
+
+    def handleRightButtonUp(self):
+        print("Right Released")
+        if self.pageRight != None:
+            Page.currentPage = self.pageRight

@@ -22,16 +22,22 @@ import ClockPage
 class ClockRadio:
     surface = None
     clockPage = None
+    clockPage2 = None
+    clockSettingsPage = None
     settings = None
     auxDevices = None
-    page = None
 
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
 
         self.clockPage = ClockPage.ClockPage(self.surface)
+        self.clockSettingsPage = ClockPage.ClockPage(self.surface)
+        self.clockSettingsPage.loadBackgroundImage('Old Clock Face.png')
+        self.clockPage2 = ClockPage.ClockPage(self.surface)
 
-        self.page = self.clockPage
+        self.clockPage.linkUp([self.clockSettingsPage, self.clockPage2])
+
+        Page.setCurrentPage(self.clockPage)
 
     def loadSettings(self):
         f = open('settings.json')
@@ -63,9 +69,7 @@ class ClockRadio:
             if self.auxDevices.in_waiting > 0:
                 self.handleAuxInput()
 
-            if self.clockPage != None:
-                now = datetime.datetime.now()
-                self.clockPage.update(now)
+            Page.updateCurrentPage()
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
@@ -86,13 +90,11 @@ class ClockRadio:
             # B <n> : <s>
             # where <n> is the button number
             #       <s> is state (0 - not pressed, 1 - pressed)
-            if (self.page != None):
+            page = Page.getCurrentPage()
+            if (page != None):
                 buttonId = int(parts[1])
                 state = int(parts[3])
-                if state != 0:
-                    self.page.handleButtonDown(buttonId)
-                else:
-                    self.page.handleButtonUp(buttonId)
+                page.handleButton(buttonId, state)
         elif (ch == 'R'):
             # Rotary Encoder changed report
             # R <n> : <d>

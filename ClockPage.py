@@ -1,3 +1,4 @@
+import datetime
 import Page
 import ImageLayer
 import AnalogClockFace
@@ -5,14 +6,15 @@ import AnalogClockHands
 
 class ClockPage(Page.Page):
     surface = None
+    backgroundColor = (127,127,127)
     backgroundImage = None
     clockFace = None
     clockHands = None
+    time = None
 
     def __init__(self, surface):
         super().__init__()
         self.surface = surface
-        self.backgroundImage = ImageLayer.ImageLayer(self.surface)
         self.clockHands = AnalogClockHands.AnalogClockHands(self.surface)
         self.clockHands.setHoursColor((0,0,0))
         self.clockHands.setMinutesColor((0,0,0))
@@ -52,13 +54,28 @@ class ClockPage(Page.Page):
         if self.clockHands != None:
             self.clockHands.setSecondsColor(color)
 
-    def update(self, time):
+    def update(self):
+        if self.time != None:
+            now = self.time
+        else:
+            now = datetime.datetime.now()
         if self.backgroundImage != None:
             self.backgroundImage.update()
+        else:
+            self.surface.fill(self.backgroundColor)
 
         if self.clockFace != None:
             self.clockFace.update()
 
         if self.clockHands != None:
-            self.clockHands.update(time)
+            self.clockHands.update(now)
 
+
+    def handleEnterButtonUp(self):
+        print("ClockPage.handleEnterButtonUp")
+        if self.time == None:
+            print("freeze")
+            self.time = datetime.datetime.now()
+        else:
+            print("unfreeze")
+            self.time = None
