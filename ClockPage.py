@@ -55,21 +55,23 @@ class ClockPage(Page.Page):
             self.clockHands.setSecondsColor(color)
 
     def update(self):
-        if self.time != None:
-            now = self.time
-        else:
-            now = datetime.datetime.now()
-        if self.backgroundImage != None:
-            self.backgroundImage.update()
-        else:
-            self.surface.fill(self.backgroundColor)
-
-        if self.clockFace != None:
-            self.clockFace.update()
+        # make sure self.layers is up to date
+        if len(self.layers) == 0:
+            if self.backgroundImage != None:
+                self.addLayer(self.backgroundImage)
+            if self.clockFace != None:
+                self.addLayer(self.clockFace)
+            if self.clockHands != None:
+                self.addLayer(self.clockHands)
 
         if self.clockHands != None:
-            self.clockHands.update(now)
+            self.clockHands.time = self.time or datetime.datetime.now()
 
+        # if no bacground image, use the background color
+        if self.backgroundImage == None:
+            self.surface.fill(self.backgroundColor)
+
+        super().update()
 
     def handleEnterButtonUp(self):
         print("ClockPage.handleEnterButtonUp")

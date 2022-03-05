@@ -18,6 +18,7 @@ import ImageLayer
 import SurfaceHelper
 import Page
 import ClockPage
+import TextLayer
 
 class ClockRadio:
     surface = None
@@ -26,6 +27,8 @@ class ClockRadio:
     clockSettingsPage = None
     settings = None
     auxDevices = None
+    font = None
+    textLayer = None
 
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
@@ -54,6 +57,15 @@ class ClockRadio:
         _clock = pygame.time.Clock()
         signal.signal(signal.SIGINT, self._exit)
 
+        pygame.font.init()
+
+        self.font = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 64)
+
+        self.textLayer = TextLayer.TextLayer(self.surface)
+        self.textLayer.text = "Hello World"
+        self.textLayer.font = self.font
+        self.textLayer.position = (480/2, 480*5/8)
+
         self.auxDevices = serial.Serial('/dev/ttyACM0', 115200)
 
         while self._running:
@@ -71,6 +83,13 @@ class ClockRadio:
 
             Page.updateCurrentPage()
 
+            now = datetime.datetime.now()
+            hour = now.hour
+            if hour > 12:
+                hour -= 12
+            self.textLayer.text = f"{hour}:{now.minute:02d}:{now.second:02d}"
+            self.textLayer.update()
+        
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
 

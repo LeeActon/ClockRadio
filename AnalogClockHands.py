@@ -36,9 +36,18 @@ class AnalogClockHands(Layer.Layer):
         # circular screens are weird...
         self.center = (240, 247)
         self._radius = 240
+        self.time = datetime.datetime.now()
 
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
+
+    @property
+    def time(self):
+        return self._time
+
+    @time.setter
+    def time(self, value):
+        self._time = value
 
     def loadSettings(self, settings):
         for key, value in settings.items():
@@ -69,22 +78,26 @@ class AnalogClockHands(Layer.Layer):
             elif key == 'sweep':
                 self.sweep = (value == "True")
 
-    def update(self, time):
+    def update(self):
 
         super().update()
 
         # Compute the angle of each hand
 
-        s = time.second
+        h = self.time.hour
+        m = self.time.minute
+        s = self.time.second
+        us = self.time.microsecond
+
         if self.sweep:
-            s += (time.microsecond/1000000)
+            s += (us/1000000)
         a_s = s / 60.0 * 360.0
 
-        a_m = time.minute/ 60.0 * 360.0
-        a_m += (time.second / 60.0) * (360.0 / 60)
+        a_m = m/ 60.0 * 360.0
+        a_m += (s / 60.0) * (360.0 / 60)
 
-        a_h = (time.hour % 12) / 12.0 * 360.0
-        a_h += (time.minute/ 60.0) * (360.0 / 12)
+        a_h = (h % 12) / 12.0 * 360.0
+        a_h += (m/ 60.0) * (360.0 / 12)
 
         a_s += 90
         a_m += 90
@@ -199,7 +212,8 @@ class AnalogClockHands(Layer.Layer):
                     if event.key == pygame.K_ESCAPE:
                         self._running = False
                         break
-            self.update(datetime.datetime.now())
+            self.time = datetime.datetime.now()
+            self.update()
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps

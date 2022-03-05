@@ -15,12 +15,21 @@ class Page:
     pageDown = None
     pageLeft = None
     pageRight = None
+    layers = None
 
     def __init__(self):
-        pass
+        self.layers = []
 
     def __delete__(self):
         pass
+
+    def addLayer(self, layer):
+        self.layers.append(layer)
+
+    def update(self):
+        if self.layers != None:
+            for layer in self.layers:
+                layer.update()
 
     def linkUp(self, buttons):
         curButton = self
