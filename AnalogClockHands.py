@@ -9,6 +9,7 @@ import math
 from colorsys import hsv_to_rgb
 from Layer import Layer
 import SurfaceHelper
+import Points
 
 class AnalogClockHands(Layer):
     hoursColor = (0,0,255)
@@ -91,31 +92,29 @@ class AnalogClockHands(Layer):
 
         if self.sweep:
             s += (us/1000000)
-        a_s = s / 60.0 * 360.0
+        a_s = 90 - s / 60.0 * 360.0
 
-        a_m = m/ 60.0 * 360.0
-        a_m += (s / 60.0) * (360.0 / 60)
+        a_m = 90 - (m/ 60.0 * 360.0 + (s / 60.0) * (360.0 / 60))
 
-        a_h = (h % 12) / 12.0 * 360.0
-        a_h += (m/ 60.0) * (360.0 / 12)
-
-        a_s += 90
-        a_m += 90
-        a_h += 90
+        a_h = 90 - ((h % 12) / 12.0 * 360.0 + (m/ 60.0) * (360.0 / 12))
 
         a_s %= 360
         a_m %= 360
         a_h %= 360
 
+        a_s = math.radians(a_s)
+        a_m = math.radians(a_m)
+        a_h = math.radians(a_h)
+
         # Compute the start and end points of each hand based on their angle
-        secondsStartPoint = self._get_point(self.center, a_s, self.secondsHubRadius)
-        secondsEndPoint = self._get_point(self.center, a_s, self.getSecondsLength())
+        secondsStartPoint = Points.getPoint(self.center, a_s, self.secondsHubRadius)
+        secondsEndPoint = Points.getPoint(self.center, a_s, self.getSecondsLength())
 
-        minutesStartPoint = self._get_point(self.center, a_m, self.minutesHubRadius)
-        minutesEndPoint = self._get_point(self.center, a_m, self.getMinutesLength())
+        minutesStartPoint = Points.getPoint(self.center, a_m, self.minutesHubRadius)
+        minutesEndPoint = Points.getPoint(self.center, a_m, self.getMinutesLength())
 
-        hoursStartPoint = self._get_point(self.center, a_h, self.hoursHubRadius)
-        hoursEndPoint = self._get_point(self.center, a_h, self.getHoursLength())
+        hoursStartPoint = Points.getPoint(self.center, a_h, self.hoursHubRadius)
+        hoursEndPoint = Points.getPoint(self.center, a_h, self.getHoursLength())
 
         # Draw the hands and their hubs
         self._line(self.hoursColor, hoursStartPoint, hoursEndPoint, self.hoursWidth)

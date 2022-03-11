@@ -9,6 +9,7 @@ import math
 from colorsys import hsv_to_rgb
 from Layer import Layer
 import SurfaceHelper
+import Points
 
 class AnalogClockFace(Layer):
     quarterHourColor = (0,0,255)
@@ -52,14 +53,14 @@ class AnalogClockFace(Layer):
         super().update()
 
         for s in range(60):
-            a = 360 / 60.0 * s
-            start = self._get_point(self.center, a, self._marks - 5)
-            end = self._get_point(self.center, a, self._marks + 5)
+            angle = math.radians(90 - 360 / 60.0 * s)
+            start = Points.getPoint(self.center, angle, self._marks - 5)
+            end = Points.getPoint(self.center, angle, self._marks + 5)
             self._line(self.minuteColor, start, end, 3)
 
         for s in range(12):
-            a = 360 / 12.0 * s
-            x, y = self._get_point(self.center, a, self._marks)
+            angle = math.radians(90 - 360 / 12.0 * s)
+            x, y = Points.getPoint(self.center, angle, self._marks)
 
             x = int(x)
             y = int(y)

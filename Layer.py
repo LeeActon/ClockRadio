@@ -19,14 +19,6 @@ class Layer:
     def addPolygon(self, polygon):
         self.polygons.append(polygon)
 
-    def _get_point(self, origin, angle, distance):
-        r = math.radians(angle)
-        cos = math.cos(r)
-        sin = math.sin(r)
-        x = origin[0] - distance * cos
-        y = origin[1] - distance * sin
-        return x, y
-
     def _circle(self, color, center, radius, antialias=True):
         #print("circle({}, {}, {})".format(color, center, radius))
         x, y = center
