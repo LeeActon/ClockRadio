@@ -1,27 +1,29 @@
-currentPage = None
-
-def getCurrentPage():
-    return Page.currentPage
-
-def setCurrentPage(page):
-    Page.currentPage = page
-
-def updateCurrentPage():
-    if Page.currentPage != None:
-        Page.currentPage.update()
 
 class Page:
-    pageUp = None
-    pageDown = None
-    pageLeft = None
-    pageRight = None
-    layers = None
-
     def __init__(self):
         self.layers = []
+        self.pageUp = None
+        self.pageDown = None
+        self.pageLeft = None
+        self.pageRight = None
 
     def __delete__(self):
         pass
+
+    currentPage = None
+
+    @classmethod
+    def getCurrentPage(cls):
+        return cls.currentPage
+
+    @classmethod
+    def setCurrentPage(cls, page):
+        cls.currentPage = page
+
+    @classmethod
+    def updateCurrentPage(cls):
+        if cls.currentPage != None:
+            cls.currentPage.update()
 
     def addLayer(self, layer):
         self.layers.append(layer)

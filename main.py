@@ -16,7 +16,7 @@ import AnalogClockFace
 import AnalogClockHands
 import ImageLayer
 import SurfaceHelper
-import Page
+from Page import Page
 from ClockPage import ClockPage
 from TextLayer import TextLayer
 from AnalogGauge import AnalogGauge
