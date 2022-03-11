@@ -17,8 +17,9 @@ import AnalogClockHands
 import ImageLayer
 import SurfaceHelper
 import Page
-import ClockPage
-import TextLayer
+from ClockPage import ClockPage
+from TextLayer import TextLayer
+from AnalogGauge import AnalogGauge
 
 class ClockRadio:
     surface = None
@@ -28,15 +29,14 @@ class ClockRadio:
     settings = None
     auxDevices = None
     font = None
-    textLayer = None
 
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
 
-        self.clockPage = ClockPage.ClockPage(self.surface)
-        self.clockSettingsPage = ClockPage.ClockPage(self.surface)
+        self.clockPage = ClockPage(self.surface)
+        self.clockSettingsPage = ClockPage(self.surface)
         self.clockSettingsPage.loadBackgroundImage('Old Clock Face.png')
-        self.clockPage2 = ClockPage.ClockPage(self.surface)
+        self.clockPage2 = ClockPage(self.surface)
 
         self.clockPage.linkUp([self.clockSettingsPage, self.clockPage2])
 
@@ -61,10 +61,12 @@ class ClockRadio:
 
         self.font = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 64)
 
-        self.textLayer = TextLayer.TextLayer(self.surface)
-        self.textLayer.text = "Hello World"
-        self.textLayer.font = self.font
-        self.textLayer.position = (480/2, 480*5/8)
+        textLayer = TextLayer(self.surface)
+        textLayer.text = "Hello World"
+        textLayer.font = self.font
+        textLayer.position = (480/2, 480*5/8)
+
+        gauge = AnalogGauge(self.surface)
 
         self.auxDevices = serial.Serial('/dev/ttyACM0', 115200)
 
@@ -87,8 +89,10 @@ class ClockRadio:
             hour = now.hour
             if hour > 12:
                 hour -= 12
-            self.textLayer.text = f"{hour}:{now.minute:02d}:{now.second:02d}"
-            self.textLayer.update()
+            textLayer.text = f"{hour}:{now.minute:02d}:{now.second:02d}"
+            textLayer.update()
+
+            gauge.update()
         
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps

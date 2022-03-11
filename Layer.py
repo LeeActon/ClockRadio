@@ -2,15 +2,22 @@
 import math
 import pygame
 from pygame import gfxdraw
+from Polygon import Polygon
 
 class Layer:
-    surface = None
-    backcolor = None
     def __init__(self, surface):
         self.surface = surface
+        self.backColor = None
+        self.polygons = []
 
     def setBackColor(self, color):
         self.backColor = color
+
+    def clearPolygons(self):
+        self.polygons = []
+
+    def addPolygon(self, polygon):
+        self.polygons.append(polygon)
 
     def _get_point(self, origin, angle, distance):
         r = math.radians(angle)
@@ -66,9 +73,8 @@ class Layer:
         gfxdraw.filled_polygon(self.surface, (tl, tr, br, bl), color)
 
     def update(self):
-        if self.backcolor != None:
-            self.surface.fill(self.backcolor)
+        if self.backColor != None:
+            self.surface.fill(self.backColor)
 
-if __name__ == "__main__":
-    clockRadio = ClockRadio()
-    clockRadio.run()
+        for polygon in self.polygons:
+            polygon.paint(self.surface)
