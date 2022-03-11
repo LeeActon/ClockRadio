@@ -65,7 +65,7 @@ class TickMarksLayer(Layer):
             start = Points.getPoint(self.center, a, self.tickStartRadius)
             poly = self.tickMark.rotate(a)
             poly2= poly.translate(start)
-            self.addPolygon(poly2)
+            self.addLayer(poly2)
 
     def update(self):
         super().update()

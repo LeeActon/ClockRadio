@@ -2,21 +2,20 @@
 import math
 import pygame
 from pygame import gfxdraw
-from Polygon import Polygon
 
 class Layer:
     def __init__(self):
         self.backColor = None
-        self.polygons = []
+        self.layers = []
 
     def setBackColor(self, color):
         self.backColor = color
 
-    def clearPolygons(self):
-        self.polygons = []
+    def clearLayers(self):
+        self.layers = []
 
-    def addPolygon(self, polygon):
-        self.polygons.append(polygon)
+    def addLayer(self, layer):
+        self.layers.append(layer)
 
     def _circle(self, surface, color, center, radius, antialias=True):
         #print("circle({}, {}, {})".format(color, center, radius))
@@ -67,5 +66,5 @@ class Layer:
         if self.backColor != None:
             surface.fill(self.backColor)
 
-        for polygon in self.polygons:
-            polygon.paint(surface)
+        for layer in self.layers:
+            layer.paint(surface)

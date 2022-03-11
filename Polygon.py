@@ -1,8 +1,10 @@
 from pygame import gfxdraw
 import Points
+from Layer import Layer
 
-class Polygon:
+class Polygon(Layer):
     def __init__(self, points, strokeColor, fillColor):
+        super().__init__()
         self.points = points
         self.strokeColor = strokeColor
         self.fillColor = fillColor
