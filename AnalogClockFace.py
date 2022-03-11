@@ -7,10 +7,10 @@ import pygame
 from pygame import gfxdraw
 import math
 from colorsys import hsv_to_rgb
-import Layer
+from Layer import Layer
 import SurfaceHelper
 
-class AnalogClockFace(Layer.Layer):
+class AnalogClockFace(Layer):
     quarterHourColor = (0,0,255)
     hourColor = (0,0,192)
     minuteColor = (0,192,192)

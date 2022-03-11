@@ -7,10 +7,10 @@ import pygame
 from pygame import gfxdraw
 import math
 from colorsys import hsv_to_rgb
-import Layer
+from Layer import Layer
 import SurfaceHelper
 
-class AnalogClockHands(Layer.Layer):
+class AnalogClockHands(Layer):
     hoursColor = (0,0,255)
     minutesColor = (0,255,0)
     secondsColor = (255,0,0)

@@ -3,10 +3,10 @@ import sys
 import signal
 import pygame
 
-import Layer
+from Layer import Layer
 import SurfaceHelper
 
-class ImageLayer(Layer.Layer):
+class ImageLayer(Layer):
     image = None
 
     def __init__(self, surface):
