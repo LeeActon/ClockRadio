@@ -12,9 +12,6 @@ import time
 
 import pygame
 
-import AnalogClockFace
-import AnalogClockHands
-import ImageLayer
 import SurfaceHelper
 from Page import Page
 from ClockPage import ClockPage
