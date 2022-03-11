@@ -16,8 +16,8 @@ class AnalogClockFace(Layer):
     hourColor = (0,0,192)
     minuteColor = (0,192,192)
 
-    def __init__(self, surface):
-        super().__init__(surface)
+    def __init__(self):
+        super().__init__()
 
         self.backColor = None
 
@@ -48,9 +48,9 @@ class AnalogClockFace(Layer):
             elif key == 'minuteColor':
                 self.setMinuteColor(eval(value))
 
-    def update(self):
+    def paint(self, surface):
 
-        super().update()
+        super().paint(surface)
 
         for s in range(60):
             angle = math.radians(90 - 360 / 60.0 * s)
@@ -80,7 +80,7 @@ class AnalogClockFace(Layer):
     def setMinuteColor(self, color):
         self.minuteColor = color
 
-    def run(self):
+    def run(self, surface):
         self._running = True
         signal.signal(signal.SIGINT, self._exit)
         _clock = pygame.time.Clock()
@@ -93,7 +93,7 @@ class AnalogClockFace(Layer):
                     if event.key == pygame.K_ESCAPE:
                         self._running = False
                         break
-            self.update()
+            self.paint(surface)
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
@@ -107,4 +107,4 @@ if __name__ == "__main__":
     clockFace = AnalogClockFace(surface)
     clockFace.setBackColor((0,0,0))
     clockFace.setTickColor((0,0,192))
-    clockFace.run()
+    clockFace.run(surface)

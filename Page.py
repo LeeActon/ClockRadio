@@ -31,7 +31,7 @@ class Page:
     def update(self):
         if self.layers != None:
             for layer in self.layers:
-                layer.update()
+                layer.paint(self.surface)
 
     def linkUp(self, buttons):
         curButton = self

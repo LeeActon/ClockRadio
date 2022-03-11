@@ -1,8 +1,9 @@
-import Layer
 
-class TextLayer(Layer.Layer):
-    def __init__(self, surface):
-        super().__init__(surface)
+from Layer import Layer
+
+class TextLayer(Layer):
+    def __init__(self):
+        super().__init__()
 
     @property
     def font(self):
@@ -28,9 +29,9 @@ class TextLayer(Layer.Layer):
     def position(self, value):
         self._position = value
 
-    def update(self):
-        super().update()
+    def paint(self, surface):
+        super().paint(surface)
         w, h = self.font.size(self.text)
         img = self.font.render(self.text,True,(255,0,0))
         x, y = self.position
-        self.surface.blit(img,(x-w/2,y-h/2))
+        surface.blit(img,(x-w/2,y-h/2))

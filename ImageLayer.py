@@ -9,8 +9,8 @@ import SurfaceHelper
 class ImageLayer(Layer):
     image = None
 
-    def __init__(self, surface):
-        super().__init__(surface)
+    def __init__(self):
+        super().__init__()
 
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
@@ -18,10 +18,10 @@ class ImageLayer(Layer):
     def loadImage(self, imageFile):
         self.image = pygame.image.load(imageFile)
 
-    def update(self):
-        super().update()
+    def paint(self, surface):
+        super().paint(surface)
         if self.image != None:
-            self.surface.blit(self.image, (0,0))
+            surface.blit(self.image, (0,0))
 
     _running = False
 

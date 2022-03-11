@@ -58,12 +58,12 @@ class ClockRadio:
 
         self.font = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 64)
 
-        textLayer = TextLayer(self.surface)
+        textLayer = TextLayer()
         textLayer.text = "Hello World"
         textLayer.font = self.font
         textLayer.position = (480/2, 480*5/8)
 
-        gauge = AnalogGauge(self.surface)
+        gauge = AnalogGauge()
 
         self.auxDevices = serial.Serial('/dev/ttyACM0', 115200)
 
@@ -87,9 +87,9 @@ class ClockRadio:
             if hour > 12:
                 hour -= 12
             textLayer.text = f"{hour}:{now.minute:02d}:{now.second:02d}"
-            textLayer.update()
+            textLayer.paint(self.surface)
 
-            gauge.update()
+            gauge.paint(self.surface)
         
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps

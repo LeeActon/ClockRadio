@@ -5,8 +5,8 @@ import Points
 
 class TickMarksLayer(Layer):
 
-    def __init__(self, surface):
-        super().__init__(surface)
+    def __init__(self):
+        super().__init__()
 
         # For some reason the canvas needs a 7px vertical offset
         # circular screens are weird...

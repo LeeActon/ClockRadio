@@ -30,8 +30,8 @@ class AnalogClockHands(Layer):
     secondsHubRadius = 10
     sweep = False
 
-    def __init__(self, surface):
-        super().__init__(surface)
+    def __init__(self):
+        super().__init__()
 
         # For some reason the canvas needs a 7px vertical offset
         # circular screens are weird...
@@ -79,9 +79,9 @@ class AnalogClockHands(Layer):
             elif key == 'sweep':
                 self.sweep = (value == "True")
 
-    def update(self):
+    def paint(self, surface):
 
-        super().update()
+        super().paint(surface)
 
         # Compute the angle of each hand
 
@@ -117,12 +117,12 @@ class AnalogClockHands(Layer):
         hoursEndPoint = Points.getPoint(self.center, a_h, self.getHoursLength())
 
         # Draw the hands and their hubs
-        self._line(self.hoursColor, hoursStartPoint, hoursEndPoint, self.hoursWidth)
-        self._circle(self.getHoursHubColor(), self.center, self.hoursHubRadius)
-        self._line(self.minutesColor, minutesStartPoint, minutesEndPoint, self.minutesWidth)
-        self._circle(self.getMinutesHubColor(), self.center, self.minutesHubRadius)
-        self._line(self.secondsColor, secondsStartPoint, secondsEndPoint, self.secondsWidth)
-        self._circle(self.getSecondsHubColor(), self.center, self.secondsHubRadius)
+        self._line(surface, self.hoursColor, hoursStartPoint, hoursEndPoint, self.hoursWidth)
+        self._circle(surface, self.getHoursHubColor(), self.center, self.hoursHubRadius)
+        self._line(surface, self.minutesColor, minutesStartPoint, minutesEndPoint, self.minutesWidth)
+        self._circle(surface, self.getMinutesHubColor(), self.center, self.minutesHubRadius)
+        self._line(surface, self.secondsColor, secondsStartPoint, secondsEndPoint, self.secondsWidth)
+        self._circle(surface, self.getSecondsHubColor(), self.center, self.secondsHubRadius)
 
     def setSweep(self, sweep):
         self.sweep = sweep
@@ -198,7 +198,7 @@ class AnalogClockHands(Layer):
         self._running = False
         print("\nExiting!...\n")
 
-    def run(self):
+    def run(self, surface):
         self._running = True
         signal.signal(signal.SIGINT, self._exit)
         _clock = pygame.time.Clock()
@@ -212,7 +212,7 @@ class AnalogClockHands(Layer):
                         self._running = False
                         break
             self.time = datetime.datetime.now()
-            self.update()
+            self.paint(surface)
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
@@ -228,4 +228,4 @@ if __name__ == "__main__":
     clockHands.setHoursColor((0,0,255))
     clockHands.setMinutesColor((0,255,0))
     clockHands.setSecondsColor((255,0,0))
-    clockHands.run()
+    clockHands.run(surface)

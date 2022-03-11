@@ -15,7 +15,7 @@ class ClockPage(Page):
     def __init__(self, surface):
         super().__init__()
         self.surface = surface
-        self.clockHands = AnalogClockHands(self.surface)
+        self.clockHands = AnalogClockHands()
         self.clockHands.setHoursColor((0,0,0))
         self.clockHands.setMinutesColor((0,0,0))
         self.clockHands.setSecondsColor((192,0,0))
@@ -31,7 +31,7 @@ class ClockPage(Page):
         
     def loadBackgroundImage(self, filename):
         if self.backgroundImage == None:
-            self.backgroundImage = ImageLayer(self.surface)
+            self.backgroundImage = ImageLayer()
         self.backgroundImage.loadImage(filename)
  
     def loadClockHandsSettings(self, settings):
@@ -39,7 +39,7 @@ class ClockPage(Page):
 
     def loadClockFaceSettings(self, settings):
         if self.clockFace == None:
-            self.clockFace = AnalogClockFace(self.surface)
+            self.clockFace = AnalogClockFace()
         self.clockFace.loadSettings(settings)
 
     def setHoursColor(self, color):

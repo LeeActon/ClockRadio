@@ -4,8 +4,8 @@ import math
 import pygame
 
 class AnalogGauge(Layer):
-    def __init__(self, surface):
-        super().__init__(surface)
+    def __init__(self):
+        super().__init__()
 
         self.ticksStartAngle = 5/8
         self.ticksEndAngle = -1/8
@@ -23,7 +23,7 @@ class AnalogGauge(Layer):
             else:
                 ticks1.append(i)
 
-        self.tickMarks10 = TickMarksLayer(self.surface)
+        self.tickMarks10 = TickMarksLayer()
         self.tickMarks10.ticksStartAngle = self.ticksStartAngle
         self.tickMarks10.ticksEndAngle = self.ticksEndAngle
         self.tickMarks10.minValue = self.minValue
@@ -32,7 +32,7 @@ class AnalogGauge(Layer):
         self.tickMarks10.tickWidth = 7
         self.tickMarks10.tickColor = (255,0,0)
         self.tickMarks10.setTicks(ticks10)
-        self.tickMarks5 = TickMarksLayer(self.surface)
+        self.tickMarks5 = TickMarksLayer()
         self.tickMarks5.ticksStartAngle = self.ticksStartAngle
         self.tickMarks5.ticksEndAngle = self.ticksEndAngle
         self.tickMarks5.minValue = self.minValue
@@ -41,7 +41,7 @@ class AnalogGauge(Layer):
         self.tickMarks5.tickWidth = 5
         self.tickMarks5.tickColor = (0,0,255)
         self.tickMarks5.setTicks(ticks5)
-        self.tickMarks1 = TickMarksLayer(self.surface)
+        self.tickMarks1 = TickMarksLayer()
         self.tickMarks1.ticksStartAngle = self.ticksStartAngle
         self.tickMarks1.ticksEndAngle = self.ticksEndAngle
         self.tickMarks1.minValue = self.minValue
@@ -51,7 +51,7 @@ class AnalogGauge(Layer):
         self.tickMarks1.tickColor = (0,0,0)
         self.tickMarks1.setTicks(ticks1)
 
-    def update(self):
-        self.tickMarks10.update()
-        self.tickMarks5.update()
-        self.tickMarks1.update()
+    def paint(self, surface):
+        self.tickMarks10.paint(surface)
+        self.tickMarks5.paint(surface)
+        self.tickMarks1.paint(surface)
