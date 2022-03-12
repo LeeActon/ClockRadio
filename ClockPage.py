@@ -16,9 +16,9 @@ class ClockPage(Page):
         super().__init__()
         self.surface = surface
         self.clockHands = AnalogClockHands()
-        self.clockHands.setHoursColor((0,0,0))
-        self.clockHands.setMinutesColor((0,0,0))
-        self.clockHands.setSecondsColor((192,0,0))
+        self.clockHands.hoursColor = (0,0,0)
+        self.clockHands.minutesColor = (0,0,0)
+        self.clockHands.secondsColor = (192,0,0)
 
     def loadSettings(self, settings):
         for key, value in settings.items():
