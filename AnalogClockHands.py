@@ -117,12 +117,12 @@ class AnalogClockHands(Layer):
         hoursEndPoint = Points.getPoint(self.center, a_h, self.getHoursLength())
 
         # Draw the hands and their hubs
-        self._line(surface, self.hoursColor, hoursStartPoint, hoursEndPoint, self.hoursWidth)
-        self._circle(surface, self.getHoursHubColor(), self.center, self.hoursHubRadius)
-        self._line(surface, self.minutesColor, minutesStartPoint, minutesEndPoint, self.minutesWidth)
-        self._circle(surface, self.getMinutesHubColor(), self.center, self.minutesHubRadius)
-        self._line(surface, self.secondsColor, secondsStartPoint, secondsEndPoint, self.secondsWidth)
-        self._circle(surface, self.getSecondsHubColor(), self.center, self.secondsHubRadius)
+        self.drawLine(surface, self.hoursColor, hoursStartPoint, hoursEndPoint, self.hoursWidth)
+        self.drawCircle(surface, self.getHoursHubColor(), self.center, self.hoursHubRadius)
+        self.drawLine(surface, self.minutesColor, minutesStartPoint, minutesEndPoint, self.minutesWidth)
+        self.drawCircle(surface, self.getMinutesHubColor(), self.center, self.minutesHubRadius)
+        self.drawLine(surface, self.secondsColor, secondsStartPoint, secondsEndPoint, self.secondsWidth)
+        self.drawCircle(surface, self.getSecondsHubColor(), self.center, self.secondsHubRadius)
 
     def setSweep(self, sweep):
         self.sweep = sweep

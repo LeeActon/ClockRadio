@@ -66,9 +66,9 @@ class AnalogClockFace(Layer):
             y = int(y)
 
             if s % 3 == 0:
-                self._circle(self.quarterHourColor, (x, y), 10)
+                self.drawCircle(self.quarterHourColor, (x, y), 10)
             else:
-                self._circle(self.hourColor, (x, y), 5)
+                self.drawCircle(self.hourColor, (x, y), 5)
 
 
     def setQuarterHourColor(self, color):
