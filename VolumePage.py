@@ -1,5 +1,6 @@
 from Page import Page
 from AnalogGauge import AnalogGauge
+import time
 
 class VolumePage(Page):
     def __init__(self, surface):
@@ -8,3 +9,7 @@ class VolumePage(Page):
         self.analogGauge.backColor = (255, 255, 255)
         self.addLayer(self.analogGauge)
 
+    def handleRotary(self, rotaryId, value):
+        if (rotaryId == 1):
+            now = time.time()
+            self.timeout = now + 5

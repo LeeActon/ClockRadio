@@ -127,6 +127,10 @@ class ClockRadio:
                 if (page != None):
                     rotaryId = int(parts[1])
                     value = int(parts[3])
+                    if (rotaryId == 1):
+                        if (page != self.volumePage):
+                            Page.push(self.volumePage)
+                            page = self.volumePage
                     page.handleRotary(rotaryId, value)
 
         elif (ch == 'V'):

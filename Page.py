@@ -1,3 +1,4 @@
+import time
 
 class Page:
     def __init__(self, surface):
@@ -7,11 +8,14 @@ class Page:
         self.pageDown = None
         self.pageLeft = None
         self.pageRight = None
+        self.timeout = None
 
     def __delete__(self):
         pass
+            
 
     currentPage = None
+    prevPages = []
 
     @classmethod
     def getCurrentPage(cls):
@@ -26,10 +30,26 @@ class Page:
         if cls.currentPage != None:
             cls.currentPage.update()
 
+    @classmethod
+    def push(cls, page):
+        cls.prevPages.append(cls.getCurrentPage())
+        cls.setCurrentPage(page)
+
+    @classmethod
+    def pop(cls):
+        if (len(cls.prevPages) > 0):
+            cls.setCurrentPage(cls.prevPages.pop())
+
     def addLayer(self, layer):
         self.layers.append(layer)
 
     def update(self):
+        if (self.timeout != None):
+            now = time.time()
+            if (now > self.timeout):
+                self.timeout = None
+                Page.pop()
+
         if self.layers != None:
             for layer in self.layers:
                 layer.paint(self.surface)
