@@ -9,6 +9,7 @@ import serial
 import signal
 import sys
 import time
+import select
 
 import pygame
 
@@ -17,6 +18,7 @@ from Page import Page
 from ClockPage import ClockPage
 from TextLayer import TextLayer
 from VolumePage import VolumePage
+from Layer import Layer
 
 class ClockRadio:
     surface = None
@@ -69,14 +71,19 @@ class ClockRadio:
         self.auxDevices = serial.Serial('/dev/ttyACM0', 115200)
 
         while self._running:
-            for event in pygame.event.get():
-                if event.type == pygame.QUIT:
-                    self._running = False
-                    break
-                if event.type == pygame.KEYDOWN:
-                    if event.key == pygame.K_ESCAPE:
+            if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
+                line = sys.stdin.readline()
+                if line:
+                    if line[0] == 'q':
                         self._running = False
-                        break
+                    elif line[0] == 'l':
+                        Layer.offsetX(-1)
+                    elif line[0] == 'r':
+                        Layer.offsetX(1)
+                    elif line[0] == 'u':
+                        Layer.offsetY(-1)
+                    elif line[0] == 'd':
+                        Layer.offsetY(1)
 
             if self.auxDevices.in_waiting > 0:
                 self.handleAuxInput()

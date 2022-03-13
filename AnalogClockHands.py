@@ -18,7 +18,6 @@ class AnalogClockHands(Layer):
 
         # For some reason the canvas needs a 7px vertical offset
         # circular screens are weird...
-        self.center = (240, 247)
         self._radius = 240
         self.time = datetime.datetime.now()
 
@@ -108,21 +107,21 @@ class AnalogClockHands(Layer):
         a_h = math.radians(a_h)
 
         # Compute the start and end points of each hand based on their angle
-        secondsStartPoint = self.center # Points.getPoint(self.center, a_s, self.secondsHubRadius)
-        secondsEndPoint = Points.getPoint(self.center, a_s, self.getSecondsLength())
+        secondsStartPoint = Points.getPoint(Layer.center, a_s, self.secondsHubRadius)
+        secondsEndPoint = Points.getPoint(Layer.center, a_s, self.getSecondsLength())
 
-        minutesStartPoint =  self.center #Points.getPoint(self.center, a_m, self.minutesHubRadius)
-        minutesEndPoint = Points.getPoint(self.center, a_m, self.getMinutesLength())
+        minutesStartPoint = Points.getPoint(Layer.center, a_m, self.minutesHubRadius)
+        minutesEndPoint = Points.getPoint(Layer.center, a_m, self.getMinutesLength())
 
-        hoursStartPoint =  self.center #Points.getPoint(self.center, a_h, self.hoursHubRadius)
-        hoursEndPoint = Points.getPoint(self.center, a_h, self.getHoursLength())
+        hoursStartPoint = Points.getPoint(Layer.center, a_h, self.hoursHubRadius)
+        hoursEndPoint = Points.getPoint(Layer.center, a_h, self.getHoursLength())
 
         # Draw the hands and their hubs
-        self.drawCircle(surface, self.center, self.hoursHubRadius, (0,0,0), self.hoursHubColor)
+        self.drawCircle(surface, Layer.center, self.hoursHubRadius, (0,0,0), self.hoursHubColor)
         self.drawLine(surface, hoursStartPoint, hoursEndPoint, self.hoursWidth, (0,0,0), self.hoursColor)
-        self.drawCircle(surface, self.center, self.minutesHubRadius, (0,0,0), self.minutesHubColor)
+        self.drawCircle(surface, Layer.center, self.minutesHubRadius, (0,0,0), self.minutesHubColor)
         self.drawLine(surface, minutesStartPoint, minutesEndPoint, self.minutesWidth, (0,0,0), self.minutesColor)
-        self.drawCircle(surface, self.center, self.secondsHubRadius, (0,0,0), self.secondsHubColor)
+        self.drawCircle(surface, Layer.center, self.secondsHubRadius, (0,0,0), self.secondsHubColor)
         self.drawLine(surface, secondsStartPoint, secondsEndPoint, self.secondsWidth, (0,0,0), self.secondsColor)
 
     @property

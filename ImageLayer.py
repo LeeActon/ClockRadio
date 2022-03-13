@@ -21,7 +21,9 @@ class ImageLayer(Layer):
     def paint(self, surface):
         super().paint(surface)
         if self.image != None:
-            surface.blit(self.image, (0,0))
+            center = Layer.center
+            offset = (center[0] - 240, center[1] - 240)
+            surface.blit(self.image, offset)
 
     _running = False
 

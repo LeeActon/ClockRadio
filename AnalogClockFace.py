@@ -17,10 +17,6 @@ class AnalogClockFace(Layer):
         super().__init__()
 
         self.backColor = None
-
-        # For some reason the canvas needs a 7px vertical offset
-        # circular screens are weird...
-        self.center = (240, 247)
         self._radius = 240
 
         # Distance of hour marks from center
@@ -53,13 +49,13 @@ class AnalogClockFace(Layer):
 
         for s in range(60):
             angle = math.radians(90 - 360 / 60.0 * s)
-            start = Points.getPoint(self.center, angle, self._marks - 5)
-            end = Points.getPoint(self.center, angle, self._marks + 5)
+            start = Points.getPoint(Layer.center, angle, self._marks - 5)
+            end = Points.getPoint(Layer.center, angle, self._marks + 5)
             self.drawLine(surface, start, end, 3, (0, 0, 0), self.minuteColor)
 
         for s in range(12):
             angle = math.radians(90 - 360 / 12.0 * s)
-            x, y = Points.getPoint(self.center, angle, self._marks)
+            x, y = Points.getPoint(Layer.center, angle, self._marks)
 
             x = int(x)
             y = int(y)

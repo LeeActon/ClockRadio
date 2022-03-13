@@ -4,9 +4,21 @@ import pygame
 from pygame import gfxdraw
 
 class Layer:
+    center = (240, 240)
+
     def __init__(self):
         self.backColor = None
         self.layers = []
+
+    @classmethod
+    def offsetX(cls, amount):
+        cls.center = (cls.center[0] + amount, cls.center[1])
+        print(f"Layer.center = {cls.center}")
+
+    @classmethod
+    def offsetY(cls, amount):
+        cls.center = (cls.center[0], cls.center[1] + amount)
+        print(f"Layer.center = {cls.center}")
 
     def setBackColor(self, color):
         self.backColor = color

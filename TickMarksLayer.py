@@ -8,10 +8,6 @@ class TickMarksLayer(Layer):
     def __init__(self):
         super().__init__()
 
-        # For some reason the canvas needs a 7px vertical offset
-        # circular screens are weird...
-        self.center = (240, 247)
-
         self.tickStartRadius = 210
         self.tickLength = 30
 
@@ -62,7 +58,7 @@ class TickMarksLayer(Layer):
         # Make a copy of the prototypical tick mark for each tick (rotating and translating it into position)
         for tick in self.ticks:
             a = self.valueToAngle(tick)*2*math.pi
-            start = Points.getPoint(self.center, a, self.tickStartRadius)
+            start = Points.getPoint(Layer.center, a, self.tickStartRadius)
             poly = self.tickMark.rotate(a)
             poly2= poly.translate(start)
             self.addLayer(poly2)
