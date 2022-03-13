@@ -36,11 +36,11 @@ class AnalogClockFace(Layer):
 
     def loadSettings(self, settings):
         for key, value in settings.items():
-            if key == 'quarterHourColor':
+            if key == "quarterHourColor":
                 self.quarterHourColor = eval(value)
-            elif key == 'hourColor':
+            elif key == "hourColor":
                 self.hourColor = eval(value)
-            elif key == 'minuteColor':
+            elif key == "minuteColor":
                 self.minuteColor = eval(value)
 
     def paint(self, surface):

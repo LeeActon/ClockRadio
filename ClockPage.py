@@ -21,11 +21,11 @@ class ClockPage(Page):
 
     def loadSettings(self, settings):
         for key, value in settings.items():
-            if key == 'backgroundImage':
+            if key == "backgroundImage":
                 self.loadBackgroundImage(value)
-            elif key == 'hands':
+            elif key == "hands":
                 self.loadClockHandsSettings(value)
-            elif key == 'face':
+            elif key == "face":
                 self.loadClockFaceSettings(value)
         
     def loadBackgroundImage(self, filename):

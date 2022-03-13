@@ -52,31 +52,31 @@ class AnalogClockHands(Layer):
 
     def loadSettings(self, settings):
         for key, value in settings.items():
-            if key == 'hoursColor':
+            if key == "hoursColor":
                 self.hoursColor = eval(value)
-            elif key == 'minutesColor':
+            elif key == "minutesColor":
                 self.minutesColor = eval(value)
-            elif key == 'secondsColor':
+            elif key == "secondsColor":
                 self.secondsColor = eval(value)
-            elif key == 'hoursHubColor':
+            elif key == "hoursHubColor":
                 self.hoursHubColor = eval(value)
-            elif key == 'minutesHubColor':
+            elif key == "minutesHubColor":
                 self.minutesHubColor = eval(value)
-            elif key == 'secondsHubColor':
+            elif key == "secondsHubColor":
                 self.secondsHubColor = eval(value)
-            elif key == 'hoursHubRadius':
+            elif key == "hoursHubRadius":
                 self.hoursHubRadius = eval(value)
-            elif key == 'minutesHubRadius':
+            elif key == "minutesHubRadius":
                 self.minutesHubRadius = eval(value)
-            elif key == 'secondsHubRadius':
+            elif key == "secondsHubRadius":
                 self.secondsHubRadius = eval(value)
-            elif key == 'hoursLength':
+            elif key == "hoursLength":
                 self.hoursLength = eval(value)
-            elif key == 'minutesLength':
+            elif key == "minutesLength":
                 self.minutesLength = eval(value)
-            elif key == 'secondsLength':
+            elif key == "secondsLength":
                 self.secondsLength = eval(value)
-            elif key == 'sweep':
+            elif key == "sweep":
                 self.sweep = (value == "True")
 
     def paint(self, surface):

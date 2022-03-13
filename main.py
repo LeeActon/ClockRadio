@@ -30,7 +30,7 @@ class ClockRadio:
 
         self.clockPage = ClockPage(self.surface)
         self.clockSettingsPage = ClockPage(self.surface)
-        self.clockSettingsPage.loadBackgroundImage('Old Clock Face.png')
+        self.clockSettingsPage.loadBackgroundImage("Old Clock Face.png")
         self.clockPage2 = ClockPage(self.surface)
 
         self.clockPage.linkUp([self.clockSettingsPage, self.clockPage2])
@@ -41,12 +41,12 @@ class ClockRadio:
         Page.setCurrentPage(self.clockPage)
 
     def loadSettings(self):
-        f = open('settings.json')
+        f = open("settings.json")
 
         settings = json.load(f)
 
         for key, value in settings.items():
-            if key == 'clock':
+            if key == "clock":
                 if (self.clockPage != None):
                     self.clockPage.loadSettings(value)
 
@@ -64,7 +64,7 @@ class ClockRadio:
         textLayer.font = self.font
         textLayer.position = (480/2, 480*5/8)
 
-        self.auxDevices = serial.Serial('/dev/ttyACM0', 115200)
+        self.auxDevices = serial.Serial("/dev/ttyACM0", 115200)
 
         while self._running:
             if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
@@ -98,16 +98,16 @@ class ClockRadio:
 
     def handleAuxInput(self):
         page = Page.getCurrentPage()
-        line = self.auxDevices.readline().decode('utf-8').strip()
+        line = self.auxDevices.readline().decode("utf-8").strip()
         parts = line.split()
-        print(f'<-- {line} - {parts}')
+        print(f"<-- {line} - {parts}")
         if len(line) > 0:
             ch = line[0]
         if (ch == '*'):
             # Just debug spew
             pass
         elif (ch == '.'):
-            self.sendAuxDevices('')
+            self.sendAuxDevices("")
         elif (ch == 'B'):
             # Button pressed/released report
             # B <n> : <s>
@@ -149,12 +149,12 @@ class ClockRadio:
         print("\nExiting!...\n")
 
     def printHelp(self):
-       print('main.py -c <clockface> -h <hour color> -m <minute color> -s <second color> -t <tick color>')
+       print("main.py -c <clockface> -h <hour color> -m <minute color> -s <second color> -t <tick color>")
 
     def sendAuxDevices(self, s):
-        print(f'--> {s}')
-        self.auxDevices.write(s.encode('utf-8'))
-        self.auxDevices.write('\n'.encode('utf-8'))
+        print(f"--> {s}")
+        self.auxDevices.write(s.encode("utf-8"))
+        self.auxDevices.write("\n".encode("utf-8"))
 
     def main(self, argv):
 
@@ -166,7 +166,7 @@ class ClockRadio:
 
        self.loadSettings()
        for opt, arg in opts:
-           if opt == '--help':
+           if opt == "--help":
                self.printHelp()
                sys.exit()
            elif opt in ("-f", "--face"):
