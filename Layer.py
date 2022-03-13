@@ -17,14 +17,14 @@ class Layer:
     def addLayer(self, layer):
         self.layers.append(layer)
 
-    def drawCircle(self, surface, color, center, radius, antialias=True):
+    def drawCircle(self, surface, center, radius, strokeColor, fillColor, antialias=True):
         #print("circle({}, {}, {})".format(color, center, radius))
         x, y = center
+        gfxdraw.filled_circle(surface, x, y, radius, fillColor)
         if antialias:
-            gfxdraw.aacircle(surface, x, y, radius, color)
-        gfxdraw.filled_circle(surface, x, y, radius, color)
+            gfxdraw.aacircle(surface, x, y, radius, strokeColor)
 
-    def drawLine(self, surface, color, start, end, thickness):
+    def drawLine(self, surface, start, end, thickness, strokeColor, fillColor):
         #print("line({}, {}, {}, {})".format(color, start, end, thickness))
         # Draw a filled, antialiased line with a given thickness
         # there's no pygame builtin for this so we get technical.
@@ -59,8 +59,8 @@ class Layer:
         br = (center.x - length * cos + thickness * sin,
               center.y - thickness * cos - length * sin)
 
-        gfxdraw.aapolygon(surface, (tl, tr, br, bl), color)
-        gfxdraw.filled_polygon(surface, (tl, tr, br, bl), color)
+        gfxdraw.filled_polygon(surface, (tl, tr, br, bl), fillColor)
+        gfxdraw.aapolygon(surface, (tl, tr, br, bl), strokeColor)
 
     def paint(self, surface):
         if self.backColor != None:

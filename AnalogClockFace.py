@@ -55,7 +55,7 @@ class AnalogClockFace(Layer):
             angle = math.radians(90 - 360 / 60.0 * s)
             start = Points.getPoint(self.center, angle, self._marks - 5)
             end = Points.getPoint(self.center, angle, self._marks + 5)
-            self.drawLine(surface, self.minuteColor, start, end, 3)
+            self.drawLine(surface, start, end, 3, (0, 0, 0), self.minuteColor)
 
         for s in range(12):
             angle = math.radians(90 - 360 / 12.0 * s)
@@ -65,9 +65,9 @@ class AnalogClockFace(Layer):
             y = int(y)
 
             if s % 3 == 0:
-                self.drawCircle(surface, self.quarterHourColor, (x, y), 10)
+                self.drawCircle(surface, (x, y), 10, (0, 0, 0), self.quarterHourColor)
             else:
-                self.drawCircle(surface, self.hourColor, (x, y), 5)
+                self.drawCircle(surface, (x, y), 5, (0, 0, 0), self.hourColor)
 
 
     def run(self, surface):

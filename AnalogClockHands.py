@@ -108,22 +108,22 @@ class AnalogClockHands(Layer):
         a_h = math.radians(a_h)
 
         # Compute the start and end points of each hand based on their angle
-        secondsStartPoint = Points.getPoint(self.center, a_s, self.secondsHubRadius)
+        secondsStartPoint = self.center # Points.getPoint(self.center, a_s, self.secondsHubRadius)
         secondsEndPoint = Points.getPoint(self.center, a_s, self.getSecondsLength())
 
-        minutesStartPoint = Points.getPoint(self.center, a_m, self.minutesHubRadius)
+        minutesStartPoint =  self.center #Points.getPoint(self.center, a_m, self.minutesHubRadius)
         minutesEndPoint = Points.getPoint(self.center, a_m, self.getMinutesLength())
 
-        hoursStartPoint = Points.getPoint(self.center, a_h, self.hoursHubRadius)
+        hoursStartPoint =  self.center #Points.getPoint(self.center, a_h, self.hoursHubRadius)
         hoursEndPoint = Points.getPoint(self.center, a_h, self.getHoursLength())
 
         # Draw the hands and their hubs
-        self.drawLine(surface, self.hoursColor, hoursStartPoint, hoursEndPoint, self.hoursWidth)
-        self.drawCircle(surface, self.hoursHubColor, self.center, self.hoursHubRadius)
-        self.drawLine(surface, self.minutesColor, minutesStartPoint, minutesEndPoint, self.minutesWidth)
-        self.drawCircle(surface, self.minutesHubColor, self.center, self.minutesHubRadius)
-        self.drawLine(surface, self.secondsColor, secondsStartPoint, secondsEndPoint, self.secondsWidth)
-        self.drawCircle(surface, self.secondsHubColor, self.center, self.secondsHubRadius)
+        self.drawCircle(surface, self.center, self.hoursHubRadius, (0,0,0), self.hoursHubColor)
+        self.drawLine(surface, hoursStartPoint, hoursEndPoint, self.hoursWidth, (0,0,0), self.hoursColor)
+        self.drawCircle(surface, self.center, self.minutesHubRadius, (0,0,0), self.minutesHubColor)
+        self.drawLine(surface, minutesStartPoint, minutesEndPoint, self.minutesWidth, (0,0,0), self.minutesColor)
+        self.drawCircle(surface, self.center, self.secondsHubRadius, (0,0,0), self.secondsHubColor)
+        self.drawLine(surface, secondsStartPoint, secondsEndPoint, self.secondsWidth, (0,0,0), self.secondsColor)
 
     @property
     def hoursHubColor(self):
