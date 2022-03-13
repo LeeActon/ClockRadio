@@ -16,7 +16,7 @@ import SurfaceHelper
 from Page import Page
 from ClockPage import ClockPage
 from TextLayer import TextLayer
-from AnalogGauge import AnalogGauge
+from VolumePage import VolumePage
 
 class ClockRadio:
     surface = None
@@ -36,6 +36,9 @@ class ClockRadio:
         self.clockPage2 = ClockPage(self.surface)
 
         self.clockPage.linkUp([self.clockSettingsPage, self.clockPage2])
+
+        self.volumePage = VolumePage(self.surface)
+        self.clockPage.linkRight([self.volumePage])
 
         Page.setCurrentPage(self.clockPage)
 
@@ -63,8 +66,6 @@ class ClockRadio:
         textLayer.font = self.font
         textLayer.position = (480/2, 480*5/8)
 
-        gauge = AnalogGauge()
-
         self.auxDevices = serial.Serial('/dev/ttyACM0', 115200)
 
         while self._running:
@@ -89,8 +90,6 @@ class ClockRadio:
             textLayer.text = f"{hour}:{now.minute:02d}:{now.second:02d}"
             textLayer.paint(self.surface)
 
-            gauge.paint(self.surface)
-        
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
 

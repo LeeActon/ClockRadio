@@ -1,6 +1,7 @@
 
 class Page:
-    def __init__(self):
+    def __init__(self, surface):
+        self.surface = surface
         self.layers = []
         self.pageUp = None
         self.pageDown = None
@@ -38,6 +39,13 @@ class Page:
         for nextButton in buttons:
             curButton.pageUp = nextButton
             nextButton.pageDown = curButton
+            curButton = nextButton
+
+    def linkRight(self, buttons):
+        curButton = self
+        for nextButton in buttons:
+            curButton.pageRight = nextButton
+            nextButton.pageLeft = curButton
             curButton = nextButton
 
     def handleRotary(self, rotaryId, value):

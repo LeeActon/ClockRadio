@@ -52,6 +52,7 @@ class AnalogGauge(Layer):
         self.tickMarks1.setTicks(ticks1)
 
     def paint(self, surface):
+        super().paint(surface)
         self.tickMarks10.paint(surface)
         self.tickMarks5.paint(surface)
         self.tickMarks1.paint(surface)

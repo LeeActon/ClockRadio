@@ -13,8 +13,7 @@ class ClockPage(Page):
     time = None
 
     def __init__(self, surface):
-        super().__init__()
-        self.surface = surface
+        super().__init__(surface)
         self.clockHands = AnalogClockHands()
         self.clockHands.hoursColor = (0,0,0)
         self.clockHands.minutesColor = (0,0,0)
