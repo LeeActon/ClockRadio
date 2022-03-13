@@ -21,16 +21,12 @@ from VolumePage import VolumePage
 from Layer import Layer
 
 class ClockRadio:
-    surface = None
-    clockPage = None
-    clockPage2 = None
-    clockSettingsPage = None
-    settings = None
-    auxDevices = None
-    font = None
 
     def __init__(self):
         self.surface = SurfaceHelper.OpenSurface()
+
+        self.auxDevices = None
+        self.font = None
 
         self.clockPage = ClockPage(self.surface)
         self.clockSettingsPage = ClockPage(self.surface)
