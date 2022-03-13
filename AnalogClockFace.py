@@ -12,9 +12,6 @@ import SurfaceHelper
 import Points
 
 class AnalogClockFace(Layer):
-    quarterHourColor = (0,0,255)
-    hourColor = (0,0,192)
-    minuteColor = (0,192,192)
 
     def __init__(self):
         super().__init__()
@@ -29,8 +26,10 @@ class AnalogClockFace(Layer):
         # Distance of hour marks from center
         self._marks = 220
 
+        self.quarterHourColor = (0,0,255)
+        self.hourColor = (0,0,192)
+        self.minuteColor = (0,192,192)
         self._running = False
-        #self._origin = pygame.math.Vector2(*self.center)
 
     def _exit(self, sig, frame):
         self._running = False
@@ -42,11 +41,11 @@ class AnalogClockFace(Layer):
     def loadSettings(self, settings):
         for key, value in settings.items():
             if key == 'quarterHourColor':
-                self.setQuarterHourColor(eval(value))
+                self.quarterHourColor = eval(value)
             elif key == 'hourColor':
-                self.setHourColor(eval(value))
+                self.hourColor = eval(value)
             elif key == 'minuteColor':
-                self.setMinuteColor(eval(value))
+                self.minuteColor = eval(value)
 
     def paint(self, surface):
 
@@ -56,7 +55,7 @@ class AnalogClockFace(Layer):
             angle = math.radians(90 - 360 / 60.0 * s)
             start = Points.getPoint(self.center, angle, self._marks - 5)
             end = Points.getPoint(self.center, angle, self._marks + 5)
-            self._line(self.minuteColor, start, end, 3)
+            self.drawLine(surface, self.minuteColor, start, end, 3)
 
         for s in range(12):
             angle = math.radians(90 - 360 / 12.0 * s)
@@ -66,19 +65,10 @@ class AnalogClockFace(Layer):
             y = int(y)
 
             if s % 3 == 0:
-                self.drawCircle(self.quarterHourColor, (x, y), 10)
+                self.drawCircle(surface, self.quarterHourColor, (x, y), 10)
             else:
-                self.drawCircle(self.hourColor, (x, y), 5)
+                self.drawCircle(surface, self.hourColor, (x, y), 5)
 
-
-    def setQuarterHourColor(self, color):
-        self.quarterHourColor = color
-
-    def setHourColor(self, color):
-        self.hourColor = color
-
-    def setMinuteColor(self, color):
-        self.minuteColor = color
 
     def run(self, surface):
         self._running = True
@@ -105,6 +95,5 @@ class AnalogClockFace(Layer):
 if __name__ == "__main__":
     surface = SurfaceHelper.OpenSurface()
     clockFace = AnalogClockFace(surface)
-    clockFace.setBackColor((0,0,0))
-    clockFace.setTickColor((0,0,192))
+    clockFace.backColor = (0, 0, 0)
     clockFace.run(surface)
