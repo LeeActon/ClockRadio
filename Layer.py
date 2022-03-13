@@ -30,14 +30,14 @@ class Layer:
         self.layers.append(layer)
 
     def drawCircle(self, surface, center, radius, strokeColor, fillColor, antialias=True):
-        #print("circle({}, {}, {})".format(color, center, radius))
+        #print(f"circle({color}, {center}, {radius})")
         x, y = center
         gfxdraw.filled_circle(surface, x, y, radius, fillColor)
         if antialias:
             gfxdraw.aacircle(surface, x, y, radius, strokeColor)
 
     def drawLine(self, surface, start, end, thickness, strokeColor, fillColor):
-        #print("line({}, {}, {}, {})".format(color, start, end, thickness))
+        #print(f"line({color}, {start}, {end}, {thickness})")
         # Draw a filled, antialiased line with a given thickness
         # there's no pygame builtin for this so we get technical.
         start = pygame.math.Vector2(start)
