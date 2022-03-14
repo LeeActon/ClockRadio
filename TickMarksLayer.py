@@ -2,6 +2,7 @@ import math
 from Layer import Layer
 from Polygon import Polygon
 import Points
+from Style import Style
 
 class TickMarksLayer(Layer):
 
@@ -9,7 +10,11 @@ class TickMarksLayer(Layer):
         super().__init__()
 
         self.tickStartRadius = 210
-        self.tickLength = 30
+        self.style = Style()
+        self.style.length = 30
+        self.style.width = 3
+        self.style.strokeColor = (0, 0, 0)
+        self.style.fillColor = (0, 0, 0)
 
         # Angles are in turns around the circle
         # 1.0 turn is all the way around the circle.
@@ -27,8 +32,6 @@ class TickMarksLayer(Layer):
         self.minValue = 0
         self.maxValue = 100
 
-        self.tickColor = (0, 0, 0)
-        self.tickWidth = 3
         self._tickMark = None
 
     def loadSettings(self, settings):
@@ -48,7 +51,7 @@ class TickMarksLayer(Layer):
     @property
     def tickMark(self):
         if (self._tickMark == None):
-            self._tickMark = Polygon.fromLine(self.tickLength, self.tickWidth, self.tickColor, self.tickColor)
+            self._tickMark = Polygon.fromLine(self.style.length, self.style.width, self.style)
 
         return self._tickMark
 
@@ -62,6 +65,3 @@ class TickMarksLayer(Layer):
             poly = self.tickMark.rotate(a)
             poly2= poly.translate(start)
             self.addLayer(poly2)
-
-    def update(self):
-        super().update()

@@ -3,33 +3,37 @@ import Points
 from Layer import Layer
 
 class Polygon(Layer):
-    def __init__(self, points, strokeColor, fillColor):
+    def __init__(self, points, style):
         super().__init__()
         self.points = points
-        self.strokeColor = strokeColor
-        self.fillColor = fillColor
+        self.style = style
 
     # Create a polygon that corresponds to a line starting at the origin, centered on the x-axis, 
     # and extending along the x-axis by length
     # This can then be rotated then translated to position it anywhere on the plane.
     @classmethod
-    def fromLine(cls, length, thickness, strokeColor, fillColor):
+    def fromLine(cls, length, thickness, style):
         thickness = thickness/2
         points = [(0, thickness), (0, -thickness), (length, -thickness), (length, thickness)]
-        return Polygon(points, strokeColor, fillColor)
+        return Polygon(points, style)
 
     # rotate the polygon around (0,0) by angle radians
     def rotate(self, angle):
         points = Points.rotatePoints(self.points, angle)
-        return Polygon(points, self.strokeColor, self.fillColor)
+        return Polygon(points, self.style)
   
     def translate(self, amount):
         points = Points.translatePoints(self.points, amount)
-        return Polygon(points, self.strokeColor, self.fillColor)
+        return Polygon(points, self.style)
 
     def paint(self, surface):
+        Layer.trace(f"{self}.paint()")
+        Layer.trace(f"    len(self.points) = {len(self.points)}")
+        Layer.trace(f"    self.style.hasStrokeColor = {self.style.hasStrokeColor}")
+        Layer.trace(f"    self.style.hasFillColor = {self.style.hasFillColor}")
+
         if len(self.points) > 0:
-            if self.strokeColor != None:
-                gfxdraw.aapolygon(surface, self.points, self.strokeColor)
-            if self.fillColor != None:
-                gfxdraw.filled_polygon(surface, self.points, self.fillColor)
+            if self.style.hasStrokeColor:
+                gfxdraw.aapolygon(surface, self.points, self.style.strokeColor)
+            if self.style.hasFillColor:
+                gfxdraw.filled_polygon(surface, self.points, self.style.fillColor)

@@ -9,6 +9,13 @@ class Layer:
     def __init__(self):
         self.backColor = None
         self.layers = []
+ 
+    traceCount = 0
+    @classmethod
+    def trace(cls, message):
+        if (cls.traceCount > 0):
+            cls.traceCount = cls.traceCount - 1
+            print(message)
 
     @classmethod
     def offsetX(cls, amount):
@@ -75,6 +82,8 @@ class Layer:
         gfxdraw.aapolygon(surface, (tl, tr, br, bl), strokeColor)
 
     def paint(self, surface):
+        Layer.trace(f"{self}.paint()")
+        Layer.trace(f"    len(self.layers) = {len(self.layers)}")
         if self.backColor != None:
             surface.fill(self.backColor)
 

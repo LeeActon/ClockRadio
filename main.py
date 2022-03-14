@@ -80,6 +80,11 @@ class ClockRadio:
                         Layer.offsetY(-1)
                     elif line[0] == 'd':
                         Layer.offsetY(1)
+                    elif line[0] == 'p':
+                        Page.push(self.volumePage)
+                        self.volumePage.timeOut = time.time() + 55
+                        Page.traceCount = 10
+                        Layer.traceCount = 100
 
             if self.auxDevices.in_waiting > 0:
                 self.handleAuxInput()
