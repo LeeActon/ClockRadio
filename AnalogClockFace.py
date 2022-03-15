@@ -44,6 +44,8 @@ class AnalogClockFace(Layer):
                 self.minuteColor = eval(value)
 
     def paint(self, surface):
+        if (not self.visible):
+            return
 
         super().paint(surface)
 
@@ -91,5 +93,5 @@ class AnalogClockFace(Layer):
 if __name__ == "__main__":
     surface = SurfaceHelper.OpenSurface()
     clockFace = AnalogClockFace(surface)
-    clockFace.backColor = (0, 0, 0)
+    clockFace.style.backColor = (0, 0, 0)
     clockFace.run(surface)

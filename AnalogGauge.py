@@ -37,6 +37,3 @@ class AnalogGauge(Layer):
             tickMarksLayer.setTicks(ticks[iMod])
             self.tickMarksLayers.append(tickMarksLayer)
             self.addLayer(tickMarksLayer)
-
-        def paint(self, surface):
-            super().paint(surface)

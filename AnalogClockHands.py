@@ -80,6 +80,8 @@ class AnalogClockHands(Layer):
                 self.sweep = (value == "True")
 
     def paint(self, surface):
+        if (not self.visible):
+            return
 
         super().paint(surface)
 

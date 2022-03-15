@@ -19,6 +19,8 @@ class ImageLayer(Layer):
         self.image = pygame.image.load(imageFile)
 
     def paint(self, surface):
+        if (not self.visible):
+            return
         super().paint(surface)
         if self.image != None:
             center = Layer.center

@@ -30,6 +30,8 @@ class TextLayer(Layer):
         self._position = value
 
     def paint(self, surface):
+        if (not self.visible):
+            return
         super().paint(surface)
         w, h = self.font.size(self.text)
         img = self.font.render(self.text,True,(255,0,0))

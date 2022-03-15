@@ -85,6 +85,8 @@ class ClockRadio:
                         self.volumePage.timeOut = time.time() + 55
                         Page.traceCount = 10
                         Layer.traceCount = 100
+                    elif line[0] == 'x':
+                        textLayer.visible = not textLayer.visible
 
             if self.auxDevices.in_waiting > 0:
                 self.handleAuxInput()

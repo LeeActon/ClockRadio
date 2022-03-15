@@ -8,8 +8,8 @@ class VolumePage(Page):
         super().__init__(surface)
 
         self.analogGauge = AnalogGauge()
-
-        self.analogGauge.backColor = (255, 255, 255)
+        self.style = Style()
+        self.style.backColor = (255, 255, 255)
 
         self.analogGauge.ticksStartAngle = 5/8
         self.analogGauge.ticksEndAngle = -1/8

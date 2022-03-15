@@ -3,6 +3,7 @@ class Style:
     def __init__(self):
         self.parentStyle = None
         self._color = None
+        self._backColor = None
         self._strokeColor = None
         self._fillColor = None
         self.width = 0
@@ -25,10 +26,24 @@ class Style:
     @property
     def hasColor(self):
         return (self._color != None) or ((self.parentStyle != None) and self.parentStyle.hasColor)
+    
+    @property
+    def backColor(self):
+        if (self._backColor != None):
+            return self._backColor
+
+        if (self.parentStyle != None):
+            return self.parentStyle.backColor
+
+        return (0, 0, 0)
+
+    @backColor.setter
+    def backColor(self, value):
+        self._backColor = value
 
     @property
-    def hasColor(self):
-        return (self._color != None)
+    def hasBackColor(self):
+        return (self._backColor != None) or ((self.parentStyle != None) and self.parentStyle.hasBackColor)
 
     @property
     def strokeColor(self):

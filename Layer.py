@@ -4,13 +4,13 @@ import pygame
 from pygame import gfxdraw
 
 class Layer:
-    center = (240, 240)
+    center = (240, 245)
 
     def __init__(self):
-        self.backColor = None
         self.layers = []
         self.parent = None
         self._style = None
+        self.visible = True
  
     traceCount = 0
     @classmethod
@@ -42,9 +42,6 @@ class Layer:
     @style.setter
     def style(self, style):
         self._style = style
-
-    def setBackColor(self, color):
-        self.backColor = color
 
     def clearLayers(self):
         self.layers = []
@@ -100,9 +97,14 @@ class Layer:
 
     def paint(self, surface):
         Layer.trace(f"{self}.paint()")
+        Layer.trace(f"    self.visible = {self.visible}")
         Layer.trace(f"    len(self.layers) = {len(self.layers)}")
-        if self.backColor != None:
-            surface.fill(self.backColor)
+        if not self.visible:
+            return
+
+        if (self.style != None) and self.style.hasBackColor:
+            surface.fill(self.style.backColor)
 
         for layer in self.layers:
-            layer.paint(surface)
+            if (layer.visible):
+                layer.paint(surface)
