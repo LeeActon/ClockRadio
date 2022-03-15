@@ -10,6 +10,7 @@ class Layer:
         self.backColor = None
         self.layers = []
         self.parent = None
+        self._style = None
  
     traceCount = 0
     @classmethod
@@ -27,6 +28,20 @@ class Layer:
     def offsetY(cls, amount):
         cls.center = (cls.center[0], cls.center[1] + amount)
         print(f"Layer.center = {cls.center}")
+
+    @property
+    def style(self):
+        if (self._style != None):
+            return self._style
+
+        if (self.parent != None):
+            return self.parent.style
+
+        return None
+
+    @style.setter
+    def style(self, style):
+        self._style = style
 
     def setBackColor(self, color):
         self.backColor = color

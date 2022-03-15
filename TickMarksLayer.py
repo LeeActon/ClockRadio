@@ -51,7 +51,7 @@ class TickMarksLayer(Layer):
     @property
     def tickMark(self):
         if (self._tickMark == None):
-            self._tickMark = Polygon.fromLine(self.style.length, self.style.width, self.style)
+            self._tickMark = Polygon.fromLine(self.style.length, self.style.width)
 
         return self._tickMark
 
