@@ -1,9 +1,9 @@
 import time
+from Layer import Layer
 
-class Page:
+class Page(Layer):
     def __init__(self, surface):
         self.surface = surface
-        self.layers = []
         self.pageUp = None
         self.pageDown = None
         self.pageLeft = None
@@ -46,9 +46,6 @@ class Page:
         if (len(cls.prevPages) > 0):
             cls.setCurrentPage(cls.prevPages.pop())
 
-    def addLayer(self, layer):
-        self.layers.append(layer)
-
     def update(self):
         Page.trace(f"{self}.update()")
 
@@ -58,9 +55,7 @@ class Page:
                 self.timeout = None
                 Page.pop()
 
-        if self.layers != None:
-            for layer in self.layers:
-                layer.paint(self.surface)
+        self.paint(self.surface)
 
     def linkUp(self, buttons):
         curButton = self

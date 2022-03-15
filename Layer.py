@@ -9,6 +9,7 @@ class Layer:
     def __init__(self):
         self.backColor = None
         self.layers = []
+        self.parent = None
  
     traceCount = 0
     @classmethod
@@ -34,6 +35,7 @@ class Layer:
         self.layers = []
 
     def addLayer(self, layer):
+        layer.parent = self
         self.layers.append(layer)
 
     def drawCircle(self, surface, center, radius, strokeColor, fillColor, antialias=True):

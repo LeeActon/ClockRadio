@@ -57,7 +57,7 @@ class ClockRadio:
 
         pygame.font.init()
 
-        self.font = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 64)
+        self.font = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
 
         textLayer = TextLayer()
         textLayer.text = "Hello World"
