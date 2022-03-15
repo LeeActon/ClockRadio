@@ -4,8 +4,8 @@ import math
 import pygame
 
 class AnalogGauge(Layer):
-    def __init__(self, parent = None):
-        super().__init__(parent)
+    def __init__(self):
+        super().__init__()
 
         self.ticksStartAngle = 5/8
         self.ticksEndAngle = -1/8

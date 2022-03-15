@@ -3,6 +3,7 @@ from Layer import Layer
 
 class Page(Layer):
     def __init__(self, surface):
+        super().__init__()
         self.surface = surface
         self.pageUp = None
         self.pageDown = None
