@@ -2,6 +2,7 @@ from Page import Page
 from AnalogGauge import AnalogGauge
 import time
 from Style import Style
+from Polygon import Polygon
 
 class VolumePage(Page):
     def __init__(self, surface):
@@ -40,6 +41,8 @@ class VolumePage(Page):
         self.style10s.width = 7
         self.style10s.strokeColor = (255, 0, 0)
         self.style10s.fillColor = (255, 0, 0)
+        points = [[0, 4], [30, 0], [0, -4], [0, 4]]
+        self.style10s.shape = Polygon(points)
         print(f"style10s.strokeColor = {self.style10s.strokeColor}, style1s.fillColor = {self.style10s.fillColor}")
 
         self.analogGauge.createTickMarks([10,5,1], [self.style10s, self.style5s, self.style1s])

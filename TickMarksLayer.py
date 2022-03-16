@@ -50,8 +50,11 @@ class TickMarksLayer(Layer):
     # into position where ever a tick mark should be displayed.
     @property
     def tickMark(self):
-        if (self._tickMark == None):
-            self._tickMark = Polygon.fromLine(self.style.length, self.style.width)
+        if self._tickMark == None:
+            if self.style.shape != None:
+                self._tickMark = self.style.shape
+            else:
+                self._tickMark = Polygon.fromLine(self.style.length, self.style.width)
 
         return self._tickMark
 

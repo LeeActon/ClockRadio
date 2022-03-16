@@ -8,6 +8,7 @@ class Style:
         self._fillColor = None
         self.width = 0
         self.length = 0
+        self.shape = None
     
     @property
     def color(self):
