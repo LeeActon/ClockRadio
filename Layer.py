@@ -95,6 +95,11 @@ class Layer:
         gfxdraw.filled_polygon(surface, (tl, tr, br, bl), fillColor)
         gfxdraw.aapolygon(surface, (tl, tr, br, bl), strokeColor)
 
+    def showLayers(self, iMin, iMax, visible):
+        print(f"{self}.showLayers({iMin}, {iMax}, {visible})")
+        for i in range(iMin, iMax):
+            self.layers[i].visible = visible
+
     def paint(self, surface):
         Layer.trace(f"{self}.paint()")
         Layer.trace(f"    self.visible = {self.visible}")

@@ -15,6 +15,14 @@ class VolumePage(Page):
         self.analogGauge.ticksEndAngle = -1/8
         self.analogGauge.minValue = 0
         self.analogGauge.maxValue = 30
+        self.analogGauge.value = 0
+
+        self.indicatorStyle = Style()
+        self.indicatorStyle.length = -60
+        self.indicatorStyle.width = 20
+        self.indicatorStyle.strokeColor = (0, 255, 0)
+        self.indicatorStyle.fillColor = (0, 255, 0)
+        self.analogGauge.createIndicator(self.indicatorStyle)
         self.style1s = Style()
         self.style1s.length = 10
         self.style1s.width = 3
@@ -42,3 +50,4 @@ class VolumePage(Page):
         if (rotaryId == 1):
             now = time.time()
             self.timeout = now + 5
+            self.analogGauge.value = self.analogGauge.value + value
