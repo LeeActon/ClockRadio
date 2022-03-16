@@ -53,6 +53,8 @@ class Layer:
     def drawCircle(self, surface, center, radius, strokeColor, fillColor, antialias=True):
         #print(f"circle({color}, {center}, {radius})")
         x, y = center
+        x = int(x)
+        y = int(y)
         gfxdraw.filled_circle(surface, x, y, radius, fillColor)
         if antialias:
             gfxdraw.aacircle(surface, x, y, radius, strokeColor)
