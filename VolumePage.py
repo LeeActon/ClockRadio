@@ -6,12 +6,14 @@ from Polygon import Polygon
 from Circle import Circle
 
 class VolumePage(Page):
-    def __init__(self, surface):
-        super().__init__(surface)
+    def __init__(self):
+        super().__init__()
 
         self.analogGauge = AnalogGauge()
+        self.addLayer(self.analogGauge)
         self.style = Style()
         self.style.backColor = (255, 255, 255)
+        self.style.radius = 200
 
         self.analogGauge.ticksStartAngle = 5/8
         self.analogGauge.ticksEndAngle = -1/8
@@ -49,8 +51,6 @@ class VolumePage(Page):
         print(f"style10s.strokeColor = {self.style10s.strokeColor}, style1s.fillColor = {self.style10s.fillColor}")
 
         self.analogGauge.createTickMarks([10,5,1], [self.style10s, self.style5s, self.style1s])
-
-        self.addLayer(self.analogGauge)
 
     def handleRotary(self, rotaryId, value):
         if (rotaryId == 1):

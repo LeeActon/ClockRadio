@@ -28,11 +28,11 @@ class Polygon(Layer):
     def paint(self, surface):
         Layer.trace(f"{self}.paint()")
         Layer.trace(f"    len(self.points) = {len(self.points)}")
-        Layer.trace(f"    self.style.hasStrokeColor = {self.style.hasStrokeColor}")
-        Layer.trace(f"    self.style.hasFillColor = {self.style.hasFillColor}")
 
         if len(self.points) > 0:
-            if self.style.hasStrokeColor:
-                gfxdraw.aapolygon(surface, self.points, self.style.strokeColor)
-            if self.style.hasFillColor:
-                gfxdraw.filled_polygon(surface, self.points, self.style.fillColor)
+            strokeColor = self.getProperty("strokeColor")
+            if strokeColor != None:
+                gfxdraw.aapolygon(surface, self.points, strokeColor)
+            fillColor = self.getProperty("fillColor")
+            if fillColor != None:
+                gfxdraw.filled_polygon(surface, self.points, fillColor)

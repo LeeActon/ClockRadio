@@ -33,13 +33,13 @@ class AnalogGauge(Layer):
 
     def createIndicator(self, tickStyle):
         self.indicator = TickMarksLayer()
+        self.addLayer(self.indicator)
         self.indicator.ticksStartAngle = self.ticksStartAngle
         self.indicator.ticksEndAngle = self.ticksEndAngle
         self.indicator.minValue = self.minValue
         self.indicator.maxValue = self.maxValue
         self.indicator.style = tickStyle
         self.indicator.setTicks(range(self.minValue, self.maxValue + 1))
-        self.addLayer(self.indicator)
 
     def createTickMarks(self, tickMods, tickStyles):
         ticks = []
@@ -57,6 +57,7 @@ class AnalogGauge(Layer):
         self.tickMarksLayers = []
         for iMod in range(modCount):
             tickMarksLayer = TickMarksLayer()
+            self.addLayer(tickMarksLayer)
             tickMarksLayer.ticksStartAngle = self.ticksStartAngle
             tickMarksLayer.ticksEndAngle = self.ticksEndAngle
             tickMarksLayer.minValue = self.minValue
@@ -64,4 +65,3 @@ class AnalogGauge(Layer):
             tickMarksLayer.style = tickStyles[iMod]
             tickMarksLayer.setTicks(ticks[iMod])
             self.tickMarksLayers.append(tickMarksLayer)
-            self.addLayer(tickMarksLayer)

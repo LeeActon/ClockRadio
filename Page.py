@@ -2,9 +2,9 @@ import time
 from Layer import Layer
 
 class Page(Layer):
-    def __init__(self, surface):
+    def __init__(self):
         super().__init__()
-        self.surface = surface
+        self.surface = None
         self.pageUp = None
         self.pageDown = None
         self.pageLeft = None

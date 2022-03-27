@@ -11,7 +11,7 @@ class Layer:
         self.parent = None
         self._style = None
         self.visible = True
- 
+
     traceCount = 0
     @classmethod
     def trace(cls, message):
@@ -42,6 +42,16 @@ class Layer:
     @style.setter
     def style(self, style):
         self._style = style
+
+    def getProperty(self, propertyName):
+        propertyValue = None
+        if self._style != None:
+            propertyValue = self._style.getProperty(propertyName)
+
+        if (propertyValue == None) and (self.parent != None):
+            propertyValue = self.parent.getProperty(propertyName)
+
+        return propertyValue
 
     def clearLayers(self):
         self.layers = []
@@ -109,8 +119,9 @@ class Layer:
         if not self.visible:
             return
 
-        if (self.style != None) and self.style.hasBackColor:
-            surface.fill(self.style.backColor)
+        # if this layer explicitly has a backColor then fill with it.
+        if (self._style != None) and (self._style.backColor != None):
+            surface.fill(self._style.backColor)
 
         for layer in self.layers:
             if (layer.visible):

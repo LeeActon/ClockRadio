@@ -11,11 +11,16 @@ class ImageLayer(Layer):
 
     def __init__(self):
         super().__init__()
+        self.imageFile = None
 
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
 
+    def __str__(self):
+        return f"ImageLayer {{{self.imageFile}}}"
+
     def loadImage(self, imageFile):
+        self.imageFile = imageFile
         self.image = pygame.image.load(imageFile)
 
     def paint(self, surface):

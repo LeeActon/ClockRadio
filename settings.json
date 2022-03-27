@@ -1,8 +1,8 @@
 {
-    "clock": 
+    "clockPage": 
         {
         "backgroundImage": "New Clock Face.png",
-        "hands": 
+        "clockHands": 
             {
             "sweep": "True",
             "hoursColor": "(0,192,0)",
@@ -13,7 +13,7 @@
             "secondsColor": "(192,0,0)",
             "secondsHubRadius": "10"
             },
-        "-face":
+        "-clockFace":
             {
             "quarterHourColor": "(255,0,0)",
             "hoursColor": "(0,0,192)",

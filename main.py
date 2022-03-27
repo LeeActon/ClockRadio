@@ -1,5 +1,11 @@
 #!/usr/bin/env python3
 
+#UNDONE: Remove when no longer debugging
+#{
+import debugpy
+debugpy.listen(("0.0.0.0", 5678))
+#}
+
 import datetime
 import getopt
 import json
@@ -11,6 +17,7 @@ import sys
 import time
 import select
 
+
 import pygame
 
 import SurfaceHelper
@@ -19,6 +26,9 @@ from ClockPage import ClockPage
 from TextLayer import TextLayer
 from VolumePage import VolumePage
 from Layer import Layer
+from Settings import Settings
+from Style import Style
+from AnalogClockFace import AnalogClockFace
 
 class ClockRadio:
 
@@ -27,28 +37,6 @@ class ClockRadio:
 
         self.auxDevices = None
         self.font = None
-
-        self.clockPage = ClockPage(self.surface)
-        self.clockSettingsPage = ClockPage(self.surface)
-        self.clockSettingsPage.loadBackgroundImage("Old Clock Face.png")
-        self.clockPage2 = ClockPage(self.surface)
-
-        self.clockPage.linkUp([self.clockSettingsPage, self.clockPage2])
-
-        self.volumePage = VolumePage(self.surface)
-        self.clockPage.linkRight([self.volumePage])
-
-        Page.setCurrentPage(self.clockPage)
-
-    def loadSettings(self):
-        f = open("settings.json")
-
-        settings = json.load(f)
-
-        for key, value in settings.items():
-            if key == "clock":
-                if (self.clockPage != None):
-                    self.clockPage.loadSettings(value)
 
     def run(self):
         self._running = True
@@ -87,6 +75,8 @@ class ClockRadio:
                         Layer.traceCount = 100
                     elif line[0] == 'x':
                         textLayer.visible = not textLayer.visible
+                    elif line[0] == 'b':
+                        debugpy.breakpoint()
 
             if self.auxDevices.in_waiting > 0:
                 self.handleAuxInput()
@@ -175,13 +165,34 @@ class ClockRadio:
            self.printHelp()
            sys.exit(2)
 
-       self.loadSettings()
+       settings = Settings.loadSettings("settings.json")
+       self.clockPage = settings.clockPage
+       self.clockPage.surface = self.surface
+
+       self.clockSettingsPage = ClockPage()
+       self.clockSettingsPage.surface = self.surface
+       self.clockSettingsPage.backgroundImage = "Old Clock Face.png"
+
+       self.clockPage2 = ClockPage()
+       self.clockPage2.surface = self.surface
+       self.clockPage2.style = Style()
+       self.clockPage2.style.radius = 200
+       self.clockPage2.clockFace = AnalogClockFace()
+
+       self.clockPage.linkUp([self.clockSettingsPage, self.clockPage2])
+
+       self.volumePage = VolumePage()
+       self.volumePage.surface = self.surface
+       self.clockPage.linkRight([self.volumePage])
+
+       Page.setCurrentPage(self.clockPage)
+
        for opt, arg in opts:
            if opt == "--help":
                self.printHelp()
                sys.exit()
            elif opt in ("-f", "--face"):
-               self.clockPage.loadBackgroundImage(arg)
+               self.clockPage.backgroundImage = arg
                self.clockPage.clockFace = None
            elif opt in ("-h", "--hour"):
                self.clockPage.clockHands.setHoursColor(eval(arg))

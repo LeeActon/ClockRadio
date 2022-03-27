@@ -39,6 +39,9 @@ class AnalogClockHands(Layer):
         self.secondsHubRadius = 10
         self.sweep = False
 
+    def __str__(self):
+        return f"AnalogClockHands"
+
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
 
@@ -49,35 +52,6 @@ class AnalogClockHands(Layer):
     @time.setter
     def time(self, value):
         self._time = value
-
-    def loadSettings(self, settings):
-        for key, value in settings.items():
-            if key == "hoursColor":
-                self.hoursColor = eval(value)
-            elif key == "minutesColor":
-                self.minutesColor = eval(value)
-            elif key == "secondsColor":
-                self.secondsColor = eval(value)
-            elif key == "hoursHubColor":
-                self.hoursHubColor = eval(value)
-            elif key == "minutesHubColor":
-                self.minutesHubColor = eval(value)
-            elif key == "secondsHubColor":
-                self.secondsHubColor = eval(value)
-            elif key == "hoursHubRadius":
-                self.hoursHubRadius = eval(value)
-            elif key == "minutesHubRadius":
-                self.minutesHubRadius = eval(value)
-            elif key == "secondsHubRadius":
-                self.secondsHubRadius = eval(value)
-            elif key == "hoursLength":
-                self.hoursLength = eval(value)
-            elif key == "minutesLength":
-                self.minutesLength = eval(value)
-            elif key == "secondsLength":
-                self.secondsLength = eval(value)
-            elif key == "sweep":
-                self.sweep = (value == "True")
 
     def paint(self, surface):
         if (not self.visible):

@@ -9,7 +9,6 @@ class TickMarksLayer(Layer):
     def __init__(self):
         super().__init__()
 
-        self.tickStartRadius = 210
         self.style = Style()
         self.style.length = 30
         self.style.width = 3
@@ -34,9 +33,6 @@ class TickMarksLayer(Layer):
 
         self._tickMark = None
 
-    def loadSettings(self, settings):
-        pass
-
     def valueToAngle(self, value):
         angleRange = self.ticksEndAngle - self.ticksStartAngle
         valueRange =  self.maxValue - self.minValue
@@ -54,7 +50,9 @@ class TickMarksLayer(Layer):
             if self.style.shape != None:
                 self._tickMark = self.style.shape
             else:
-                self._tickMark = Polygon.fromLine(self.style.length, self.style.width)
+                length = self.getProperty("length")
+                width = self.getProperty("width")
+                self._tickMark = Polygon.fromLine(length, width)
 
         return self._tickMark
 
@@ -64,7 +62,8 @@ class TickMarksLayer(Layer):
         # Make a copy of the prototypical tick mark for each tick (rotating and translating it into position)
         for tick in self.ticks:
             a = self.valueToAngle(tick)*2*math.pi
-            start = Points.getPoint(Layer.center, a, self.tickStartRadius)
+            radius = self.getProperty("radius")
+            start = Points.getPoint(Layer.center, a, radius)
             poly = self.tickMark.rotate(a)
             poly2= poly.translate(start)
             self.addLayer(poly2)
