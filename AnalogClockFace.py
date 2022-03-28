@@ -16,26 +16,13 @@ from Polygon import Polygon
 
 
 class AnalogClockFace(Layer):
+    hoursStyle_type = Style
+    minutesStyle_type = Style
+    quarterHoursStyle_type = Style
+    style_type = Style
 
     def __init__(self):
         super().__init__()
-
-        self.quarterHourColor = (0,0,255)
-        self.hourColor = (0,0,192)
-        self.minuteColor = (0,192,192)
-        self._running = False
-    def __str__(self):
-        return f"AnalogClockFace"
-
-    def createClockFace(self):
-        self.analogGauge = AnalogGauge()
-        self.addLayer(self.analogGauge)
-
-        self.analogGauge.ticksStartAngle = 1/4
-        self.analogGauge.ticksEndAngle = self.analogGauge.ticksStartAngle - 59/60
-        self.analogGauge.minValue = 0
-        self.analogGauge.maxValue = 59
-        self.analogGauge.value = 0
 
         self.minutesStyle = Style()
         self.minutesStyle.length = 10
@@ -56,6 +43,21 @@ class AnalogClockFace(Layer):
         self.quarterHoursStyle.fillColor = (255, 0, 0)
         points = [[0, 0], [15, 15], [30, 0], [15, -15], [0, 0]] # Diamond
         self.quarterHoursStyle.shape = Polygon(points)
+
+        self._running = False
+
+    def __str__(self):
+        return f"AnalogClockFace"
+
+    def createClockFace(self):
+        self.analogGauge = AnalogGauge()
+        self.addLayer(self.analogGauge)
+
+        self.analogGauge.ticksStartAngle = 1/4
+        self.analogGauge.ticksEndAngle = self.analogGauge.ticksStartAngle - 59/60
+        self.analogGauge.minValue = 0
+        self.analogGauge.maxValue = 59
+        self.analogGauge.value = 0
 
         self.analogGauge.createTickMarks([15,5,1], [self.quarterHoursStyle, self.hoursStyle, self.minutesStyle])
 
