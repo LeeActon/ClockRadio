@@ -1,44 +1,76 @@
 {
-    "clockPage":
+    "clockPages":
     {
-        "backgroundImage": "New Clock Face.png",
-        "clockHands":
+        "1":
         {
-            "sweep": "True",
-            "hoursColor": "(0,192,0)",
-            "hoursHubRadius": "20",
-            "minutesColor": "(0,0,192)",
-            "minutesHubColor": "(0,0,192)",
-            "minutesHubRadius": "15",
-            "secondsColor": "(192,0,0)",
-            "secondsHubRadius": "10"
+            "backgroundImage": "New Clock Face.png",
+            "clockHands":
+            {
+                "sweep": "True",
+                "hoursColor": "(0,192,0)",
+                "hoursHubRadius": "20",
+                "minutesColor": "(0,0,192)",
+                "minutesHubColor": "(0,0,192)",
+                "minutesHubRadius": "15",
+                "secondsColor": "(192,0,0)",
+                "secondsHubRadius": "10"
+            }
         },
-        "clockFace":
+        "2":
         {
-            "style":
+            "backgroundImage": "Old Clock Face.png",
+            "clockHands":
             {
-                "radius": "200"
+                "sweep": "False",
+                "hoursColor": "(0,0,0)",
+                "hoursHubRadius": "20",
+                "minutesColor": "(0,0,0)",
+                "minutesHubColor": "(0,0,0)",
+                "minutesHubRadius": "15",
+                "secondsColor": "(192,0,0)",
+                "secondsHubRadius": "10"
+            }
+        },
+        "3":
+        {
+            "clockHands":
+            {
+                "sweep": "False",
+                "hoursColor": "(0,0,0)",
+                "hoursHubRadius": "20",
+                "minutesColor": "(0,0,0)",
+                "minutesHubColor": "(0,0,0)",
+                "minutesHubRadius": "15",
+                "secondsColor": "(192,0,0)",
+                "secondsHubRadius": "10"
             },
-            "minutesStyle":
+            "clockFace":
             {
-                "length": 10,
-                "width": 3,
-                "strokeColor": "(0,0,0)",
-                "fillColor": "(0,0,0)"
-            },
-            "quarterHoursStyle":
-            {
-                "length": 30,
-                "width": 7,
-                "strokeColor": "(0,0,0)",
-                "fillColor": "(255,0,0)"
-            },
-            "hoursStyle":
-            {
-                "length": 20,
-                "width": 5,
-                "strokeColor": "(0,0,0)",
-                "fillColor": "(0,0,255)"
+                "style":
+                {
+                    "radius": "200"
+                },
+                "minutesStyle":
+                {
+                    "length": 10,
+                    "width": 3,
+                    "strokeColor": "(0,0,0)",
+                    "fillColor": "(0,0,0)"
+                },
+                "quarterHoursStyle":
+                {
+                    "length": 30,
+                    "width": 7,
+                    "strokeColor": "(0,0,0)",
+                    "fillColor": "(255,0,0)"
+                },
+                "hoursStyle":
+                {
+                    "length": 20,
+                    "width": 5,
+                    "strokeColor": "(0,0,0)",
+                    "fillColor": "(0,0,255)"
+                }
             }
         }
     }

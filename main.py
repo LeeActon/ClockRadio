@@ -4,6 +4,7 @@
 #{
 import debugpy
 debugpy.listen(("0.0.0.0", 5678))
+#debugpy.wait_for_client()
 #}
 
 import datetime
@@ -166,20 +167,14 @@ class ClockRadio:
            sys.exit(2)
 
        settings = Settings.loadSettings("settings.json")
-       self.clockPage = settings.clockPage
-       self.clockPage.surface = self.surface
 
-       self.clockSettingsPage = ClockPage()
-       self.clockSettingsPage.surface = self.surface
-       self.clockSettingsPage.backgroundImage = "Old Clock Face.png"
+       clockPages = list(settings.clockPages.values())
+       for clockPage in clockPages:
+           clockPage.surface = self.surface
 
-       self.clockPage2 = ClockPage()
-       self.clockPage2.surface = self.surface
-       self.clockPage2.style = Style()
-       self.clockPage2.style.radius = 200
-       self.clockPage2.clockFace = AnalogClockFace()
+       self.clockPage = clockPages[0]
 
-       self.clockPage.linkUp([self.clockSettingsPage, self.clockPage2])
+       self.clockPage.linkUp(clockPages[1:])
 
        self.volumePage = VolumePage()
        self.volumePage.surface = self.surface
