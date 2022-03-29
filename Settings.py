@@ -3,27 +3,26 @@ from ClockPage import ClockPage
 from Style import Style
 
 class Settings:
-    styles_loader = lambda values : Settings.loadDict(Style, values)
-    clockPages_loader = lambda values : Settings.loadDict(ClockPage, values)
+    styles_loader = lambda settings, values : settings.loadDict(Style, values)
+    clockPages_loader = lambda settings, values : settings.loadDict(ClockPage, values)
 
     @classmethod
     def loadSettings(cls, fileName):
         settings = Settings()
         with open(fileName) as f:
-            Settings.loadAttrs(settings, json.load(f))
+            settings.loadAttrs(settings, json.load(f))
 
         return settings;
 
-    @classmethod
-    def createObject(cls, objType, value):
+    def createObject(self, objType, value):
         newObj = None
         if type(value) is dict:
             newObj = objType()
-            Settings.loadAttrs(newObj, value)
+            self.loadAttrs(newObj, value)
         elif (type(value) is list):
             newObj= []
             for itemValue in value:
-                newItem = Settings.createObject(objType, itemValue)
+                newItem = self.createObject(objType, itemValue)
                 newObj.append(newItem)
         else:
             try:
@@ -36,8 +35,7 @@ class Settings:
 
         return newObj
 
-    @classmethod
-    def loadAttrs(cls, obj, settings):
+    def loadAttrs(self, obj, settings):
         obj_type = type(obj)
         attrNames = dir(obj) # gets all attributes including from base classes
         if type(settings) is not dict:
@@ -49,7 +47,7 @@ class Settings:
                     attrName_loader = f"{attrName}_loader"
                     if attrName_loader in attrNames:
                         loader = getattr(obj_type, attrName_loader)
-                        attrValue = loader(value)
+                        attrValue = loader(self, value)
                         setattr(obj, attrName, attrValue)
                     else:
                         attrName_type = f"{attrName}_type"
@@ -60,13 +58,12 @@ class Settings:
                         else:
                             print(f"{attrName} not in {attrNames}")
 
-                        newObj = Settings.createObject(attrType, value)
+                        newObj = self.createObject(attrType, value)
                         setattr(obj, attrName, newObj)
         
-    @classmethod
-    def loadDict(cls, itemType, values):
+    def loadDict(self, itemType, values):
         results = dict()
         for key, value in values.items():
-            results[key] = Settings.createObject(itemType, value)
+            results[key] = self.createObject(itemType, value)
 
         return results
