@@ -12,6 +12,7 @@ class ImageLayer(Layer):
     def __init__(self):
         super().__init__()
         self.imageFile = None
+        self.centerImage = True
 
     def __del__(self):
         "Destructor to make sure pygame shuts down, etc."
@@ -28,8 +29,12 @@ class ImageLayer(Layer):
             return
         super().paint(surface)
         if self.image != None:
-            center = Layer.center
-            offset = (center[0] - 240, center[1] - 240)
+            offset = (0,0)
+            if (self.centerImage):
+                center = Layer.center
+                image_width = self.image.get_width()
+                image_height = self.image.get_height()
+                offset = (center[0] - image_width/2, center[1] - image_height/2)
             surface.blit(self.image, offset)
 
     _running = False

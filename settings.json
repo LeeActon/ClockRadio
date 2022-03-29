@@ -31,6 +31,21 @@
                 "secondsHubRadius": "10"
             }
         },
+        "2a":
+        {
+            "backgroundImage": "Clock Face 2.png",
+            "clockHands":
+            {
+                "sweep": "False",
+                "hoursColor": "(0,0,0)",
+                "hoursHubRadius": "20",
+                "minutesColor": "(0,0,0)",
+                "minutesHubColor": "(0,0,0)",
+                "minutesHubRadius": "15",
+                "secondsColor": "(192,0,0)",
+                "secondsHubRadius": "10"
+            }
+        },
         "3":
         {
             "clockHands":
