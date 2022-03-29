@@ -25,15 +25,37 @@ class Settings:
                 newItem = self.createObject(objType, itemValue)
                 newObj.append(newItem)
         else:
-            try:
-                if objType is None or objType is type(None) or objType is property:
-                    newObj = eval(value)
-                else:
-                    newObj = objType(eval(value))
-            except:
-                newObj = value
+            if (type(value) is str) and (len(value) > 0) and (value[0] == "#"):
+                newObj = self.findObject(value[1:])
+            else:
+                try:
+                    if objType is None or objType is type(None) or objType is property:
+                        newObj = eval(value)
+                    else:
+                        newObj = objType(eval(value))
+                except:
+                    newObj = value
 
         return newObj
+
+    def findObject(self, reference):
+        t, i = reference.split('.')
+        d = None
+        obj = None
+        if (t == "styles"):
+            d = self.styles
+        elif t == "clockPages":
+            d = self.clockPages
+        else:
+            print(f"{t} not found")
+
+        if (d is not None) and (i in d):
+            obj = d[i]
+
+        if obj is None:
+            print(f"{i} not found")
+
+        return obj
 
     def loadAttrs(self, obj, settings):
         obj_type = type(obj)
