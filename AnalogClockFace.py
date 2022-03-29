@@ -19,7 +19,6 @@ class AnalogClockFace(Layer):
     hoursStyle_type = Style
     minutesStyle_type = Style
     quarterHoursStyle_type = Style
-    style_type = Style
 
     def __init__(self):
         super().__init__()

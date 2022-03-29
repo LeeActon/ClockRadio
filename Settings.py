@@ -37,8 +37,8 @@ class Settings:
 
     @classmethod
     def loadAttrs(cls, obj, settings):
-        attrs = type(obj).__dict__
-        attrNames = attrs.keys()
+        obj_type = type(obj)
+        attrNames = dir(obj) # gets all attributes including from base classes
         if type(settings) is not dict:
             print(f"{settings} is not dict")
         else:
@@ -47,14 +47,15 @@ class Settings:
                     attrType = None
                     attrName_loader = f"{attrName}_loader"
                     if attrName_loader in attrNames:
-                        attrValue = attrs[attrName_loader](value)
+                        loader = getattr(obj_type, attrName_loader)
+                        attrValue = loader(value)
                         setattr(obj, attrName, attrValue)
                     else:
                         attrName_type = f"{attrName}_type"
                         if attrName_type in attrNames:
-                            attrType = attrs[attrName_type]
+                            attrType = getattr(obj_type, attrName_type)
                         elif attrName in attrNames:
-                            attrType = type(attrs[attrName])
+                            attrType = type(getattr(obj, attrName))
                         else:
                             print(f"{attrName} not in {attrNames}")
 

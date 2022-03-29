@@ -2,9 +2,11 @@
 import math
 import pygame
 from pygame import gfxdraw
+from Style import Style
 
 class Layer:
     center = (240, 245)
+    style_type = Style
 
     def __init__(self):
         self.layers = []
