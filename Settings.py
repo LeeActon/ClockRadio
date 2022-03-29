@@ -26,7 +26,7 @@ class Settings:
                 newObj.append(newItem)
         else:
             try:
-                if objType is None or objType is property:
+                if objType is None or objType is type(None) or objType is property:
                     newObj = eval(value)
                 else:
                     newObj = objType(eval(value))
@@ -44,6 +44,8 @@ class Settings:
         else:
             for attrName, value in settings.items():
                 if (attrName[0] != '-'):
+                    if attrName == "radius":
+                        debugpy.breakpoint()
                     attrType = None
                     attrName_loader = f"{attrName}_loader"
                     if attrName_loader in attrNames:
