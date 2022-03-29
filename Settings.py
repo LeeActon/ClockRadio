@@ -44,8 +44,6 @@ class Settings:
         else:
             for attrName, value in settings.items():
                 if (attrName[0] != '-'):
-                    if attrName == "radius":
-                        debugpy.breakpoint()
                     attrType = None
                     attrName_loader = f"{attrName}_loader"
                     if attrName_loader in attrNames:

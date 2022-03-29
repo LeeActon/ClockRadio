@@ -36,8 +36,9 @@ class VolumePage(Page):
         self.style5s = Style()
         self.style5s.length = 20
         self.style5s.width = 5
-        self.style5s.radius = 8
         self.style5s.shape = Circle()
+        self.style5s.shape.style = Style()
+        self.style5s.shape.style.radius = 8
         self.style5s.strokeColor = (0, 0, 255)
         self.style5s.fillColor = (0, 0, 255)
         print(f"style5s.strokeColor = {self.style5s.strokeColor}, style5s.fillColor = {self.style5s.fillColor}")
