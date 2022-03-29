@@ -1,8 +1,9 @@
-import debugpy
 import json
 from ClockPage import ClockPage
+from Style import Style
 
 class Settings:
+    styles_loader = lambda values : Settings.loadDict(Style, values)
     clockPages_loader = lambda values : Settings.loadDict(ClockPage, values)
 
     @classmethod
