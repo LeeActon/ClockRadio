@@ -10,33 +10,39 @@ from colorsys import hsv_to_rgb
 from Layer import Layer
 import SurfaceHelper
 import Points
+from Style import Style
 
 class AnalogClockHands(Layer):
+    hoursStyle_type = Style
+    minutesStyle_type = Style
+    secondsStyle_type = Style
 
     def __init__(self):
         super().__init__()
 
-        # For some reason the canvas needs a 7px vertical offset
-        # circular screens are weird...
-        self._radius = 240
+        self.style = Style()
+        self.style.radius = 240
+
         self.time = datetime.datetime.now()
 
-        self.hoursColor = (0,0,255)
-        self.minutesColor = (0,255,0)
-        self.secondsColor = (255,0,0)
-        self.hoursHubColor = None
-        self.minutesHubColor = None
-        self.secondsHubColor = None
+        self.hoursStyle = Style()
+        self.hoursStyle.fillColor = (0,0,0)
+        self.hoursStyle.width = 11
+        self.hoursStyle.length = -110
+        self.hoursStyle.hubRadius = 20
 
-        self.hoursWidth = 11
-        self.hoursLength = -110
-        self.hoursHubRadius = 20
-        self.minutesWidth = 6
-        self.minutesLength = -80
-        self.minutesHubRadius = 20
-        self.secondsWidth = 3
-        self.secondsLength = -50
-        self.secondsHubRadius = 10
+        self.minutesStyle = Style()
+        self.minutesStyle.fillColor = (0,0,0)
+        self.minutesStyle.width = 6
+        self.minutesStyle.length = -80
+        self.minutesStyle.hubRadius = 15
+
+        self.secondsStyle = Style()
+        self.secondsStyle.fillColor = (0,0,0)
+        self.secondsStyle.width = 3
+        self.secondsStyle.length = -50
+        self.secondsStyle.hubRadius = 10
+
         self.sweep = False
 
     def __str__(self):
@@ -83,68 +89,37 @@ class AnalogClockHands(Layer):
         a_h = math.radians(a_h)
 
         # Compute the start and end points of each hand based on their angle
-        secondsStartPoint = Points.getPoint(Layer.center, a_s, self.secondsHubRadius)
+        secondsStartPoint = Points.getPoint(Layer.center, a_s, self.secondsStyle.hubRadius)
         secondsEndPoint = Points.getPoint(Layer.center, a_s, self.getSecondsLength())
 
-        minutesStartPoint = Points.getPoint(Layer.center, a_m, self.minutesHubRadius)
+        minutesStartPoint = Points.getPoint(Layer.center, a_m, self.minutesStyle.hubRadius)
         minutesEndPoint = Points.getPoint(Layer.center, a_m, self.getMinutesLength())
 
-        hoursStartPoint = Points.getPoint(Layer.center, a_h, self.hoursHubRadius)
+        hoursStartPoint = Points.getPoint(Layer.center, a_h, self.hoursStyle.hubRadius)
         hoursEndPoint = Points.getPoint(Layer.center, a_h, self.getHoursLength())
 
         # Draw the hands and their hubs
-        self.drawCircle(surface, Layer.center, self.hoursHubRadius, (0,0,0), self.hoursHubColor)
-        self.drawLine(surface, hoursStartPoint, hoursEndPoint, self.hoursWidth, (0,0,0), self.hoursColor)
-        self.drawCircle(surface, Layer.center, self.minutesHubRadius, (0,0,0), self.minutesHubColor)
-        self.drawLine(surface, minutesStartPoint, minutesEndPoint, self.minutesWidth, (0,0,0), self.minutesColor)
-        self.drawCircle(surface, Layer.center, self.secondsHubRadius, (0,0,0), self.secondsHubColor)
-        self.drawLine(surface, secondsStartPoint, secondsEndPoint, self.secondsWidth, (0,0,0), self.secondsColor)
-
-    @property
-    def hoursHubColor(self):
-        if self._hoursHubColor == None:
-            return self.hoursColor
-
-        return self._hoursHubColor
-
-    @hoursHubColor.setter
-    def hoursHubColor(self, value):
-        self._hoursHubColor = value
-
-    @property
-    def minutesHubColor(self):
-        if self._minutesHubColor == None:
-            return self.minutesColor
-        return self._minutesHubColor
-
-    @minutesHubColor.setter
-    def minutesHubColor(self, value):
-        self._minutesHubColor = value
-
-    @property
-    def secondsHubColor(self):
-        if self._secondsHubColor == None:
-            return self.secondsColor
-        return self._secondsHubColor
-
-    @secondsHubColor.setter
-    def secondsHubColor(self, value):
-        self._secondsHubColor = value
+        self.drawCircle(surface, Layer.center, self.hoursStyle.hubRadius, (0,0,0), self.hoursStyle.fillColor)
+        self.drawLine(surface, hoursStartPoint, hoursEndPoint, self.hoursStyle.width, (0,0,0), self.hoursStyle.fillColor)
+        self.drawCircle(surface, Layer.center, self.minutesStyle.hubRadius, (0,0,0), self.minutesStyle.fillColor)
+        self.drawLine(surface, minutesStartPoint, minutesEndPoint, self.minutesStyle.width, (0,0,0), self.minutesStyle.fillColor)
+        self.drawCircle(surface, Layer.center, self.secondsStyle.hubRadius, (0,0,0), self.secondsStyle.fillColor)
+        self.drawLine(surface, secondsStartPoint, secondsEndPoint, self.secondsStyle.width, (0,0,0), self.secondsStyle.fillColor)
 
     def getHoursLength(self):
-        if self.hoursLength < 0:
-            return self._radius + self.hoursLength
-        return self.hoursLength
+        if self.hoursStyle.length < 0:
+            return self.style.radius + self.hoursStyle.length
+        return self.hoursStyle.length
 
     def getMinutesLength(self):
-        if self.minutesLength < 0:
-            return self._radius + self.minutesLength
-        return self.minutesLength
+        if self.minutesStyle.length < 0:
+            return self.style.radius + self.minutesStyle.length
+        return self.minutesStyle.length
 
     def getSecondsLength(self):
-        if self.secondsLength < 0:
-            return self._radius + self.secondsLength
-        return self.secondsLength
+        if self.secondsStyle.length < 0:
+            return self.style.radius + self.secondsStyle.length
+        return self.secondsStyle.length
 
     def _exit(self, sig, frame):
         self._running = False
@@ -175,9 +150,8 @@ class AnalogClockHands(Layer):
 
 if __name__ == "__main__":
     surface = SurfaceHelper.OpenSurface()
-    clockHands = AnalogClockHands(surface)
-    clockHands.backcolor = (0,0,0)
-    clockHands.hoursColor = (0,0,255)
-    clockHands.minutesColor = (0,255,0)
-    clockHands.secondsColor = (255,0,0)
+    clockHands = AnalogClockHands()
+    clockHands.style = Style()
+    clockHands.style.backColor = (128, 128, 128)
+    clockHands.style.radius = 220
     clockHands.run(surface)
