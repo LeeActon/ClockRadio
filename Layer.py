@@ -14,13 +14,6 @@ class Layer:
         self._style = None
         self.visible = True
 
-    traceCount = 0
-    @classmethod
-    def trace(cls, message):
-        if (cls.traceCount > 0):
-            cls.traceCount = cls.traceCount - 1
-            print(message)
-
     @classmethod
     def offsetX(cls, amount):
         cls.center = (cls.center[0] + amount, cls.center[1])
@@ -115,9 +108,6 @@ class Layer:
             self.layers[i].visible = visible
 
     def paint(self, surface):
-        Layer.trace(f"{self}.paint()")
-        Layer.trace(f"    self.visible = {self.visible}")
-        Layer.trace(f"    len(self.layers) = {len(self.layers)}")
         if not self.visible:
             return
 

@@ -26,8 +26,6 @@ class Polygon(Layer):
         return Polygon(points)
 
     def paint(self, surface):
-        Layer.trace(f"{self}.paint()")
-        Layer.trace(f"    len(self.points) = {len(self.points)}")
 
         if len(self.points) > 0:
             strokeColor = self.getProperty("strokeColor")

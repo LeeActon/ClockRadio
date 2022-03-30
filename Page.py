@@ -13,13 +13,6 @@ class Page(Layer):
 
     def __delete__(self):
         pass
- 
-    traceCount = 0
-    @classmethod
-    def trace(cls, message):
-        if (cls.traceCount > 0):
-            cls.traceCount = cls.traceCount - 1
-            print(message)
 
     currentPage = None
     prevPages = []
@@ -48,8 +41,6 @@ class Page(Layer):
             cls.setCurrentPage(cls.prevPages.pop())
 
     def update(self):
-        Page.trace(f"{self}.update()")
-
         if (self.timeout != None):
             now = time.time()
             if (now > self.timeout):

@@ -72,8 +72,6 @@ class ClockRadio:
                     elif line[0] == 'p':
                         Page.push(self.volumePage)
                         self.volumePage.timeOut = time.time() + 55
-                        Page.traceCount = 10
-                        Layer.traceCount = 100
                     elif line[0] == 'x':
                         textLayer.visible = not textLayer.visible
                     elif line[0] == 'b':
