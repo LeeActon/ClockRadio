@@ -3,7 +3,7 @@ import Points
 from Layer import Layer
 
 class Polygon(Layer):
-    def __init__(self, points):
+    def __init__(self, points = None):
         super().__init__()
         self.points = points
 

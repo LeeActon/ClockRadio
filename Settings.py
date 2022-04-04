@@ -1,9 +1,13 @@
 import json
 from ClockPage import ClockPage
 from Style import Style
+from Polygon import Polygon
+from Circle import Circle
 
 class Settings:
     styles_loader = lambda settings, values : settings.loadDict(Style, values)
+    polygons_loader = lambda settings, values : settings.loadDict(Polygon, values)
+    circles_loader = lambda settings, values : settings.loadDict(Circle, values)
     clockPages_loader = lambda settings, values : settings.loadDict(ClockPage, values)
 
     @classmethod
@@ -12,7 +16,7 @@ class Settings:
         with open(fileName) as f:
             settings.loadAttrs(settings, json.load(f))
 
-        return settings;
+        return settings
 
     def createObject(self, objType, value):
         newObj = None
@@ -44,6 +48,10 @@ class Settings:
         obj = None
         if (t == "styles"):
             d = self.styles
+        elif (t == "polygons"):
+            d = self.polygons
+        elif (t == "circles"):
+            d = self.circles
         elif t == "clockPages":
             d = self.clockPages
         else:

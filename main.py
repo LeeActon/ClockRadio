@@ -4,7 +4,6 @@
 #{
 import debugpy
 debugpy.listen(("0.0.0.0", 5678))
-#debugpy.wait_for_client()
 #}
 
 import datetime
@@ -159,7 +158,7 @@ class ClockRadio:
     def main(self, argv):
 
        try:
-           opts, args = getopt.getopt(argv,"b:f:h:m:s:",["backColor=", "face=","hour=", "minute=", "second=", "sweep", "help"])
+           opts, args = getopt.getopt(argv,"b:f:h:m:s:",["backColor=", "face=","hour=", "minute=", "second=", "sweep", "debug", "help"])
        except getopt.GetoptError:
            self.printHelp()
            sys.exit(2)
@@ -184,6 +183,9 @@ class ClockRadio:
            if opt == "--help":
                self.printHelp()
                sys.exit()
+           elif opt == "--debug":
+               print("Waiting for debugger to attach")
+               debugpy.wait_for_client()
            elif opt in ("-f", "--face"):
                self.clockPage.backgroundImage = arg
                self.clockPage.clockFace = None

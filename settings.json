@@ -47,6 +47,32 @@
             "hubRadius": "10"
         }
     },
+    "polygons":
+    {
+        "red-diamond":
+        {
+            "style":
+                {
+                "fillColor": "(255,0,0)",
+                "strokeColor": "(255,0,0)"
+            },
+            "points":
+            [
+                "(0, 0)",
+                "(15,15)",
+                "(30, 0)",
+                "(15, -15)",
+                "(0, 0)"
+            ]
+        }
+    },
+    "circles":
+    {
+        "radius10":
+        {
+            "style": {"radius": "10"}
+        }
+    },
     "clockPages":
     {
         "1":
