@@ -189,12 +189,6 @@ class ClockRadio:
            elif opt in ("-f", "--face"):
                self.clockPage.backgroundImage = arg
                self.clockPage.clockFace = None
-           elif opt in ("-h", "--hour"):
-               self.clockPage.clockHands.setHoursColor(eval(arg))
-           elif opt in ("-m", "--minute"):
-               self.clockPage.clockHands.setMinutesColor(eval(arg))
-           elif opt in ("-s", "--second"):
-               self.clockPage.clockHands.setSecondsColor(eval(arg))
            elif opt == "--sweep":
                self.clockPage.clockHands.setSweep(True)
 

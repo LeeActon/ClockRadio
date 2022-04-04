@@ -104,6 +104,10 @@
         },
         "3":
         {
+            "style":
+            {
+                "backColor": "(64,64,0)"
+            },
             "clockHands":
             {
                 "sweep": "False"
