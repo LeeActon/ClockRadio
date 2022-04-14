@@ -5,7 +5,7 @@ from pygame import gfxdraw
 from Style import Style
 
 class Layer:
-    center = (240, 245)
+    center = (240, 240)
     style_type = Style
 
     def __init__(self):
@@ -103,7 +103,7 @@ class Layer:
         gfxdraw.aapolygon(surface, (tl, tr, br, bl), strokeColor)
 
     def showLayers(self, iMin, iMax, visible):
-        print(f"{self}.showLayers({iMin}, {iMax}, {visible})")
+        # print(f"{self}.showLayers({iMin}, {iMax}, {visible})")
         for i in range(iMin, iMax):
             self.layers[i].visible = visible
 

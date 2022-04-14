@@ -31,6 +31,14 @@ class RotaryEncoderEx : public AiEsp32RotaryEncoder
 				pStream->print(this->id);
 				pStream->print(" : ");
 				pStream->print(position);
+				pStream->print(", ");
+				pStream->print(this->_minEncoderValue / this->encoderSteps );
+				pStream->print(", ");
+				pStream->print(this->_maxEncoderValue / this->encoderSteps);
+				pStream->print(", ");
+				pStream->print(this->rotaryAccelerationCoef);
+				pStream->print(", ");
+				pStream->print(this->_circleValues);
 				pStream->println();
 				}
 			}

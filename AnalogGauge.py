@@ -13,6 +13,7 @@ class AnalogGauge(Layer):
         self.maxValue = 30
         self.tickMarks = []
         self.indicator = None
+        self.showZeroIndicator = False
 
     @property
     def value(self):
@@ -27,8 +28,10 @@ class AnalogGauge(Layer):
 
         self._value = value
         if (self.indicator != None):
-            self.indicator.showLayers(0, value - self.minValue, True)
+            self.indicator.showLayers(0, value + 1  - self.minValue, True)
             self.indicator.showLayers(value + 1, self.maxValue + 1, False)
+            if not self.showZeroIndicator:
+                self.indicator.showLayers(0,1, False)
         
 
     def createIndicator(self, tickStyle):

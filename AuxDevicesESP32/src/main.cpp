@@ -6,7 +6,7 @@
     https://robotzero.one/heltec-wifi-kit-32
 */
 
-void DebugMessage(char* szMessage);
+void DebugMessage(const char* szMessage);
 #include <Arduino.h>
 #include "RotaryEncoderEx.h"
 #include "FMTuner.h"
@@ -26,9 +26,9 @@ int favoriteChannels[] =
 	9490    // KUOW
 	};
 
-#define DEBUG_PIN 8
+#define DEBUG_PIN 14
 
-void DebugMessage(char* szMessage)
+void DebugMessage(const char* szMessage)
 	{
 	Serial.print("*");
 	Serial.println(szMessage);
@@ -47,9 +47,9 @@ void DebugPulse(int count)
 	}
 
 // Connections (through 5V to 3.3V converter)
-#define R_RST  9
-#define R_SDIO 2
-#define R_SCLK 3
+#define R_RST  19
+#define R_SDIO 21
+#define R_SCLK 22
 #define R_INT  0
 
 void HandleSerialInput();
@@ -69,23 +69,24 @@ FMTuner fmTuner(&Serial, R_RST, R_SDIO, R_SCLK, R_INT);
 #define ROTARY_ENCODER_3_PIN_A      33
 #define ROTARY_ENCODER_3_PIN_B      27
 
-#define ROTARY_ENCODER_4_BUTTON_PIN 19
-#define ROTARY_ENCODER_4_PIN_A      23
-#define ROTARY_ENCODER_4_PIN_B      18
+#define ROTARY_ENCODER_4_BUTTON_PIN 23
+#define ROTARY_ENCODER_4_PIN_A      18
+#define ROTARY_ENCODER_4_PIN_B      5
 
-#define ROTARY_ENCODER_5_BUTTON_PIN 5
-#define ROTARY_ENCODER_5_PIN_A      14
-#define ROTARY_ENCODER_5_PIN_B      12
+#define ROTARY_ENCODER_5_BUTTON_PIN 17
+#define ROTARY_ENCODER_5_PIN_A      0
+#define ROTARY_ENCODER_5_PIN_B      2
 
 #define ROTARY_ENCODER_STEPS 4
+#define ROTARY_ENCODER_COUNT 5
 
-RotaryEncoderEx (rgRotaryEncoder)[5] =
+RotaryEncoderEx (rgRotaryEncoder)[ROTARY_ENCODER_COUNT] =
     {
-    RotaryEncoderEx(1, ROTARY_ENCODER_1_PIN_A, ROTARY_ENCODER_1_PIN_B, ROTARY_ENCODER_1_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS ),
-    RotaryEncoderEx(2, ROTARY_ENCODER_2_PIN_A, ROTARY_ENCODER_2_PIN_B, ROTARY_ENCODER_2_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS ),
-    RotaryEncoderEx(3, ROTARY_ENCODER_3_PIN_A, ROTARY_ENCODER_3_PIN_B, ROTARY_ENCODER_3_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS ),
-    RotaryEncoderEx(4, ROTARY_ENCODER_4_PIN_A, ROTARY_ENCODER_4_PIN_B, ROTARY_ENCODER_4_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS ),
-    RotaryEncoderEx(5, ROTARY_ENCODER_5_PIN_A, ROTARY_ENCODER_5_PIN_B, ROTARY_ENCODER_5_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS )
+    RotaryEncoderEx(10, ROTARY_ENCODER_1_PIN_A, ROTARY_ENCODER_1_PIN_B, ROTARY_ENCODER_1_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS ),
+    RotaryEncoderEx(12, ROTARY_ENCODER_2_PIN_A, ROTARY_ENCODER_2_PIN_B, ROTARY_ENCODER_2_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS ),
+    RotaryEncoderEx(13, ROTARY_ENCODER_3_PIN_A, ROTARY_ENCODER_3_PIN_B, ROTARY_ENCODER_3_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS ),
+    RotaryEncoderEx(14, ROTARY_ENCODER_4_PIN_A, ROTARY_ENCODER_4_PIN_B, ROTARY_ENCODER_4_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS ),
+    RotaryEncoderEx(15, ROTARY_ENCODER_5_PIN_A, ROTARY_ENCODER_5_PIN_B, ROTARY_ENCODER_5_BUTTON_PIN, AIESP32ROTARYENCODER_DEFAULT_VCC_PIN, ROTARY_ENCODER_STEPS )
     };
 
 void IRAM_ATTR readEncoder1ISR()
@@ -113,9 +114,37 @@ void IRAM_ATTR readEncoder5ISR()
     rgRotaryEncoder[4].readEncoder_ISR();
 }
 
+RotaryEncoderEx* FindRotaryEncoder(int id)
+	{
+	for (int i = 0; i < ROTARY_ENCODER_COUNT; i++)
+		{
+		if (rgRotaryEncoder[i].id == id)
+			return &(rgRotaryEncoder[i]);
+		}
+
+	return NULL;
+	}
+
 void setup()
     {
     Serial.begin(115200);
+	Serial.setTimeout(30000); // Wait up to thirty seconds for input
+	Serial.println();
+	Serial.println("Started");
+
+	pinMode(DEBUG_PIN, OUTPUT);
+	digitalWrite(DEBUG_PIN, LOW);
+
+	DebugPulse(1);
+
+	// Wait for input before going any further.
+	// Makes debugging easier.
+	while (!Serial.available())
+		{
+
+		Serial.println(".");
+		delay(1000);
+		}
 
     rgRotaryEncoder[0].begin();
     rgRotaryEncoder[0].setup(readEncoder1ISR);
@@ -127,12 +156,6 @@ void setup()
     rgRotaryEncoder[3].setup(readEncoder4ISR);
     rgRotaryEncoder[4].begin();
     rgRotaryEncoder[4].setup(readEncoder5ISR);
-
-#if 0
-    pRotaryEncoder->setBoundaries(88 * 10, 104 * 10, true); //minValue, maxValue, circleValues true|false (when max go to min and vice versa)
-    pRotaryEncoder->setAcceleration(150);
-    pRotaryEncoder->setEncoderValue(92.1 * 10); //set default to 92.1 MHz
-#endif
     }
 
 void loop()
@@ -174,6 +197,24 @@ void HandleSerialInput(char* sz)
 	//     ?) Print all info
 	switch (command)
 		{
+		case 'r':
+			DebugPulse(1);
+
+			pinMode(R_RST, OUTPUT);
+			pinMode(R_SDIO, OUTPUT);
+			pinMode(R_SCLK, OUTPUT);
+
+			// Set communcation mode to 2-Wire
+			digitalWrite(R_RST, LOW);   // Put Si4703 into reset
+			delay(1);                     // Delay to allow pins to settle
+			digitalWrite(R_SDIO, LOW);   // A low SDIO indicates a 2-wire interface
+			delay(1);                     // Delay to allow pins to settle
+			digitalWrite(R_RST, HIGH);  // Bring Si4703 out of reset with SDIO set to low and SEN pulled high with on-board resistor
+			delay(1);                     // Allow Si4703 to come out of reset
+			digitalWrite(R_SDIO, HIGH);
+			digitalWrite(R_SCLK, HIGH);
+			break;
+
 		case 'P':
 			// Power on
 			{
@@ -245,7 +286,7 @@ void HandleSerialInput(char* sz)
 				{
 				fmTuner.incChannel();
 				}
-			else if (sz[0] == '+')
+			else if (sz[0] == '-')
 				{
 				fmTuner.decChannel();
 				}
@@ -282,6 +323,29 @@ void HandleSerialInput(char* sz)
 				i = 9;
 
 			fmTuner.setChannel(favoriteChannels[i]);
+			}
+			break;
+
+		case 'R':
+			{
+			int id;
+			int value;
+			int min;
+			int max;
+			int acceleration;
+			int wrap;
+
+			int count = sscanf(sz, "%d : %d, %d, %d, %d, %d", &id, &value, &min, &max, &acceleration, &wrap);
+			if (count == 6)
+				{
+				RotaryEncoderEx *pRotaryEncoder = FindRotaryEncoder(id);
+				if (pRotaryEncoder != NULL)
+					{
+					pRotaryEncoder->setBoundaries(min, max, wrap != 0);
+					pRotaryEncoder->setEncoderValue(value);
+					pRotaryEncoder->setAcceleration(acceleration);
+					}
+				}
 			}
 			break;
 

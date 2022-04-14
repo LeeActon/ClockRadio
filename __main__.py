@@ -36,23 +36,20 @@ class ClockRadio:
         self.surface = SurfaceHelper.OpenSurface()
 
         self.auxDevices = None
-        self.font = None
+        self.fontM = None
+        self.fontL = None
 
     def run(self):
         self._running = True
         _clock = pygame.time.Clock()
         signal.signal(signal.SIGINT, self._exit)
 
-        pygame.font.init()
-
-        self.font = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
-
         textLayer = TextLayer()
         textLayer.text = "Hello World"
-        textLayer.font = self.font
+        textLayer.font = self.fontM
         textLayer.position = (480/2, 480*5/8)
 
-        self.auxDevices = serial.Serial("/dev/ttyACM0", 115200)
+        self.auxDevices = serial.Serial("/dev/ttyUSB0", 115200)
 
         while self._running:
             if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
@@ -73,6 +70,8 @@ class ClockRadio:
                         self.volumePage.timeOut = time.time() + 55
                     elif line[0] == 'x':
                         textLayer.visible = not textLayer.visible
+                    elif line[0] == 'z':
+                        self.volumePage.toggleZeroIndicator()
                     elif line[0] == 'b':
                         debugpy.breakpoint()
 
@@ -95,7 +94,7 @@ class ClockRadio:
         page = Page.getCurrentPage()
         line = self.auxDevices.readline().decode("utf-8").strip()
         parts = line.split()
-        print(f"<-- {line} - {parts}")
+        print(f"<-- {line} - {parts}\n")
         if len(line) > 0:
             ch = line[0]
         if (ch == '*'):
@@ -103,6 +102,8 @@ class ClockRadio:
             pass
         elif (ch == '.'):
             self.sendAuxDevices("")
+            self.sendAuxDevices("R 10 : 0, 0, 30, 150, 0")
+            self.sendAuxDevices("R 11 : 880, 1080, 949, 150, 0")
         elif (ch == 'B'):
             # Button pressed/released report
             # B <n> : <s>
@@ -118,11 +119,11 @@ class ClockRadio:
             # R <n> : <d>
             # where <n> is the encoder number\
             #       <d> is the amount the encoder has changed
-            if len(parts) == 4:
+            if len(parts) >= 4:
                 if (page != None):
                     rotaryId = int(parts[1])
-                    value = int(parts[3])
-                    if (rotaryId == 1):
+                    value = int(parts[3].rstrip(", "))
+                    if (rotaryId == 10):
                         if (page != self.volumePage):
                             Page.push(self.volumePage)
                             page = self.volumePage
@@ -165,6 +166,11 @@ class ClockRadio:
 
        settings = Settings.loadSettings("settings.json")
 
+       pygame.font.init()
+
+       self.fontM = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
+       self.fontL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 128)
+
        clockPages = list(settings.clockPages.values())
        for clockPage in clockPages:
            clockPage.surface = self.surface
@@ -174,6 +180,7 @@ class ClockRadio:
        self.clockPage.linkUp(clockPages[1:])
 
        self.volumePage = VolumePage()
+       self.volumePage.font = self.fontL
        self.volumePage.surface = self.surface
        self.clockPage.linkRight([self.volumePage])
 

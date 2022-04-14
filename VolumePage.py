@@ -4,10 +4,17 @@ import time
 from Style import Style
 from Polygon import Polygon
 from Circle import Circle
+from TextLayer import TextLayer
+from Layer import Layer
 
 class VolumePage(Page):
     def __init__(self):
         super().__init__()
+
+        self.label = TextLayer()
+        self.label.text = "0"
+        self.label.position = Layer.center
+        self.addLayer(self.label);
 
         self.analogGauge = AnalogGauge()
         self.addLayer(self.analogGauge)
@@ -53,8 +60,23 @@ class VolumePage(Page):
 
         self.analogGauge.createTickMarks([10,5,1], [self.style10s, self.style5s, self.style1s])
 
+    @property
+    def font(self):
+        return self.label.font
+
+    @font.setter
+    def font(self, value):
+        self.label.font = value
+
+    def setValue(self, value):
+        self.analogGauge.value = value
+        self.label.text = f"{value}"
+
+    def toggleZeroIndicator(self):
+        self.analogGauge.showZeroIndicator = not self.analogGauge.showZeroIndicator
+
     def handleRotary(self, rotaryId, value):
-        if (rotaryId == 1):
+        if (rotaryId == 10):
             now = time.time()
             self.timeout = now + 5
-            self.analogGauge.value = self.analogGauge.value + value
+            self.setValue(value)
