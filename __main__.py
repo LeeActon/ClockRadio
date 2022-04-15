@@ -29,6 +29,7 @@ from Layer import Layer
 from Settings import Settings
 from Style import Style
 from AnalogClockFace import AnalogClockFace
+from FMPage import FMPage
 
 class ClockRadio:
 
@@ -38,6 +39,7 @@ class ClockRadio:
         self.auxDevices = None
         self.fontM = None
         self.fontL = None
+        self.fontXL = None
 
     def run(self):
         self._running = True
@@ -102,8 +104,8 @@ class ClockRadio:
             pass
         elif (ch == '.'):
             self.sendAuxDevices("")
-            self.sendAuxDevices("R 10 : 0, 0, 30, 150, 0")
-            self.sendAuxDevices("R 11 : 880, 1080, 949, 150, 0")
+            self.sendAuxDevices(f"R {self.volumePage.rotaryId} : 0, 0, 30, 150, 0")
+            self.sendAuxDevices(f"R {self.fmPage.rotaryId} : 949, 880, 1080, 150, 1")
         elif (ch == 'B'):
             # Button pressed/released report
             # B <n> : <s>
@@ -123,10 +125,14 @@ class ClockRadio:
                 if (page != None):
                     rotaryId = int(parts[1])
                     value = int(parts[3].rstrip(", "))
-                    if (rotaryId == 10):
+                    if (rotaryId == self.volumePage.rotaryId):
                         if (page != self.volumePage):
                             Page.push(self.volumePage)
                             page = self.volumePage
+                    if (rotaryId == self.fmPage.rotaryId):
+                        if (page != self.fmPage):
+                            Page.push(self.fmPage)
+                            page = self.fmPage
                     page.handleRotary(rotaryId, value)
 
         elif (ch == 'V'):
@@ -169,7 +175,8 @@ class ClockRadio:
        pygame.font.init()
 
        self.fontM = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
-       self.fontL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 128)
+       self.fontL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64)
+       self.fontXL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64+32+8)
 
        clockPages = list(settings.clockPages.values())
        for clockPage in clockPages:
@@ -180,9 +187,14 @@ class ClockRadio:
        self.clockPage.linkUp(clockPages[1:])
 
        self.volumePage = VolumePage()
-       self.volumePage.font = self.fontL
+       self.volumePage.rotaryId = 11
+       self.volumePage.font = self.fontXL
        self.volumePage.surface = self.surface
-       self.clockPage.linkRight([self.volumePage])
+       self.fmPage = FMPage()
+       self.fmPage.rotaryId = 12
+       self.fmPage.font = self.fontXL
+       self.fmPage.surface = self.surface
+       self.clockPage.linkRight([self.volumePage, self.fmPage])
 
        Page.setCurrentPage(self.clockPage)
 

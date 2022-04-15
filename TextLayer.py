@@ -4,6 +4,7 @@ from Layer import Layer
 class TextLayer(Layer):
     def __init__(self):
         super().__init__()
+        self._color = (255,0,0)
 
     @property
     def font(self):
@@ -22,6 +23,14 @@ class TextLayer(Layer):
         self._text = value
 
     @property
+    def color(self):
+        return self._color
+
+    @color.setter
+    def color(self, value):
+        self._color = value
+
+    @property
     def position(self):
         return self._position
 
@@ -34,6 +43,6 @@ class TextLayer(Layer):
             return
         super().paint(surface)
         w, h = self.font.size(self.text)
-        img = self.font.render(self.text,True,(255,0,0))
+        img = self.font.render(self.text,True,self.color)
         x, y = self.position
         surface.blit(img,(x-w/2,y-h/2))

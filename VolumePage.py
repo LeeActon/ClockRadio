@@ -10,6 +10,7 @@ from Layer import Layer
 class VolumePage(Page):
     def __init__(self):
         super().__init__()
+        self.rotaryId = 0
 
         self.label = TextLayer()
         self.label.text = "0"
@@ -76,7 +77,7 @@ class VolumePage(Page):
         self.analogGauge.showZeroIndicator = not self.analogGauge.showZeroIndicator
 
     def handleRotary(self, rotaryId, value):
-        if (rotaryId == 10):
+        if (rotaryId == self.rotaryId):
             now = time.time()
             self.timeout = now + 5
             self.setValue(value)
