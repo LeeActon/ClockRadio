@@ -2,6 +2,9 @@ import time
 from Layer import Layer
 
 class Page(Layer):
+    prevMenuRotaryValue = 0
+    menuRotaryId = 13
+
     def __init__(self):
         super().__init__()
         self.surface = None
@@ -66,7 +69,16 @@ class Page(Layer):
             curButton = nextButton
 
     def handleRotary(self, rotaryId, value):
-        print(f"Rotary {rotaryId} = {value}")
+        if rotaryId == Page.menuRotaryId:
+            d = value - Page.prevMenuRotaryValue
+            print(f"value = {value} prev = {Page.prevMenuRotaryValue} d = {d}")
+            Page.prevMenuRotaryValue = value
+            if d > 0:
+                self.up()
+            elif d < 0:
+                self.down()
+            return True
+
         return False
 
     def handleButton(self, buttonId, state):
@@ -119,6 +131,9 @@ class Page(Layer):
 
     def handleUpButtonUp(self):
         print("Up Released")
+        self.up()
+
+    def up(self):
         if self.pageUp != None:
             print(self)
             print(self.pageUp)
@@ -126,15 +141,24 @@ class Page(Layer):
 
     def handleDownButtonUp(self):
         print("Down Released")
+        self.down()
+
+    def down(self):
         if self.pageDown != None:
             Page.currentPage = self.pageDown
 
     def handleLeftButtonUp(self):
         print("Left Released")
+        self.left()
+
+    def left(self):
         if self.pageLeft != None:
             Page.currentPage = self.pageLeft
 
     def handleRightButtonUp(self):
         print("Right Released")
+        self.right()
+
+    def right(self):
         if self.pageRight != None:
             Page.currentPage = self.pageRight

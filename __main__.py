@@ -104,6 +104,7 @@ class ClockRadio:
             self.sendAuxDevices("")
             self.sendAuxDevices(f"R {self.volumePage.rotaryId} : 0, 0, 30, 150, 0")
             self.sendAuxDevices(f"R {self.fmPage.rotaryId} : 949, 880, 1080, 150, 1")
+            self.sendAuxDevices(f"R 13 : 0, -8000, 8000, 0, 1")
         elif (ch == 'B'):
             # Button pressed/released report
             # B <n> : <s>
