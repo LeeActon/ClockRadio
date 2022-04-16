@@ -11,6 +11,7 @@ class VolumePage(Page):
     def __init__(self):
         super().__init__()
         self.rotaryId = 0
+        self.auxDevices = None
 
         self.label = SevenSegmentLayer()
         self.label.value = 0
@@ -82,6 +83,10 @@ class VolumePage(Page):
 
     def handleRotary(self, rotaryId, value):
         if (rotaryId == self.rotaryId):
+            Page.pushIfNotCurrent(self)
             now = time.time()
             self.timeout = now + 5
             self.setValue(value)
+            return True
+
+        return False

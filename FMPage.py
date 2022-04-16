@@ -8,6 +8,7 @@ class FMPage(Page):
     def __init__(self):
         super().__init__()
         self.rotaryId = 0
+        self.auxDevices = None
 
         self.style = Style()
         self.style.backColor = (0, 0, 0)
@@ -29,7 +30,11 @@ class FMPage(Page):
         self.freqText.value = value/10.0
 
     def handleRotary(self, rotaryId, value):
-        if (rotaryId == 12):
+        if (rotaryId == self.rotaryId):
+            Page.pushIfNotCurrent(self)
             now = time.time()
             self.timeout = now + 5
             self.setValue(value)
+            return True
+
+        return False

@@ -51,8 +51,6 @@ class ClockRadio:
         textLayer.font = self.fontM
         textLayer.position = (480/2, 480*5/8)
 
-        self.auxDevices = serial.Serial("/dev/ttyUSB0", 115200)
-
         while self._running:
             if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
                 line = sys.stdin.readline()
@@ -68,7 +66,7 @@ class ClockRadio:
                     elif line[0] == 'd':
                         Layer.offsetY(1)
                     elif line[0] == 'p':
-                        Page.push(self.volumePage)
+                        Page.pushIfNotCurrent(self.volumePage)
                         self.volumePage.timeOut = time.time() + 55
                     elif line[0] == 'x':
                         textLayer.visible = not textLayer.visible
@@ -96,7 +94,7 @@ class ClockRadio:
         page = Page.getCurrentPage()
         line = self.auxDevices.readline().decode("utf-8").strip()
         parts = line.split()
-        print(f"<-- {line} - {parts}\n")
+        print(f"<-- {line}\n")
         if len(line) > 0:
             ch = line[0]
         if (ch == '*'):
@@ -125,15 +123,9 @@ class ClockRadio:
                 if (page != None):
                     rotaryId = int(parts[1])
                     value = int(parts[3].rstrip(", "))
-                    if (rotaryId == self.volumePage.rotaryId):
-                        if (page != self.volumePage):
-                            Page.push(self.volumePage)
-                            page = self.volumePage
-                    if (rotaryId == self.fmPage.rotaryId):
-                        if (page != self.fmPage):
-                            Page.push(self.fmPage)
-                            page = self.fmPage
-                    page.handleRotary(rotaryId, value)
+                    for p in [self.volumePage, self.fmPage, page]:
+                        if p.handleRotary(rotaryId, value):
+                            break;
 
         elif (ch == 'V'):
             # Volume report
@@ -172,6 +164,8 @@ class ClockRadio:
 
        settings = Settings.loadSettings("settings.json")
 
+       self.auxDevices = serial.Serial("/dev/ttyUSB0", 115200)
+
        pygame.font.init()
 
        self.fontM = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
@@ -188,10 +182,12 @@ class ClockRadio:
 
        self.volumePage = VolumePage()
        self.volumePage.rotaryId = 11
+       self.volumePage.auxDevices = self.auxDevices
        self.volumePage.font = self.fontXL
        self.volumePage.surface = self.surface
        self.fmPage = FMPage()
        self.fmPage.rotaryId = 12
+       self.fmPage.auxDevices = self.auxDevices
        self.fmPage.font = self.fontXL
        self.fmPage.surface = self.surface
        self.clockPage.linkRight([self.volumePage, self.fmPage])

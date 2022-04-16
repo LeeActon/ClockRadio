@@ -31,9 +31,11 @@ class Page(Layer):
             cls.currentPage.update()
 
     @classmethod
-    def push(cls, page):
-        cls.prevPages.append(cls.getCurrentPage())
-        cls.setCurrentPage(page)
+    def pushIfNotCurrent(cls, page):
+        currentPage = cls.getCurrentPage()
+        if page != currentPage:
+            cls.prevPages.append(currentPage)
+            cls.setCurrentPage(page)
 
     @classmethod
     def pop(cls):
@@ -65,6 +67,7 @@ class Page(Layer):
 
     def handleRotary(self, rotaryId, value):
         print(f"Rotary {rotaryId} = {value}")
+        return False
 
     def handleButton(self, buttonId, state):
         if (state != 0):

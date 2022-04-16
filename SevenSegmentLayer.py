@@ -1,8 +1,6 @@
 from Layer import Layer
 from TextLayer import TextLayer
 
-import debugpy
-
 class SevenSegmentLayer(Layer):
     def __init__(self):
         super().__init__()
@@ -29,7 +27,6 @@ class SevenSegmentLayer(Layer):
 
     @value.setter
     def value(self, value):
-        debugpy.breakpoint()
         self._value = value;
 
         totalDigits = self.digits
