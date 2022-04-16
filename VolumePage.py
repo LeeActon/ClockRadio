@@ -4,16 +4,20 @@ import time
 from Style import Style
 from Polygon import Polygon
 from Circle import Circle
-from TextLayer import TextLayer
 from Layer import Layer
+from SevenSegmentLayer import SevenSegmentLayer
 
 class VolumePage(Page):
     def __init__(self):
         super().__init__()
         self.rotaryId = 0
 
-        self.label = TextLayer()
-        self.label.text = "0"
+        self.label = SevenSegmentLayer()
+        self.label.value = 0
+        self.label.digits = 2
+        self.label.decimalPlaces = 0
+        self.label.color = (255,0,0)
+        self.label.shadowColor = (255, 255-12,255-12)
         self.label.position = Layer.center
         self.addLayer(self.label);
 
@@ -71,7 +75,7 @@ class VolumePage(Page):
 
     def setValue(self, value):
         self.analogGauge.value = value
-        self.label.text = f"{value}"
+        self.label.value = value
 
     def toggleZeroIndicator(self):
         self.analogGauge.showZeroIndicator = not self.analogGauge.showZeroIndicator
