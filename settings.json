@@ -123,5 +123,18 @@
                 "hoursStyle": "#styles.hourTicksStyle"
             }
         }
-    }
+    },
+    "fmStations":
+    [
+        {"callSign" : "KEXP", "frequency" : "903"},
+        {"callSign" : "KING", "frequency" : "981"},
+        {"callSign" : "KIRO", "frequency" : "973"},
+        {"callSign" : "KISW", "frequency" : "999"},
+        {"callSign" : "KJR", "frequency" : "957"},
+        {"callSign" : "KPLU", "frequency" : "885"},
+        {"callSign" : "KRWM", "frequency" : "1069"},
+        {"callSign" : "KUBE", "frequency" : "933"},
+        {"callSign" : "KUOW", "frequency" : "949"},
+        {"callSign" : "KZOK", "frequency" : "1025"}
+    ]
 }

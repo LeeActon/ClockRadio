@@ -37,19 +37,14 @@ class ClockRadio:
         self.surface = SurfaceHelper.OpenSurface()
 
         self.auxDevices = None
-        self.fontM = None
-        self.fontL = None
-        self.fontXL = None
+        self.fontLED_LED_M = None
+        self.fontLED_L = None
+        self.fontLED_XL = None
 
     def run(self):
         self._running = True
         _clock = pygame.time.Clock()
         signal.signal(signal.SIGINT, self._exit)
-
-        textLayer = TextLayer()
-        textLayer.text = "Hello World"
-        textLayer.font = self.fontM
-        textLayer.position = (480/2, 480*5/8)
 
         while self._running:
             if sys.stdin in select.select([sys.stdin], [], [], 0)[0]:
@@ -68,8 +63,6 @@ class ClockRadio:
                     elif line[0] == 'p':
                         Page.pushIfNotCurrent(self.volumePage)
                         self.volumePage.timeOut = time.time() + 55
-                    elif line[0] == 'x':
-                        textLayer.visible = not textLayer.visible
                     elif line[0] == 'z':
                         self.volumePage.toggleZeroIndicator()
                     elif line[0] == 'b':
@@ -84,8 +77,6 @@ class ClockRadio:
             hour = now.hour
             if hour > 12:
                 hour -= 12
-            textLayer.text = f"{hour}:{now.minute:02d}:{now.second:02d}"
-            textLayer.paint(self.surface)
 
             pygame.display.flip()
             _clock.tick(30)  # Aim for 30fps
@@ -169,9 +160,10 @@ class ClockRadio:
 
        pygame.font.init()
 
-       self.fontM = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
-       self.fontL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64)
-       self.fontXL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64+32+8)
+       self.fontLED_LED_M = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
+       self.fontLED_L = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64)
+       self.fontLED_XL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64+32+8)
+       self.font_M = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 64)
 
        clockPages = list(settings.clockPages.values())
        for clockPage in clockPages:
@@ -184,12 +176,14 @@ class ClockRadio:
        self.volumePage = VolumePage()
        self.volumePage.rotaryId = 11
        self.volumePage.auxDevices = self.auxDevices
-       self.volumePage.font = self.fontXL
+       self.volumePage.font = self.fontLED_XL
        self.volumePage.surface = self.surface
        self.fmPage = FMPage()
        self.fmPage.rotaryId = 12
        self.fmPage.auxDevices = self.auxDevices
-       self.fmPage.font = self.fontXL
+       self.fmPage.fmStations = settings.fmStations
+       self.fmPage.font = self.fontLED_XL
+       self.fmPage.callSignFont = self.font_M
        self.fmPage.surface = self.surface
        self.clockPage.linkRight([self.volumePage, self.fmPage])
 
@@ -202,6 +196,7 @@ class ClockRadio:
            elif opt == "--debug":
                print("Waiting for debugger to attach")
                debugpy.wait_for_client()
+               debugpy.breakpoint()
            elif opt in ("-f", "--face"):
                self.clockPage.backgroundImage = arg
                self.clockPage.clockFace = None

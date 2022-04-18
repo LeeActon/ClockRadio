@@ -3,12 +3,14 @@ from ClockPage import ClockPage
 from Style import Style
 from Polygon import Polygon
 from Circle import Circle
+from FMStation import FMStation
 
 class Settings:
     styles_loader = lambda settings, values : settings.loadDict(Style, values)
     polygons_loader = lambda settings, values : settings.loadDict(Polygon, values)
     circles_loader = lambda settings, values : settings.loadDict(Circle, values)
     clockPages_loader = lambda settings, values : settings.loadDict(ClockPage, values)
+    fmStations_type = FMStation
 
     @classmethod
     def loadSettings(cls, fileName):
