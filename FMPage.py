@@ -97,6 +97,6 @@ class FMPage(Page):
             self.sendAuxDevices(f"R {self.rotaryId} : {self.preset}, 0, {count - 1}, 0, 1")
             self.showPreset()
 
-    def handleButtonUp(self, buttonId):
+    def handleButtonUp(self, buttonId, ns):
         if buttonId == self.rotaryId:
             self.setMode(self.mode + 1)

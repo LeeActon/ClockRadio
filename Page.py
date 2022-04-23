@@ -14,6 +14,7 @@ class Page(Layer):
         self.pageLeft = None
         self.pageRight = None
         self.timeout = None
+        self.buttonDownTimes = {}
 
     def __delete__(self):
         pass
@@ -84,9 +85,11 @@ class Page(Layer):
 
     def handleButton(self, buttonId, state):
         if (state != 0):
+            self.buttonDownTimes[buttonId] = time.time_ns();
             self.handleButtonDown(buttonId)
         else:
-            self.handleButtonUp(buttonId)
+            ns = time.time_ns() - self.buttonDownTimes[buttonId];
+            self.handleButtonUp(buttonId, ns)
 
     def handleButtonDown(self, buttonId):
         if buttonId == 0:
@@ -100,7 +103,7 @@ class Page(Layer):
         elif buttonId == 4:
             self.handleRightButtonDown()
 
-    def handleButtonUp(self, buttonId):
+    def handleButtonUp(self, buttonId, ns):
         if buttonId == 0:
             self.handleEnterButtonUp()
         elif buttonId == 1:
