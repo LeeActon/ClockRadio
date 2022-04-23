@@ -93,6 +93,7 @@ class ClockRadio:
             pass
         elif (ch == '.'):
             self.sendAuxDevices("")
+            self.sendAuxDevices("P") # power on the FM tuner
             self.sendAuxDevices(f"R {self.volumePage.rotaryId} : 0, 0, 30, 150, 0")
             self.sendAuxDevices(f"R {self.fmPage.rotaryId} : 949, 880, 1080, 150, 1")
             self.sendAuxDevices(f"R 13 : 0, -8000, 8000, 0, 1")
@@ -175,6 +176,7 @@ class ClockRadio:
 
        self.volumePage = VolumePage()
        self.volumePage.rotaryId = 11
+       self.volumePage.auxDevices = self.auxDevices
        self.volumePage.auxDevices = self.auxDevices
        self.volumePage.font = self.fontLED_XL
        self.volumePage.surface = self.surface

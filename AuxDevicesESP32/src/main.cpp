@@ -280,7 +280,7 @@ void HandleSerialInput(char* sz)
 			}
 			break;
 		case 'f':
-			// Frequency: f{[+\-]|[<n>]}
+			// Frequency: f{[+|-]|<space><n>}
 			{
 			if (sz[0] == '+')
 				{
@@ -290,9 +290,11 @@ void HandleSerialInput(char* sz)
 				{
 				fmTuner.decChannel();
 				}
-			else
+			else if (sz[0] == ' ')
 				{
-				//UNDONE: parse frequency
+				int f = atoi(sz + 1);
+				if (f != 0)
+					fmTuner.setChannel(f);
 				}
 			}
 			break;

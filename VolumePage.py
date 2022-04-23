@@ -77,6 +77,7 @@ class VolumePage(Page):
     def setValue(self, value):
         self.analogGauge.value = value
         self.label.value = value
+        self.sendAuxDevices(f"v{value}")
 
     def toggleZeroIndicator(self):
         self.analogGauge.showZeroIndicator = not self.analogGauge.showZeroIndicator

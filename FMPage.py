@@ -14,7 +14,6 @@ class FMPage(Page):
     def __init__(self):
         super().__init__()
         self.rotaryId = 0
-        self.auxDevices = None
         self.fmStations = None
         self.mode = FMPage.MODE_FREQ
         self.preset = 0
@@ -53,7 +52,8 @@ class FMPage(Page):
     def setFreq(self, value):
         self.freq = value
         self.freqText.value = value/10.0
-        self.callSignText.text = ""
+        # auxDevice expects actual freq * 100 and self.freq is already 10 times actual freq.
+        self.sendAuxDevices(f"f {self.freq*10}")
 
     def setPreset(self, value):
         self.preset = value
@@ -65,8 +65,7 @@ class FMPage(Page):
         self.showPreset()
 
     def showPreset(self):
-        self.freq = self.fmStations[self.preset].frequency
-        self.freqText.value = self.freq/10.0
+        self.setFreq(self.fmStations[self.preset].frequency)
         self.callSignText.text = self.fmStations[self.preset].callSign
 
     def handleRotary(self, rotaryId, value):
@@ -76,6 +75,7 @@ class FMPage(Page):
             self.timeout = now + 5
             if self.mode == FMPage.MODE_FREQ:
                 self.setFreq(value)
+                self.callSignText.text = ""
             elif self.mode == FMPage.MODE_PRESET:
                 self.setPreset(value)
             return True
@@ -100,8 +100,3 @@ class FMPage(Page):
     def handleButtonUp(self, buttonId):
         if buttonId == self.rotaryId:
             self.setMode(self.mode + 1)
-
-    def sendAuxDevices(self, s):
-        print(f"--> {s}")
-        self.auxDevices.write(s.encode("utf-8"))
-        self.auxDevices.write("\n".encode("utf-8"))

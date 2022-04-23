@@ -8,6 +8,7 @@ class Page(Layer):
     def __init__(self):
         super().__init__()
         self.surface = None
+        self.auxDevices = None
         self.pageUp = None
         self.pageDown = None
         self.pageLeft = None
@@ -162,3 +163,8 @@ class Page(Layer):
     def right(self):
         if self.pageRight != None:
             Page.currentPage = self.pageRight
+
+    def sendAuxDevices(self, s):
+        print(f"--> {s}")
+        self.auxDevices.write(s.encode("utf-8"))
+        self.auxDevices.write("\n".encode("utf-8"))
