@@ -1,5 +1,7 @@
 
 class FMStation:
     def __init__(self):
-        self.callsign = None
-        self.frequency = 0
+        self.callSign = ""
+        self.frequency = 0.0
+        self.city = ""
+        self.format = ""

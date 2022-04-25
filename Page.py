@@ -4,6 +4,9 @@ from Layer import Layer
 class Page(Layer):
     prevMenuRotaryValue = 0
     menuRotaryId = 13
+    buttonDownTimes = {}
+    buttonDownRepeats = {}
+    buttonRepeatRate = {}
 
     def __init__(self):
         super().__init__()
@@ -14,7 +17,6 @@ class Page(Layer):
         self.pageLeft = None
         self.pageRight = None
         self.timeout = None
-        self.buttonDownTimes = {}
 
     def __delete__(self):
         pass
@@ -41,6 +43,8 @@ class Page(Layer):
         if page != currentPage:
             cls.prevPages.append(currentPage)
             cls.setCurrentPage(page)
+            return False
+        return True
 
     @classmethod
     def pop(cls):
@@ -53,6 +57,17 @@ class Page(Layer):
             if (now > self.timeout):
                 self.timeout = None
                 Page.pop()
+
+        time_ns = time.time_ns()
+        for buttonId, ns in Page.buttonDownTimes.items():
+            if ns != None:
+                count = Page.buttonDownRepeats[buttonId] + 1
+                rate = Page.buttonRepeatRate[buttonId]
+
+                delta = time_ns - ns
+                if delta > rate*count:
+                    Page.buttonDownRepeats[buttonId] = count
+                    self.handleButtonDownRepeat(buttonId, count)
 
         self.paint(self.surface)
 
@@ -83,13 +98,28 @@ class Page(Layer):
 
         return False
 
+    @classmethod
+    def setButtonRepeatRate(cls, buttonId, rate):
+        Page.buttonRepeatRate[buttonId] = rate
+
     def handleButton(self, buttonId, state):
         if (state != 0):
-            self.buttonDownTimes[buttonId] = time.time_ns();
+            if buttonId in Page.buttonRepeatRate:
+                Page.buttonDownTimes[buttonId] = time.time_ns()
+                Page.buttonDownRepeats[buttonId] = 0
             self.handleButtonDown(buttonId)
         else:
-            ns = time.time_ns() - self.buttonDownTimes[buttonId];
+            ns = 0  # to handle any weird cases
+
+            if buttonId in Page.buttonRepeatRate:
+                if buttonId in Page.buttonDownTimes:
+                    ns = time.time_ns() - Page.buttonDownTimes[buttonId];
+                    del Page.buttonDownTimes[buttonId]
+
             self.handleButtonUp(buttonId, ns)
+
+    def handleButtonDownRepeat(self, buttonId, count):
+        pass
 
     def handleButtonDown(self, buttonId):
         if buttonId == 0:

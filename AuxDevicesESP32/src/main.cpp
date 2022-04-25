@@ -316,6 +316,7 @@ void HandleSerialInput(char* sz)
 					}
 				}
 			}
+			break;
 		case 'p':
 			{
 			int i = atoi(sz);

@@ -11,7 +11,7 @@ class Settings:
     circles_loader = lambda settings, values : settings.loadDict(Circle, values)
     clockPages_loader = lambda settings, values : settings.loadDict(ClockPage, values)
     fmStations_type = FMStation
-
+    
     @classmethod
     def loadSettings(cls, fileName):
         settings = Settings()

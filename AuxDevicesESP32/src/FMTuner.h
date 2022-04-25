@@ -144,15 +144,15 @@ class FMTuner : public Si4703
 				{
 				int whole = this->channel / 100;
 				int frac = this->channel % 100;
-				this->pStream->print("F:");
+				this->pStream->print("F ");
 				this->pStream->print(whole);
 				this->pStream->print(".");
 				this->pStream->print(frac);
-				this->pStream->print(" Mhz, ");
+				this->pStream->print(" ");
 				this->pStream->print(this->getRSSI());
 				if (this->getST())
 					{
-					this->pStream->print(", stereo");
+					this->pStream->print(" stereo");
 					}
 				this->pStream->println();
 				}
@@ -239,6 +239,7 @@ class FMTuner : public Si4703
 
 		void save()
 			{
+#if 0
 			EEPROM.write(eeprom_signature, eeprom_signature_value);
 
 			int chan = this->channel;
@@ -248,10 +249,12 @@ class FMTuner : public Si4703
 			EEPROM.write(eeprom_chn_lsb, lsb);
 
 			EEPROM.write(eeprom_vol, this->volume);
+#endif
 			}
 
 		void restore()
 			{
+#if 0
 			int signature = EEPROM.read(eeprom_signature);
 			if (signature == eeprom_signature_value)
 				{
@@ -263,6 +266,7 @@ class FMTuner : public Si4703
 				// Read Volume
 				this->volume = EEPROM.read(eeprom_vol);
 				}
+#endif
 			}
 
 		void reportAll()

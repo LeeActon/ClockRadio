@@ -52,6 +52,8 @@ class ClockRadio:
                 if line:
                     if line[0] == 'q':
                         self._running = False
+                    elif line[0] == 'b':
+                        debugpy.breakpoint()
                     elif line[0] == 'l':
                         Layer.offsetX(-1)
                     elif line[0] == 'r':
@@ -65,8 +67,6 @@ class ClockRadio:
                         self.volumePage.timeOut = time.time() + 55
                     elif line[0] == 'z':
                         self.volumePage.toggleZeroIndicator()
-                    elif line[0] == 'b':
-                        debugpy.breakpoint()
 
             if self.auxDevices.in_waiting > 0:
                 self.handleAuxInput()
@@ -94,9 +94,9 @@ class ClockRadio:
         elif (ch == '.'):
             self.sendAuxDevices("")
             self.sendAuxDevices("P") # power on the FM tuner
-            self.sendAuxDevices(f"R {self.volumePage.rotaryId} : 0, 0, 30, 150, 0")
-            self.sendAuxDevices(f"R {self.fmPage.rotaryId} : 949, 880, 1080, 150, 1")
-            self.sendAuxDevices(f"R 13 : 0, -8000, 8000, 0, 1")
+            self.sendAuxDevices(f"R {self.volumePage.rotaryId} : 0, 0, 30, 150, 0") #UNDONE: VolumePage should do this
+            self.fmPage.setMode(FMPage.MODE_PRESET)
+            self.sendAuxDevices(f"R 13 : 0, -8000, 8000, 0, 1") # For menu
         elif (ch == 'B'):
             # Button pressed/released report
             # B <n> : <s>
@@ -119,6 +119,21 @@ class ClockRadio:
                     for p in [self.volumePage, self.fmPage, page]:
                         if p.handleRotary(rotaryId, value):
                             break;
+        elif (ch == 'F'):
+            # Frequency report
+            # F: <f> MHz, <s>[, stereo]
+            # where <f> is the megahertz of the tuned station
+            #       <s> is the signal strength
+            #       optional "stereo" indicates the tuner has detected a stereo signal
+            if len(parts) >= 2:
+                freq = eval(parts[1])
+                strength = 0
+                stereo = ""
+                if len(parts) >= 3:
+                    strength = eval(parts[2])
+                    if len (parts) >= 4:
+                        stereo = parts[3]
+                self.fmPage.tuningReport(freq, strength, stereo)
 
         elif (ch == 'V'):
             # Volume report
@@ -126,13 +141,6 @@ class ClockRadio:
             # where <v> is the current volume
             #       optional "mute" indcates output is muted
             #       optional "mono" indcates output is forced to mono
-            pass
-        elif (ch == 'F'):
-            # Frequency report
-            # F: <f> MHz, <s>[, stereo]
-            # where <f> is the megahertz of the tuned station
-            #       <s> is the signal strength
-            #       optional "stereo" indicates the tuner has detected a stereo signal
             pass
 
     def _exit(self, sig, frame):
@@ -164,6 +172,7 @@ class ClockRadio:
        self.fontLED_LED_M = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
        self.fontLED_L = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64)
        self.fontLED_XL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64+32+8)
+       self.font_S = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 32)
        self.font_M = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 64)
 
        clockPages = list(settings.clockPages.values())
@@ -182,10 +191,13 @@ class ClockRadio:
        self.volumePage.surface = self.surface
        self.fmPage = FMPage()
        self.fmPage.rotaryId = 12
+       Page.setButtonRepeatRate(self.fmPage.rotaryId, 1000000000) # in ns this is one second
        self.fmPage.auxDevices = self.auxDevices
        self.fmPage.fmStations = settings.fmStations
+       self.fmPage.presetFMStations = settings.presetFMStations
        self.fmPage.font = self.fontLED_XL
        self.fmPage.callSignFont = self.font_M
+       self.fmPage.formatFont = self.font_S
        self.fmPage.surface = self.surface
        self.clockPage.linkRight([self.volumePage, self.fmPage])
 
@@ -198,7 +210,7 @@ class ClockRadio:
            elif opt == "--debug":
                print("Waiting for debugger to attach")
                debugpy.wait_for_client()
-               debugpy.breakpoint()
+               print("Debugger attached")
            elif opt in ("-f", "--face"):
                self.clockPage.backgroundImage = arg
                self.clockPage.clockFace = None

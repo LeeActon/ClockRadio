@@ -84,10 +84,10 @@ class VolumePage(Page):
 
     def handleRotary(self, rotaryId, value):
         if (rotaryId == self.rotaryId):
-            Page.pushIfNotCurrent(self)
-            now = time.time()
-            self.timeout = now + 5
-            self.setValue(value)
+            if Page.pushIfNotCurrent(self):
+                now = time.time()
+                self.timeout = now + 5
+                self.setValue(value)
             return True
 
         return False
