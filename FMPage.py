@@ -42,6 +42,12 @@ class FMPage(Page):
         self.formatText.position = (240, 240+150)
         self.addLayer(self.formatText);
 
+        self.stereoText = TextLayer()
+        self.stereoText.color = (255, 255, 255)
+        self.stereoText.text = ""
+        self.stereoText.position = (240+100, 240-100)
+        self.addLayer(self.stereoText);
+
     @property
     def fmStations(self):
         return self._fmStations
@@ -77,11 +83,20 @@ class FMPage(Page):
     def formatFont(self, value):
         self.formatText.font = value
 
+    @property
+    def stereoFont(self):
+        return self.stereoText.font
+
+    @stereoFont.setter
+    def stereoFont(self, value):
+        self.stereoText.font = value
+
     def tuningReport(self, freq, strength, stereo):
         self.freq = freq
         self.strength = strength
         self.stereo = stereo
         self.freqText.value = freq
+        self.stereoText.text = stereo
         self.callSignText.text = ""
         self.formatText.text = ""
         if freq in self.freqToFMStation:

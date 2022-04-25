@@ -198,6 +198,7 @@ class ClockRadio:
        self.fmPage.font = self.fontLED_XL
        self.fmPage.callSignFont = self.font_M
        self.fmPage.formatFont = self.font_S
+       self.fmPage.stereoFont = self.font_S
        self.fmPage.surface = self.surface
        self.clockPage.linkRight([self.volumePage, self.fmPage])
 
