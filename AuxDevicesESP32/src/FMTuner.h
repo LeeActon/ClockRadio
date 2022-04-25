@@ -219,23 +219,6 @@ class FMTuner : public Si4703
 			DebugMessage("setVolume()");
 			setVolume(this->volume);
 			}
-		//-----------------------------------------------------------------------------------------------------------------------------------
-		// Read the entire register set (0x00 - 0x0F) to Shadow
-		// Reading is in following register address sequence 0A,0B,0C,0D,0E,0F,00,01,02,03,04,05,06,07,08,09 = 16 Words = 32 bytes.
-		//-----------------------------------------------------------------------------------------------------------------------------------
-		int	getShadow2()
-			{
-			static const int  		I2C_ADDR		= 0x10; // I2C address of Si4703 - note that the Wire function assumes non-left-shifted I2C address, not 0b.0010.000W
-			uint16_t words[16];
-
-			int cw = Wire.requestFrom(I2C_ADDR, 32)/2; 
-			for(int i = 0 ; i<cw; i++)
-				{
-				words[i] = (Wire.read()<<8) | Wire.read();
-				}
-
-			return cw;
-			}
 
 		void save()
 			{

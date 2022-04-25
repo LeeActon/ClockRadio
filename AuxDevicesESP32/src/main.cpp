@@ -221,18 +221,8 @@ void HandleSerialInput(char* sz)
 			DebugMessage("Before fmTuner.start()");
 			DebugPulse(2);
 			fmTuner.start();          // Power Up Device
-#if 0
-			while (fmTuner.getShadow2() ==0)
-				{
-				DebugMessage("repeat fmTuner.start()");
-				fmTuner.start();          // Power Up Device
-				}
-#endif
 			DebugPulse(3);
 			DebugMessage("After fmTuner.start()");
-			DebugPulse(4);
-			fmTuner.reportAll();
-			DebugPulse(5);
 			}
 			break;
 		case 'v':
@@ -355,6 +345,7 @@ void HandleSerialInput(char* sz)
 		case '?':
 			{
 			fmTuner.reportAll();
+			Serial.println(".");
 			}
 			break;
 		}

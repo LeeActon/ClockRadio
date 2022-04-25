@@ -166,6 +166,7 @@ class ClockRadio:
        settings = Settings.loadSettings("settings.json")
 
        self.auxDevices = serial.Serial("/dev/ttyUSB0", 115200)
+       self.sendAuxDevices("?")
 
        pygame.font.init()
 
