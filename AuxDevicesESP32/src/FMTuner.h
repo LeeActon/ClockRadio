@@ -3,14 +3,6 @@
 // see: https://github.com/mkhuthir/Si4703
 #include <Si4703.h>
 #include <Wire.h>
-#include <EEPROM.h>
-
-// EEPROM Usage Map
-#define eeprom_signature 1
-#define eeprom_signature_value 0xCA
-#define eeprom_chn_msb   2
-#define eeprom_chn_lsb   3
-#define eeprom_vol       4
 
 class FMTuner : public Si4703
 	{
@@ -73,7 +65,6 @@ class FMTuner : public Si4703
 				v++;
 			Si4703::setVolExt(this->volume <= 15);
 			Si4703::setVolume(v);
-			save();
 			reportVolume();
 			}
 
@@ -166,7 +157,6 @@ class FMTuner : public Si4703
 		void syncChannel()
 			{
 			this->channel = Si4703::getChannel();
-			save();
 			reportFrequency();
 			}
 
@@ -210,46 +200,10 @@ class FMTuner : public Si4703
 			{
 			Si4703::start();
 
-			DebugMessage("Before read_EEPROM()");
-			restore();
-			DebugMessage("After read_EEPROM()");
-
 			DebugMessage("setChannel()");
 			setChannel(this->channel);
 			DebugMessage("setVolume()");
 			setVolume(this->volume);
-			}
-
-		void save()
-			{
-#if 0
-			EEPROM.write(eeprom_signature, eeprom_signature_value);
-
-			int chan = this->channel;
-			int msb = chan >> 8;
-			int lsb = chan & 0x00FF;
-			EEPROM.write(eeprom_chn_msb, msb);
-			EEPROM.write(eeprom_chn_lsb, lsb);
-
-			EEPROM.write(eeprom_vol, this->volume);
-#endif
-			}
-
-		void restore()
-			{
-#if 0
-			int signature = EEPROM.read(eeprom_signature);
-			if (signature == eeprom_signature_value)
-				{
-				// Read channel value
-				int MSB = EEPROM.read(eeprom_chn_msb);
-				int LSB = EEPROM.read(eeprom_chn_lsb);
-				this->channel = (MSB << 8) | LSB;
-
-				// Read Volume
-				this->volume = EEPROM.read(eeprom_vol);
-				}
-#endif
 			}
 
 		void reportAll()
