@@ -328,15 +328,27 @@ void HandleSerialInput(char* sz)
 			int acceleration;
 			int wrap;
 
-			int count = sscanf(sz, "%d : %d, %d, %d, %d, %d", &id, &value, &min, &max, &acceleration, &wrap);
-			if (count == 6)
+			if (sz[0] == '-')
 				{
+				id = atoi(sz + 1);
 				RotaryEncoderEx *pRotaryEncoder = FindRotaryEncoder(id);
 				if (pRotaryEncoder != NULL)
 					{
-					pRotaryEncoder->setBoundaries(min, max, wrap != 0);
-					pRotaryEncoder->setEncoderValue(value);
-					pRotaryEncoder->setAcceleration(acceleration);
+					pRotaryEncoder->restorePosition();
+					}
+				}
+			else
+				{
+				int count = sscanf(sz, "%d : %d, %d, %d, %d, %d", &id, &value, &min, &max, &acceleration, &wrap);
+				if (count == 6)
+					{
+					RotaryEncoderEx *pRotaryEncoder = FindRotaryEncoder(id);
+					if (pRotaryEncoder != NULL)
+						{
+						pRotaryEncoder->setBoundaries(min, max, wrap != 0);
+						pRotaryEncoder->setEncoderValue(value);
+						pRotaryEncoder->setAcceleration(acceleration);
+						}
 					}
 				}
 			}

@@ -84,7 +84,10 @@ class VolumePage(Page):
 
     def handleRotary(self, rotaryId, value):
         if (rotaryId == self.rotaryId):
-            if Page.pushIfNotCurrent(self):
+            if not Page.pushIfNotCurrent(self):
+                # tell rotary encoder to go back to previous position
+                self.sendAuxDevices(f"R-{self.rotaryId}")
+            else:
                 now = time.time()
                 self.timeout = now + 5
                 self.setValue(value)
