@@ -188,7 +188,8 @@ class ClockRadio:
        self.volumePage.rotaryId = 11
        self.volumePage.auxDevices = self.auxDevices
        self.volumePage.auxDevices = self.auxDevices
-       self.volumePage.font = self.fontLED_XL
+       self.volumePage.digitalValueFont = self.fontLED_XL
+       self.volumePage.textFont = self.font_M
        self.volumePage.surface = self.surface
        self.fmPage = FMPage()
        self.fmPage.rotaryId = 12

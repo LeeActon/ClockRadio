@@ -5,7 +5,9 @@ from Style import Style
 from Polygon import Polygon
 from Circle import Circle
 from Layer import Layer
+from TextLayer import TextLayer
 from SevenSegmentLayer import SevenSegmentLayer
+import Points
 
 class VolumePage(Page):
     def __init__(self):
@@ -13,14 +15,20 @@ class VolumePage(Page):
         self.rotaryId = 0
         self.auxDevices = None
 
-        self.label = SevenSegmentLayer()
-        self.label.value = 0
-        self.label.digits = 2
-        self.label.decimalPlaces = 0
-        self.label.color = (255,0,0)
-        self.label.shadowColor = (255, 255-12,255-12)
-        self.label.position = Layer.center
-        self.addLayer(self.label);
+        self.digitalValue = SevenSegmentLayer()
+        self.digitalValue.value = 0
+        self.digitalValue.digits = 2
+        self.digitalValue.decimalPlaces = 0
+        self.digitalValue.color = (255,0,0)
+        self.digitalValue.shadowColor = (255, 255-12,255-12)
+        self.digitalValue.position = Layer.center
+        self.addLayer(self.digitalValue);
+
+        self.textLayer = TextLayer()
+        self.textLayer.text = "Volume"
+        self.textLayer.color = (0,0,255)
+        self.textLayer.position = Points.translatePoint(Layer.center, (0, 100))
+        self.addLayer(self.textLayer)
 
         self.analogGauge = AnalogGauge()
         self.addLayer(self.analogGauge)
@@ -67,16 +75,24 @@ class VolumePage(Page):
         self.analogGauge.createTickMarks([10,5,1], [self.style10s, self.style5s, self.style1s])
 
     @property
-    def font(self):
-        return self.label.font
+    def digitalValueFont(self):
+        return self.digitalValue.font
 
-    @font.setter
-    def font(self, value):
-        self.label.font = value
+    @digitalValueFont.setter
+    def digitalValueFont(self, value):
+        self.digitalValue.font = value
+
+    @property
+    def textFont(self):
+        return self.textLayer.font
+
+    @textFont.setter
+    def textFont(self, value):
+        self.textLayer.font = value
 
     def setValue(self, value):
         self.analogGauge.value = value
-        self.label.value = value
+        self.digitalValue.value = value
         self.sendAuxDevices(f"v{value}")
 
     def toggleZeroIndicator(self):
