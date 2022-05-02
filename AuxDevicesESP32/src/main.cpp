@@ -348,6 +348,7 @@ void HandleSerialInput(char* sz)
 						pRotaryEncoder->setBoundaries(min, max, wrap != 0);
 						pRotaryEncoder->setEncoderValue(value);
 						pRotaryEncoder->setAcceleration(acceleration);
+						pRotaryEncoder->encoderChanged();
 						}
 					}
 				}

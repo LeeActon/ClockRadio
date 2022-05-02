@@ -21,6 +21,7 @@ class FMPage(Page):
         self.preset = 0
         self.freq = 949
         self.prevRotaryValue = 0
+        self.ignoreButtonUp = False
 
         self.style = Style()
         self.style.backColor = (0, 0, 0)
@@ -123,12 +124,12 @@ class FMPage(Page):
 
     def handleRotary(self, rotaryId, value):
         if (rotaryId == self.rotaryId):
+            self.defaultTimeout()
             if not Page.pushIfNotCurrent(self):
                 # tell rotary encoder to go back to previous position
+                # i.e. ignore this knob turn
                 self.sendAuxDevices(f"R-{self.rotaryId}")
             else:
-                now = time.time()
-                self.timeout = now + 5
                 if self.mode == FMPage.MODE_FREQ:
                     f = value/10.0
                     self.setFreq(f)
@@ -167,19 +168,33 @@ class FMPage(Page):
             self.sendAuxDevices(f"R {self.rotaryId} : {self.preset}, 0, {count - 1}, 0, 1")
             self.showPreset()
 
+    def handleButton(self, buttonId, state):
+        if buttonId == self.rotaryId:
+            self.defaultButtonHandler(buttonId, state)
+            return True
+
+        return False
+
+    def handleButtonDown(self, buttonId):
+        if buttonId == self.rotaryId:
+            if not Page.pushIfNotCurrent(self):
+                self.ignoreButtonUp = True
+            self.defaultTimeout()
+
     def handleButtonDownRepeat(self, buttonId, count):
         if buttonId == self.rotaryId:
             if (self.mode != FMPage.MODE_FREQ):
                 self.setMode(FMPage.MODE_FREQ)
-            now = time.time()
-            self.timeout = now + 5
+                self.ignoreButtonUp = True
+            self.defaultTimeout()
 
     def handleButtonUp(self, buttonId, ns):
         if buttonId == self.rotaryId:
-            now = time.time()
-            self.timeout = now + 5
-            if ns > 1000000000:
-                pass    # should have been handled by handleButtonDownRepeat
+            self.defaultTimeout()
+            print(f"FMPage.handleButtonUp({buttonId}, {ns})")
+            if self.ignoreButtonUp:
+                # Was either handled by handleButtonDownRepeat or was auto page flip
+                self.ignoreButtonUp = False
             elif self.mode == FMPage.MODE_FREQ:
                 self.setMode(FMPage.MODE_PRESET)
             elif self.mode == FMPage.MODE_PRESET:

@@ -1,3 +1,4 @@
+import debugpy
 from Page import Page
 from AnalogGauge import AnalogGauge
 import time
@@ -10,10 +11,18 @@ from SevenSegmentLayer import SevenSegmentLayer
 import Points
 
 class VolumePage(Page):
+    MODE_FIRST = 0
+    MODE_VOLUME = 0
+    MODE_SLEEP = 1
+    MODE_LAST = 1
+
     def __init__(self):
         super().__init__()
         self.rotaryId = 0
         self.auxDevices = None
+        self.mute = False
+
+        self.sleepPage = None
 
         self.digitalValue = SevenSegmentLayer()
         self.digitalValue.value = 0
@@ -98,14 +107,51 @@ class VolumePage(Page):
     def toggleZeroIndicator(self):
         self.analogGauge.showZeroIndicator = not self.analogGauge.showZeroIndicator
 
+    def setMute(self, mute):
+        self.mute = mute
+        if self.mute:
+            self.textLayer.text = "Mute"
+            self.sendAuxDevices("m+")
+        else:
+            self.textLayer.text = "Volume"
+            self.sendAuxDevices("m-")
+
+    def onActivate(self):
+        self.sendAuxDevices(f"R {self.rotaryId} : {self.digitalValue.value}, 0, 30, 150, 0")
+
+    def handleButton(self, buttonId, state):
+        if (buttonId == self.rotaryId):
+            self.defaultButtonHandler(buttonId, state)
+            return True
+
+        return False
+
+    def handleButtonDown(self, buttonId):
+        if (buttonId == self.rotaryId):
+            Page.pushIfNotCurrent(self)
+            self.defaultTimeout()
+
+    def handleButtonUp(self, buttonId, ns):
+        if buttonId == self.rotaryId:
+            if self.mute:
+                self.setMute(False)
+                Page.pushIfNotCurrent(self.sleepPage)
+                self.defaultTimeout()
+            else:
+                self.setMute(True)
+
     def handleRotary(self, rotaryId, value):
         if (rotaryId == self.rotaryId):
+            # volumePage and SleepPage use the same rotary encoder... defer to SleepPage if it is active.
+            if Page.getCurrentPage() == self.sleepPage:
+                return False
+
+            self.defaultTimeout()
             if not Page.pushIfNotCurrent(self):
                 # tell rotary encoder to go back to previous position
+                # i.e. ignore this knob turn
                 self.sendAuxDevices(f"R-{self.rotaryId}")
             else:
-                now = time.time()
-                self.timeout = now + 5
                 self.setValue(value)
             return True
 

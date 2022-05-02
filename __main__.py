@@ -30,6 +30,7 @@ from Settings import Settings
 from Style import Style
 from AnalogClockFace import AnalogClockFace
 from FMPage import FMPage
+from SleepPage import SleepPage
 
 class ClockRadio:
 
@@ -106,7 +107,11 @@ class ClockRadio:
                 if (page != None):
                     buttonId = int(parts[1])
                     state = int(parts[3])
-                    page.handleButton(buttonId, state)
+                    for p in [self.volumePage, self.fmPage, page]:
+                        if p != None:
+                            if p.handleButton(buttonId, state):
+                                break;
+
         elif (ch == 'R'):
             # Rotary Encoder changed report
             # R <n> : <d>
@@ -184,13 +189,22 @@ class ClockRadio:
 
        self.clockPage.linkUp(clockPages[1:])
 
+       self.sleepPage = SleepPage()
+       self.sleepPage.rotaryId = 11
+       self.sleepPage.auxDevices = self.auxDevices
+       self.sleepPage.digitalValueFont = self.fontLED_XL
+       self.sleepPage.textFont = self.font_M
+       self.sleepPage.surface = self.surface
+
+
        self.volumePage = VolumePage()
        self.volumePage.rotaryId = 11
-       self.volumePage.auxDevices = self.auxDevices
        self.volumePage.auxDevices = self.auxDevices
        self.volumePage.digitalValueFont = self.fontLED_XL
        self.volumePage.textFont = self.font_M
        self.volumePage.surface = self.surface
+       self.volumePage.sleepPage = self.sleepPage
+
        self.fmPage = FMPage()
        self.fmPage.rotaryId = 12
        Page.setButtonRepeatRate(self.fmPage.rotaryId, 1000000000) # in ns this is one second

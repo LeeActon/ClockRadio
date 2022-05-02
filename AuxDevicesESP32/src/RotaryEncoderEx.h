@@ -29,6 +29,7 @@ class RotaryEncoderEx : public AiEsp32RotaryEncoder
 		void restorePosition()
 			{
 			this->setEncoderValue(this->nextToLastReportedPosition);
+			this->encoderChanged();
 			}
 
 		void reportPosition(Stream *pStream)

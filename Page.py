@@ -31,6 +31,7 @@ class Page(Layer):
     @classmethod
     def setCurrentPage(cls, page):
         cls.currentPage = page
+        cls.currentPage.onActivate()
 
     @classmethod
     def updateCurrentPage(cls):
@@ -43,20 +44,35 @@ class Page(Layer):
         if page != currentPage:
             cls.prevPages.append(currentPage)
             cls.setCurrentPage(page)
+            print(f"push - {page} - {cls.prevPages}")
             return False
         return True
 
     @classmethod
     def pop(cls):
         if (len(cls.prevPages) > 0):
-            cls.setCurrentPage(cls.prevPages.pop())
+            page = cls.prevPages.pop()
+            cls.setCurrentPage(page)
+            print(f"pop - {page} - {cls.prevPages}")
+            return page
+        
+        return None
+
+    def onActivate(self):
+        pass
+
+    def defaultTimeout(self):
+        self.timeout = time.time() + 3
+
+    def checkTimeout(self, now):
+        if (self.timeout != None) and (now > self.timeout):
+            page = Page.pop()
+            if page != None:
+                page.checkTimeout(now)
 
     def update(self):
         if (self.timeout != None):
-            now = time.time()
-            if (now > self.timeout):
-                self.timeout = None
-                Page.pop()
+            self.checkTimeout(time.time())
 
         time_ns = time.time_ns()
         for buttonId, ns in Page.buttonDownTimes.items():
@@ -66,6 +82,7 @@ class Page(Layer):
 
                 delta = time_ns - ns
                 if delta > rate*count:
+                    print(f"button repeat: {delta}, {count}, {rate}")
                     Page.buttonDownRepeats[buttonId] = count
                     self.handleButtonDownRepeat(buttonId, count)
 
@@ -103,6 +120,11 @@ class Page(Layer):
         Page.buttonRepeatRate[buttonId] = rate
 
     def handleButton(self, buttonId, state):
+        self.defaultButtonHandler(buttonId, state)
+        return True
+
+    def defaultButtonHandler(self, buttonId, state):
+        print(f"defaultButtonHandler({buttonId}, {state})")
         if (state != 0):
             if buttonId in Page.buttonRepeatRate:
                 Page.buttonDownTimes[buttonId] = time.time_ns()
@@ -112,8 +134,10 @@ class Page(Layer):
             ns = 0  # to handle any weird cases
 
             if buttonId in Page.buttonRepeatRate:
+                print(f"    repeat rate: {Page.buttonRepeatRate[buttonId]}")
                 if buttonId in Page.buttonDownTimes:
                     ns = time.time_ns() - Page.buttonDownTimes[buttonId];
+                    print(f"    down time: {Page.buttonDownTimes[buttonId]} ns: {ns}")
                     del Page.buttonDownTimes[buttonId]
 
             self.handleButtonUp(buttonId, ns)
