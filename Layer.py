@@ -55,6 +55,10 @@ class Layer:
         layer.parent = self
         self.layers.append(layer)
 
+    def removeLayer(self, layer):
+        layer.parent = None
+        self.layers.remove(layer)
+
     def drawCircle(self, surface, center, radius, strokeColor, fillColor, antialias=True):
         #print(f"circle({color}, {center}, {radius})")
         x, y = center

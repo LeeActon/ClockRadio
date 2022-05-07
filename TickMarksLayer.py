@@ -47,8 +47,9 @@ class TickMarksLayer(Layer):
     @property
     def tickMark(self):
         if self._tickMark == None:
-            if self.style.shape != None:
-                self._tickMark = self.style.shape
+            shape = self.getProperty("shape")
+            if shape != None:
+                self._tickMark = shape
             else:
                 length = self.getProperty("length")
                 width = self.getProperty("width")

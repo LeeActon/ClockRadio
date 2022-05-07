@@ -3,6 +3,7 @@ from Page import Page
 from ImageLayer import ImageLayer
 from AnalogClockFace import AnalogClockFace
 from AnalogClockHands import AnalogClockHands
+from AnalogAlarmIndicator import AnalogAlarmIndicator
 from Style import Style
 
 class ClockPage(Page):
@@ -17,6 +18,17 @@ class ClockPage(Page):
         self._backgroundImage = None
         self.clockFace = None
         self.clockHands = AnalogClockHands()
+        self.alarmIndicator1 = AnalogAlarmIndicator()
+        self.alarmIndicator1.style.strokeColor = (255,0,0)
+        self.alarmIndicator1.style.fillColor = (255,0,0)
+        self.alarmIndicator1.style.radius = 200
+        self.alarmIndicator1.time = datetime.time(6, 30)
+
+        self.alarmIndicator2 = AnalogAlarmIndicator()
+        self.alarmIndicator2.style.strokeColor = (192,0,255)
+        self.alarmIndicator2.style.fillColor = (192,0,255)
+        self.alarmIndicator2.style.radius = 200
+        self.alarmIndicator2.time = datetime.time(10, 30)
 
     def __str__(self):
         return f"ClockPage {{{self._backgroundImage}, {self.clockFace}, {self.clockHands}}}"
@@ -44,6 +56,10 @@ class ClockPage(Page):
                 self.clockFace.createClockFace()
             if self.clockHands != None:
                 self.addLayer(self.clockHands)
+            if self.alarmIndicator1 != None:
+                self.addLayer(self.alarmIndicator1)
+            if self.alarmIndicator2 != None:
+                self.addLayer(self.alarmIndicator2)
 
         if self.clockHands != None:
             self.clockHands.time = self.time or datetime.datetime.now()

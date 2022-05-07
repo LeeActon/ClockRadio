@@ -6,7 +6,7 @@ import debugpy
 debugpy.listen(("0.0.0.0", 5678))
 #}
 
-import datetime
+from datetime import datetime
 import getopt
 import json
 import math
@@ -68,13 +68,20 @@ class ClockRadio:
                         self.volumePage.timeOut = time.time() + 55
                     elif line[0] == 'z':
                         self.volumePage.toggleZeroIndicator()
+                    elif line[0] == 'a':
+                        n = line[1]
+                        t = datetime.strptime(line.strip(), f"a{n} %I:%M")
+                        if n == '1':
+                            self.clockPage.alarmIndicator1.time = t
+                        elif n == '2':
+                            self.clockPage.alarmIndicator2.time = t
 
             if self.auxDevices.in_waiting > 0:
                 self.handleAuxInput()
 
             Page.updateCurrentPage()
 
-            now = datetime.datetime.now()
+            now = datetime.now()
             hour = now.hour
             if hour > 12:
                 hour -= 12
