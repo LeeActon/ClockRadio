@@ -1,4 +1,42 @@
 {
+    "fonts":
+    {
+       "LED_M":
+       {
+           "filename": "/usr/share/fonts/7segment.ttf",
+           "size": "64"
+       },
+       "LED_L":
+       {
+           "filename": "/usr/share/fonts/7segment.ttf",
+           "size": "128"
+       },
+       "LED_XL":
+       {
+           "filename": "/usr/share/fonts/7segment.ttf",
+           "size": "168"
+       },
+       "SEG16_M":
+       {
+           "filename": "/usr/share/fonts/16Segments-Basic.otf",
+           "size": "64"
+       },
+       "text_S":
+       {
+           "filename": "/usr/share/fonts/SourceSansPro-Regular.otf",
+           "size": "32"
+       },
+       "text_S+":
+       {
+           "filename": "/usr/share/fonts/SourceSansPro-Regular.otf",
+           "size": "48"
+       },
+       "text_M":
+       {
+           "filename": "/usr/share/fonts/SourceSansPro-Regular.otf",
+           "size": "64"
+       }
+    },
     "styles":
     {
         "minuteTicksStyle":
@@ -123,6 +161,27 @@
                 "hoursStyle": "#styles.hourTicksStyle"
             }
         }
+    },
+    "alarmPages":
+    {
+        "1":
+        {
+            "backgroundImage": "New Clock Face Dim.png",
+            "font": "#fonts.text_S+",
+            "timeFont": "#fonts.SEG16_M",
+            "stateFont": "#fonts.text_S+",
+            "title": "Alarm 1"
+
+        },
+        "2":
+        {
+            "backgroundImage": "New Clock Face Dim.png",
+            "font": "#fonts.text_S+",
+            "timeFont": "#fonts.SEG16_M",
+            "stateFont": "#fonts.text_S+",
+            "title": "Alarm 2"
+        }
+
     },
     "fmStations":
     [

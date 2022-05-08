@@ -1,10 +1,13 @@
 
 from Layer import Layer
+from FontRef import FontRef
 
 class TextLayer(Layer):
     def __init__(self):
         super().__init__()
         self._color = (255,0,0)
+        self._font = None
+        self._text = None
 
     @property
     def font(self):
@@ -12,6 +15,8 @@ class TextLayer(Layer):
 
     @font.setter
     def font(self, value):
+        if isinstance(value, FontRef):
+            value = value.font
         self._font = value
 
     @property

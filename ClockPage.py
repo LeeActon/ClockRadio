@@ -7,7 +7,6 @@ from AnalogAlarmIndicator import AnalogAlarmIndicator
 from Style import Style
 
 class ClockPage(Page):
-    surface = None
     clockHands_type = AnalogClockHands
     clockHands = None
     clockFace_type = AnalogClockFace
@@ -63,11 +62,6 @@ class ClockPage(Page):
 
         if self.clockHands != None:
             self.clockHands.time = self.time or datetime.datetime.now()
-
-        # if no bacground image, use the background color
-        if self.backgroundImage == None:
-            if (self.style != None) and (self.style.backColor != None):
-                self.surface.fill(self.style.backColor)
 
         super().update()
 

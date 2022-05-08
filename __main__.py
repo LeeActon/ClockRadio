@@ -38,7 +38,7 @@ class ClockRadio:
         self.surface = SurfaceHelper.OpenSurface()
 
         self.auxDevices = None
-        self.fontLED_LED_M = None
+        self.fontLED_M = None
         self.fontLED_L = None
         self.fontLED_XL = None
 
@@ -167,6 +167,11 @@ class ClockRadio:
         self.auxDevices.write(s.encode("utf-8"))
         self.auxDevices.write("\n".encode("utf-8"))
 
+    def waitForDebugger(self):
+        print("Waiting for debugger to attach")
+        debugpy.wait_for_client()
+        print("Debugger attached")
+
     def main(self, argv):
 
        try:
@@ -175,26 +180,31 @@ class ClockRadio:
            self.printHelp()
            sys.exit(2)
 
+       pygame.font.init()
+
        settings = Settings.loadSettings("settings.json")
 
        self.auxDevices = serial.Serial("/dev/ttyUSB0", 115200)
        self.sendAuxDevices("?")
 
-       pygame.font.init()
-
-       self.fontLED_LED_M = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64)
-       self.fontLED_L = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64)
-       self.fontLED_XL = pygame.font.Font("/usr/share/fonts/7segment.ttf", 64+64+32+8)
-       self.font_S = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 32)
-       self.font_M = pygame.font.Font("/usr/share/fonts/SourceSansPro-Regular.otf", 64)
+       self.fontLED_M = settings.fonts["LED_M"]
+       self.fontLED_L = settings.fonts["LED_L"]
+       self.fontLED_XL = settings.fonts["LED_XL"]
+       self.font_S = settings.fonts["text_S"]
+       self.font_M = settings.fonts["text_M"]
 
        clockPages = list(settings.clockPages.values())
        for clockPage in clockPages:
            clockPage.surface = self.surface
 
+       alarmPages = list(settings.alarmPages.values())
+       for alarmPage in alarmPages:
+           alarmPage.surface = self.surface
+
        self.clockPage = clockPages[0]
 
-       self.clockPage.linkUp(clockPages[1:])
+       self.clockPage.linkUp(alarmPages)
+       alarmPages[1].linkUp(clockPages[1:])
 
        self.sleepPage = SleepPage()
        self.sleepPage.rotaryId = 11
@@ -232,9 +242,7 @@ class ClockRadio:
                self.printHelp()
                sys.exit()
            elif opt == "--debug":
-               print("Waiting for debugger to attach")
-               debugpy.wait_for_client()
-               print("Debugger attached")
+               self.waitForDebugger()
            elif opt in ("-f", "--face"):
                self.clockPage.backgroundImage = arg
                self.clockPage.clockFace = None

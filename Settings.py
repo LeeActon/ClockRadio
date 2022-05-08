@@ -4,12 +4,16 @@ from Style import Style
 from Polygon import Polygon
 from Circle import Circle
 from FMStation import FMStation
+from AlarmPage import AlarmPage
+from FontRef import FontRef
 
 class Settings:
+    fonts_loader = lambda settings, values : settings.loadDict(FontRef, values)
     styles_loader = lambda settings, values : settings.loadDict(Style, values)
     polygons_loader = lambda settings, values : settings.loadDict(Polygon, values)
     circles_loader = lambda settings, values : settings.loadDict(Circle, values)
     clockPages_loader = lambda settings, values : settings.loadDict(ClockPage, values)
+    alarmPages_loader = lambda settings, values : settings.loadDict(AlarmPage, values)
     fmStations_type = FMStation
     
     @classmethod
@@ -50,6 +54,8 @@ class Settings:
         obj = None
         if (t == "styles"):
             d = self.styles
+        elif t == "fonts":
+            d = self.fonts
         elif (t == "polygons"):
             d = self.polygons
         elif (t == "circles"):
