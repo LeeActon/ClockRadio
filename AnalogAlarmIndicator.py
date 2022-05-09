@@ -40,7 +40,6 @@ class AnalogAlarmIndicator(Layer):
 
         rotated = self.indicatorShape.rotate(a_h_radians)
 
-        radius = self.getProperty("radius")
-        t = Points.getPoint(Layer.center, a_h_radians, radius)
+        t = Points.getPoint(Layer.center, a_h_radians, self.radius)
         self.indicator  = rotated.translate(t)
         self.addLayer(self.indicator)

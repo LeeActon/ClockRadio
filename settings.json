@@ -89,11 +89,8 @@
     {
         "red-diamond":
         {
-            "style":
-                {
-                "fillColor": "(255,0,0)",
-                "strokeColor": "(255,0,0)"
-            },
+            "fillColor": "(255,0,0)",
+            "strokeColor": "(255,0,0)",
             "points":
             [
                 "(0, 0)",
@@ -108,7 +105,7 @@
     {
         "radius10":
         {
-            "style": {"radius": "10"}
+            "radius": "10"
         }
     },
     "clockPages":
@@ -142,20 +139,14 @@
         },
         "3":
         {
-            "style":
-            {
-                "backColor": "(64,64,0)"
-            },
+            "backColor": "(64,64,0)",
             "clockHands":
             {
                 "sweep": "False"
             },
             "clockFace":
             {
-                "style":
-                {
-                    "radius": "200"
-                },
+                "radius": "200",
                 "minutesStyle": "#styles.minuteTicksStyle",
                 "quarterHoursStyle": "#styles.quarterHourTicksStyle",
                 "hoursStyle": "#styles.hourTicksStyle"

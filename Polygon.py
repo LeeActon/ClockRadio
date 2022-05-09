@@ -28,9 +28,9 @@ class Polygon(Layer):
     def paint(self, surface):
 
         if len(self.points) > 0:
-            strokeColor = self.getProperty("strokeColor")
+            strokeColor = self.strokeColor
             if strokeColor != None:
                 gfxdraw.aapolygon(surface, self.points, strokeColor)
-            fillColor = self.getProperty("fillColor")
+            fillColor = self.fillColor
             if fillColor != None:
                 gfxdraw.filled_polygon(surface, self.points, fillColor)

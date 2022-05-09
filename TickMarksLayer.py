@@ -47,13 +47,11 @@ class TickMarksLayer(Layer):
     @property
     def tickMark(self):
         if self._tickMark == None:
-            shape = self.getProperty("shape")
+            shape = self.shape
             if shape != None:
                 self._tickMark = shape
             else:
-                length = self.getProperty("length")
-                width = self.getProperty("width")
-                self._tickMark = Polygon.fromLine(length, width)
+                self._tickMark = Polygon.fromLine(self.length, self.width)
 
         return self._tickMark
 
@@ -63,8 +61,7 @@ class TickMarksLayer(Layer):
         # Make a copy of the prototypical tick mark for each tick (rotating and translating it into position)
         for tick in self.ticks:
             a = self.valueToAngle(tick)*2*math.pi
-            radius = self.getProperty("radius")
-            start = Points.getPoint(Layer.center, a, radius)
+            start = Points.getPoint(Layer.center, a, self.radius)
             poly = self.tickMark.rotate(a)
             poly2= poly.translate(start)
             self.addLayer(poly2)

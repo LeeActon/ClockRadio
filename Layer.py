@@ -7,12 +7,14 @@ from Style import Style
 class Layer:
     center = (240, 240)
     style_type = Style
+    styles_type = Style
 
     def __init__(self):
         self.layers = []
         self.parent = None
         self._style = None
         self.visible = True
+        self.styles = []
 
     @classmethod
     def offsetX(cls, amount):
@@ -40,13 +42,103 @@ class Layer:
 
     def getProperty(self, propertyName):
         propertyValue = None
-        if self._style != None:
-            propertyValue = self._style.getProperty(propertyName)
 
-        if (propertyValue == None) and (self.parent != None):
+        # First look on the style and the style's ancestors
+        if self.style != None:
+            propertyValue = self.style.getProperty(propertyName)
+            if propertyValue != None:
+                return propertyValue
+
+        # Next look on the other styles associated with this layer
+        for style in self.styles:
+            propertyValue = style.getProperty(propertyName)
+            if propertyValue != None:
+                return propertyValue
+
+        # Finally look on the layer's ancestors
+        if self.parent != None:
             propertyValue = self.parent.getProperty(propertyName)
 
         return propertyValue
+
+    def setProperty(self, propertyName, value):
+        if self._style == None:
+            self._style = Style()
+
+        self._style.setProperty(propertyName, value)
+
+    @property
+    def color(self):
+        return self.getProperty("color")
+
+    @color.setter
+    def color(self, value):
+        self.setProperty("color", value)
+
+
+    @property
+    def backColor(self):
+        return self.getProperty("backColor")
+
+    @backColor.setter
+    def backColor(self, value):
+        self.setProperty("backColor", value)
+
+    @property
+    def strokeColor(self):
+        return self.getProperty("strokeColor")
+
+    @strokeColor.setter
+    def strokeColor(self, value):
+        self.setProperty("strokeColor", value)
+
+    @property
+    def fillColor(self):
+        return self.getProperty("fillColor")
+
+    @fillColor.setter
+    def fillColor(self, value):
+        self.setProperty("fillColor", value)
+
+    @property
+    def width(self):
+        return self.getProperty("width")
+
+    @width.setter
+    def width(self, value):
+        self.setProperty("width", value)
+
+    @property
+    def length(self):
+        return self.getProperty("length")
+
+    @length.setter
+    def length(self, value):
+        self.setProperty("length", value)
+
+    @property
+    def shape(self):
+        return self.getProperty("shape")
+
+    @shape.setter
+    def shape(self, value):
+        self.setProperty("shape", value)
+
+    @property
+    def radius(self):
+        return self.getProperty("radius")
+
+    @radius.setter
+    def radius(self, value):
+        self.setProperty("radius", value)
+
+    @property
+    def font(self):
+        return self.getProperty("font")
+
+    @font.setter
+    def font(self, value):
+        self.setProperty("font", value)
 
     def clearLayers(self):
         self.layers = []

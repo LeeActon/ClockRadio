@@ -26,5 +26,5 @@ class Circle(Layer):
 
         super().paint(surface)
 
-        self.drawCircle(surface, self.center, self.getProperty("radius"), self.getProperty("strokeColor"), self.getProperty("fillColor"))
+        self.drawCircle(surface, self.center, self.radius, self.strokeColor, self.fillColor)
 

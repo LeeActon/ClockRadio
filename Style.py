@@ -1,7 +1,8 @@
 
 class Style:
     def __init__(self):
-        self._color = None
+        self.parent = None
+        self.color = None
         self.backColor = None
         self.strokeColor = None
         self.fillColor = None
@@ -13,3 +14,6 @@ class Style:
 
     def getProperty(self, propertyName):
         return getattr(self, propertyName)
+
+    def setProperty(self, propertyName, value):
+        return setattr(self, propertyName, value)
