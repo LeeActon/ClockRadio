@@ -83,6 +83,10 @@
             "strokeColor": "(255,0,0)",
             "fillColor": "(255,0,0)",
             "hubRadius": "10"
+        },
+        "testForward":
+        {
+            "shape": "#polygons.red-diamond"
         }
     },
     "polygons":

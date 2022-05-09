@@ -9,6 +9,13 @@ from FontRef import FontRef
 from MenuItem import MenuItem
 from MenuPage import MenuPage
 
+class ForwardRef:
+    def __init__(self, target, attrName, attrType, value):
+        self.target = target
+        self.attrName = attrName
+        self.attrType = attrType
+        self.value = value
+
 class Settings:
     fonts_loader = lambda settings, values : settings.loadDict(FontRef, values)
     styles_loader = lambda settings, values : settings.loadDict(Style, values)
@@ -19,12 +26,27 @@ class Settings:
     menuItems_loader = lambda settings, values : settings.loadDict(MenuItem, values)
     menuPages_loader = lambda settings, values : settings.loadDict(MenuPage, values)
     fmStations_type = FMStation
+
+    def __init__(self):
+        self.forwardRefs = []
+
+        self.fonts = None
+        self.styles = None
+        self.polygons = None
+        self.circles = None
+        self.clockPages = None
+        self.alarmPages = None
+        self.menuItems = None
+        self.menuPages = None
+        self.fmStations = None
     
     @classmethod
     def loadSettings(cls, fileName):
         settings = Settings()
         with open(fileName) as f:
             settings.loadAttrs(settings, json.load(f))
+
+        settings.bindForwardRefs()
 
         return settings
 
@@ -56,22 +78,8 @@ class Settings:
         t, i = reference.split('.')
         d = None
         obj = None
-        if (t == "styles"):
-            d = self.styles
-        elif t == "fonts":
-            d = self.fonts
-        elif (t == "polygons"):
-            d = self.polygons
-        elif (t == "circles"):
-            d = self.circles
-        elif t == "clockPages":
-            d = self.clockPages
-        elif t == "alarmPages":
-            d = self.alarmPages
-        elif t == "menuItems":
-            d = self.menuItems
-        elif t == "menuPages":
-            d = self.menuPages
+        if t in self.__dict__:
+            d = getattr(self, t)
         else:
             print(f"{t} not found")
 
@@ -107,8 +115,16 @@ class Settings:
                             print(f"{attrName} not in {attrNames}")
 
                         newObj = self.createObject(attrType, value)
-                        setattr(obj, attrName, newObj)
+                        if newObj != None:
+                            setattr(obj, attrName, newObj)
+                        elif (type(value) is str) and (len(value) > 0) and (value[0] == "#"):
+                            self.forwardRefs.append(ForwardRef(obj, attrName, attrType, value))
         
+    def bindForwardRefs(self):
+        for ref in self.forwardRefs:
+            newObj = self.createObject(ref.attrType, ref.value)
+            setattr(ref.target, ref.attrName, newObj)
+
     def loadDict(self, itemType, values):
         results = dict()
         for key, value in values.items():
