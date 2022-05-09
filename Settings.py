@@ -6,6 +6,8 @@ from Circle import Circle
 from FMStation import FMStation
 from AlarmPage import AlarmPage
 from FontRef import FontRef
+from MenuItem import MenuItem
+from MenuPage import MenuPage
 
 class Settings:
     fonts_loader = lambda settings, values : settings.loadDict(FontRef, values)
@@ -14,6 +16,8 @@ class Settings:
     circles_loader = lambda settings, values : settings.loadDict(Circle, values)
     clockPages_loader = lambda settings, values : settings.loadDict(ClockPage, values)
     alarmPages_loader = lambda settings, values : settings.loadDict(AlarmPage, values)
+    menuItems_loader = lambda settings, values : settings.loadDict(MenuItem, values)
+    menuPages_loader = lambda settings, values : settings.loadDict(MenuPage, values)
     fmStations_type = FMStation
     
     @classmethod
@@ -62,6 +66,12 @@ class Settings:
             d = self.circles
         elif t == "clockPages":
             d = self.clockPages
+        elif t == "alarmPages":
+            d = self.alarmPages
+        elif t == "menuItems":
+            d = self.menuItems
+        elif t == "menuPages":
+            d = self.menuPages
         else:
             print(f"{t} not found")
 

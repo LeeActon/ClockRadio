@@ -203,7 +203,10 @@ class ClockRadio:
 
        self.clockPage = clockPages[0]
 
-       self.clockPage.linkUp(alarmPages)
+       self.mainMenuPage = settings.menuPages["main"]
+       self.mainMenuPage.surface = self.surface
+       self.clockPage.linkUp([self.mainMenuPage])
+       self.mainMenuPage.linkUp(alarmPages)
        alarmPages[1].linkUp(clockPages[1:])
 
        self.sleepPage = SleepPage()

@@ -183,6 +183,46 @@
         }
 
     },
+    "menuItems":
+    {
+        "alarm 1":
+        {
+            "text": "Alarm 1",
+            "page": "#alarmPages.1"
+        },
+        "alarm 2":
+        {
+            "text": "Alarm 2",
+            "page": "#alarmPages.2"
+        },
+        "clock face":
+        {
+            "text": "Clock Face"
+        },
+        "clock hands":
+        {
+            "text": "Clock Hands"
+        },
+        "radio presets":
+        {
+            "text": "Radio Presets"
+        }
+    },
+    "menuPages":
+    {
+        "main":
+        {
+            "font": "#fonts.text_M",
+            "menuItems":
+            [
+                "#menuItems.alarm 1",
+                "#menuItems.alarm 2",
+                "#menuItems.clock face",
+                "#menuItems.clock hands",
+                "#menuItems.radio presets"
+            ]
+        }
+    },
     "fmStations":
     [
         {"callSign" : "KWAO", "frequency" : "88.1", "city" : "Vashon", "format" : "Christian Contemporary"},
