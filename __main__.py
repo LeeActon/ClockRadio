@@ -31,6 +31,7 @@ from Style import Style
 from AnalogClockFace import AnalogClockFace
 from FMPage import FMPage
 from SleepPage import SleepPage
+from Layer import Layer
 
 class ClockRadio:
 
@@ -102,7 +103,6 @@ class ClockRadio:
         elif (ch == '.'):
             self.sendAuxDevices("")
             self.sendAuxDevices("P") # power on the FM tuner
-            self.sendAuxDevices(f"R {self.volumePage.rotaryId} : 0, 0, 30, 150, 0") #UNDONE: VolumePage should do this
             self.fmPage.setMode(FMPage.MODE_PRESET)
             self.sendAuxDevices(f"R 13 : 0, -8000, 8000, 0, 1") # For menu
         elif (ch == 'B'):
@@ -128,7 +128,7 @@ class ClockRadio:
                 if (page != None):
                     rotaryId = int(parts[1])
                     value = int(parts[3].rstrip(", "))
-                    for p in [self.volumePage, self.fmPage, page]:
+                    for p in [self.volumePage, self.fmPage, self.mainMenuPage, page]:
                         if p.handleRotary(rotaryId, value):
                             break;
         elif (ch == 'F'):
@@ -184,6 +184,8 @@ class ClockRadio:
 
        settings = Settings.loadSettings("settings.json")
 
+       Layer.settings = settings
+
        self.auxDevices = serial.Serial("/dev/ttyUSB0", 115200)
        self.sendAuxDevices("?")
 
@@ -205,9 +207,12 @@ class ClockRadio:
 
        self.mainMenuPage = settings.menuPages["main"]
        self.mainMenuPage.surface = self.surface
-       self.clockPage.linkUp([self.mainMenuPage])
-       self.mainMenuPage.linkUp(alarmPages)
-       alarmPages[1].linkUp(clockPages[1:])
+       self.mainMenuPage.rotaryId = 13
+       self.mainMenuPage.auxDevices = self.auxDevices
+
+       #self.clockPage.linkUp([self.mainMenuPage])
+       #self.mainMenuPage.linkUp(alarmPages)
+       #alarmPages[1].linkUp(clockPages[1:])
 
        self.sleepPage = SleepPage()
        self.sleepPage.rotaryId = 11

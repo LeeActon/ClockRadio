@@ -43,15 +43,15 @@ class Layer:
     def getProperty(self, propertyName):
         propertyValue = None
 
-        # First look on the style and the style's ancestors
-        if self.style != None:
-            propertyValue = self.style.getProperty(propertyName)
+        # First look on the additional styles associated with this layer
+        for style in self.styles:
+            propertyValue = style.getProperty(propertyName)
             if propertyValue != None:
                 return propertyValue
 
-        # Next look on the other styles associated with this layer
-        for style in self.styles:
-            propertyValue = style.getProperty(propertyName)
+        # Next look on the style and the style's ancestors
+        if self.style != None:
+            propertyValue = self.style.getProperty(propertyName)
             if propertyValue != None:
                 return propertyValue
 
@@ -150,6 +150,12 @@ class Layer:
     def removeLayer(self, layer):
         layer.parent = None
         self.layers.remove(layer)
+
+    def addStyle(self, style):
+        self.styles.append(style)
+
+    def removeStyle(self, style):
+        self.styles.remove(style)
 
     def drawCircle(self, surface, center, radius, strokeColor, fillColor, antialias=True):
         #print(f"circle({color}, {center}, {radius})")

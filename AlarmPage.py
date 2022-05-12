@@ -72,6 +72,10 @@ class AlarmPage(Page):
     def stateFont(self, font):
         self.stateTextLayer.font = font
 
+    def onActivate(self):
+        self.defaultTimeout()
+        return super().onActivate()
+
     def update(self):
         # make sure self.layers is up to date
         if len(self.layers) == 0:

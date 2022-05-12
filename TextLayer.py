@@ -5,7 +5,6 @@ from FontRef import FontRef
 class TextLayer(Layer):
     def __init__(self):
         super().__init__()
-        self._color = (255,0,0)
         self._font = None
         self._text = None
 
@@ -26,14 +25,6 @@ class TextLayer(Layer):
     @text.setter
     def text(self, value):
         self._text = value
-
-    @property
-    def color(self):
-        return self._color
-
-    @color.setter
-    def color(self, value):
-        self._color = value
 
     @property
     def position(self):

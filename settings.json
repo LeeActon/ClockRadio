@@ -87,7 +87,12 @@
         "testForward":
         {
             "shape": "#polygons.red-diamond"
+        },
+        "activeMenuStyle":
+        {
+            "color": "(0,255,0)"
         }
+
     },
     "polygons":
     {
@@ -163,6 +168,7 @@
         {
             "backgroundImage": "New Clock Face Dim.png",
             "font": "#fonts.text_S+",
+            "color": "(0, 0, 255)",
             "timeFont": "#fonts.SEG16_M",
             "stateFont": "#fonts.text_S+",
             "title": "Alarm 1"
@@ -172,6 +178,7 @@
         {
             "backgroundImage": "New Clock Face Dim.png",
             "font": "#fonts.text_S+",
+            "color": "(0, 0, 255)",
             "timeFont": "#fonts.SEG16_M",
             "stateFont": "#fonts.text_S+",
             "title": "Alarm 2"
@@ -208,6 +215,8 @@
         "main":
         {
             "font": "#fonts.text_M",
+            "activeMenuStyle": "#styles.activeMenuStyle",
+            "color": "(255,255,255)",
             "menuItems":
             [
                 "#menuItems.alarm 1",

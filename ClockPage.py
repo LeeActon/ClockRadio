@@ -8,7 +8,6 @@ from Style import Style
 
 class ClockPage(Page):
     clockHands_type = AnalogClockHands
-    clockHands = None
     clockFace_type = AnalogClockFace
 
     def __init__(self):

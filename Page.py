@@ -195,7 +195,7 @@ class Page(Layer):
         if self.pageUp != None:
             print(self)
             print(self.pageUp)
-            Page.currentPage = self.pageUp
+            Page.setCurrentPage(self.pageUp)
 
     def handleDownButtonUp(self):
         print("Down Released")
@@ -203,7 +203,7 @@ class Page(Layer):
 
     def down(self):
         if self.pageDown != None:
-            Page.currentPage = self.pageDown
+            Page.setCurrentPage(self.pageDown)
 
     def handleLeftButtonUp(self):
         print("Left Released")
@@ -211,7 +211,7 @@ class Page(Layer):
 
     def left(self):
         if self.pageLeft != None:
-            Page.currentPage = self.pageLeft
+            Page.setCurrentPage(self.pageLeft)
 
     def handleRightButtonUp(self):
         print("Right Released")
@@ -219,7 +219,7 @@ class Page(Layer):
 
     def right(self):
         if self.pageRight != None:
-            Page.currentPage = self.pageRight
+            Page.setCurrentPage(self.pageRight)
 
     def sendAuxDevices(self, s):
         print(f"--> {s}")
