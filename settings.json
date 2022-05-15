@@ -184,7 +184,8 @@
             "backgroundImage": "New Clock Face Dim.png",
             "alarmIndicator" : "#alarmIndicators.red",
             "font": "#fonts.text_S+",
-            "color": "(0, 0, 255)",
+            "color": "(255, 255, 255)",
+            "focusColor": "(255, 0, 0)",
             "timeFont": "#fonts.SEG16_M",
             "stateFont": "#fonts.text_S+",
             "title": "Alarm 1"
@@ -195,7 +196,8 @@
             "backgroundImage": "New Clock Face Dim.png",
             "alarmIndicator" : "#alarmIndicators.blue",
             "font": "#fonts.text_S+",
-            "color": "(0, 0, 255)",
+            "color": "(255, 255, 255)",
+            "focusColor": "(255, 0, 0)",
             "timeFont": "#fonts.SEG16_M",
             "stateFont": "#fonts.text_S+",
             "title": "Alarm 2"

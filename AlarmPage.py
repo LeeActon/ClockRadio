@@ -120,14 +120,18 @@ class AlarmPage(Page):
         self.mode = mode
         if self.mode == AlarmPage.onoffMode:
             self.sendAuxDevices(f"R {self.rotaryId} : {self.state}, 0, 9, 0, 1")
+            self.stateTextLayer.setFocus()
         elif self.mode == AlarmPage.hourMode:
+            self.timeTextLayer.setFocus()
             hour = (self.time.hour % 12) + 1
             self.sendAuxDevices(f"R {self.rotaryId} : {hour}, 1, 12, 0, 1")
             pass
         elif self.mode == AlarmPage.minuteMode:
+            self.timeTextLayer.setFocus()
             hour = (self.time.hour % 12) + 1
             self.sendAuxDevices(f"R {self.rotaryId} : {hour}, 0, 59, 50, 1")
         elif self.mode == AlarmPage.ampmMode:
+            self.timeTextLayer.setFocus()
             self.sendAuxDevices(f"R {self.rotaryId} : 0, 0, 9, 0, 1")
 
     def onActivate(self):

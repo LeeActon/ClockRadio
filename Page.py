@@ -64,7 +64,7 @@ class Page(Layer):
         pass
 
     def defaultTimeout(self):
-        self.timeout = time.time() + 3
+        self.timeout = time.time() + 5
 
     def checkTimeout(self, now):
         if (self.timeout != None) and (now > self.timeout):

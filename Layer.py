@@ -8,6 +8,7 @@ class Layer:
     center = (240, 240)
     style_type = Style
     styles_type = Style
+    focusLayer = None
 
     def __init__(self):
         self.layers = []
@@ -75,6 +76,14 @@ class Layer:
     def color(self, value):
         self.setProperty("color", value)
 
+    @property
+    def focusColor(self):
+        return self.getProperty("focusColor")
+
+    @focusColor.setter
+    def focusColor(self, value):
+        self.setProperty("focusColor", value)
+
 
     @property
     def backColor(self):
@@ -139,6 +148,25 @@ class Layer:
     @font.setter
     def font(self, value):
         self.setProperty("font", value)
+
+    def setFocus(self):
+        if self is Layer.focusLayer:
+            return
+
+        if Layer.focusLayer != None:
+            Layer.focusLayer.lostFocus()
+        Layer.focusLayer = self
+        self.gotFocus()
+
+    @property
+    def hasFocus(self):
+        return self is Layer.focusLayer
+
+    def gotFocus(self):
+        pass
+
+    def lostFocus(self):
+        pass
 
     def clearLayers(self):
         self.layers = []

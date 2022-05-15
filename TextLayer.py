@@ -39,6 +39,9 @@ class TextLayer(Layer):
             return
         super().paint(surface)
         w, h = self.font.size(self.text)
-        img = self.font.render(self.text,True,self.color)
+        color = self.color
+        if self.hasFocus and (self.focusColor != None):
+            color = self.focusColor
+        img = self.font.render(self.text,True,color)
         x, y = self.position
         surface.blit(img,(x-w/2,y-h/2))
