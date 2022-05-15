@@ -6,7 +6,7 @@ import debugpy
 debugpy.listen(("0.0.0.0", 5678))
 #}
 
-from datetime import datetime
+import datetime
 import getopt
 import json
 import math
@@ -71,7 +71,7 @@ class ClockRadio:
                         self.volumePage.toggleZeroIndicator()
                     elif line[0] == 'a':
                         n = line[1]
-                        t = datetime.strptime(line.strip(), f"a{n} %I:%M")
+                        t = datetime.datetime.strptime(line.strip(), f"a{n} %I:%M")
                         if n == '1':
                             self.clockPage.alarmIndicator1.time = t
                         elif n == '2':
@@ -82,7 +82,7 @@ class ClockRadio:
 
             Page.updateCurrentPage()
 
-            now = datetime.now()
+            now = datetime.datetime.now()
             hour = now.hour
             if hour > 12:
                 hour -= 12
@@ -215,8 +215,10 @@ class ClockRadio:
        self.clockPage = clockPages[0]
        if len(alarmPages) > 0:
            self.clockPage.alarmIndicator1 = alarmPages[0].alarmIndicator
+           alarmPages[0].time = datetime.time(6,0)
        if len(alarmPages) > 1:
            self.clockPage.alarmIndicator2 = alarmPages[1].alarmIndicator
+           alarmPages[1].time = datetime.time(7,0)
 
        self.mainMenuPage = settings.menuPages["main"]
        self.mainMenuPage.surface = self.surface

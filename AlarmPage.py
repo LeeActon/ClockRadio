@@ -30,13 +30,23 @@ class AlarmPage(Page):
         self.alarmIndicator.style.radius = 200
         self.titleTextLayer = TextLayer()
         self.titleTextLayer.position = Points.translatePoint(Layer.center, (0, -75))
-        self.timeTextLayer = TextLayer()
-        self.timeTextLayer.position = Points.translatePoint(Layer.center, (0, 0))
+
+        self.hourTextLayer = TextLayer()
+        self.hourTextLayer.position = Points.translatePoint(Layer.center, (0, 0))
+        self.colonTextLayer = TextLayer()
+        self.colonTextLayer.position = Points.translatePoint(Layer.center, (0, 0))
+        self.colonTextLayer.text = ":"
+        self.minuteTextLayer = TextLayer()
+        self.minuteTextLayer.position = Points.translatePoint(Layer.center, (0, 0))
+        self.ampmTextLayer = TextLayer()
+        self.ampmTextLayer.position = Points.translatePoint(Layer.center, (0, 0))
+
+        self.timeTextLayers = [self.hourTextLayer, self.colonTextLayer, self.minuteTextLayer, self.ampmTextLayer]
+
         self.stateTextLayer = TextLayer()
         self.stateTextLayer.position = Points.translatePoint(Layer.center, (0, 75))
         self.stateTextLayer.text = "ON"
 
-        self.time = datetime.time(6, 30)
         self.setState(AlarmPage.onState)
 
     @property
@@ -71,11 +81,14 @@ class AlarmPage(Page):
 
     @property
     def timeFont(self):
-        return self.timeTextLayer.font
+        return self.hourTextLayer.font
 
     @timeFont.setter
     def timeFont(self, font):
-        self.timeTextLayer.font = font
+        self.hourTextLayer.font = font
+        self.colonTextLayer.font = font
+        self.minuteTextLayer.font = font
+        self.ampmTextLayer.font = font
 
     @property
     def stateFont(self):
@@ -101,7 +114,11 @@ class AlarmPage(Page):
 
         if hour < 1:
             hour = 12
-        self.timeTextLayer.text = f"{hour:2}:{time.minute:02}{ampm}"
+
+        self.hourTextLayer.text = f"{hour:2}"
+        self.minuteTextLayer.text = f"{time.minute:02}"
+        self.ampmTextLayer.text = ampm
+        TextLayer.centerHorizontal(self.timeTextLayers, Layer.center)
 
     def setState(self, state):
         if state > AlarmPage.maxState:
@@ -122,16 +139,16 @@ class AlarmPage(Page):
             self.sendAuxDevices(f"R {self.rotaryId} : {self.state}, 0, 9, 0, 1")
             self.stateTextLayer.setFocus()
         elif self.mode == AlarmPage.hourMode:
-            self.timeTextLayer.setFocus()
+            self.hourTextLayer.setFocus()
             hour = (self.time.hour % 12) + 1
             self.sendAuxDevices(f"R {self.rotaryId} : {hour}, 1, 12, 0, 1")
             pass
         elif self.mode == AlarmPage.minuteMode:
-            self.timeTextLayer.setFocus()
+            self.minuteTextLayer.setFocus()
             hour = (self.time.hour % 12) + 1
             self.sendAuxDevices(f"R {self.rotaryId} : {hour}, 0, 59, 50, 1")
         elif self.mode == AlarmPage.ampmMode:
-            self.timeTextLayer.setFocus()
+            self.ampmTextLayer.setFocus()
             self.sendAuxDevices(f"R {self.rotaryId} : 0, 0, 9, 0, 1")
 
     def onActivate(self):
@@ -148,10 +165,16 @@ class AlarmPage(Page):
                 self.addLayer(self.alarmIndicator)
             if self.titleTextLayer != None:
                 self.addLayer(self.titleTextLayer)
-            if self.timeTextLayer != None:
-                self.addLayer(self.timeTextLayer)
             if self.stateTextLayer != None:
                 self.addLayer(self.stateTextLayer)
+            if self.hourTextLayer != None:
+                self.addLayer(self.hourTextLayer)
+            if self.colonTextLayer != None:
+                self.addLayer(self.colonTextLayer)
+            if self.minuteTextLayer != None:
+                self.addLayer(self.minuteTextLayer)
+            if self.ampmTextLayer != None:
+                self.addLayer(self.ampmTextLayer)
 
         super().update()
 
