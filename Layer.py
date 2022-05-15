@@ -144,7 +144,8 @@ class Layer:
         self.layers = []
 
     def addLayer(self, layer):
-        layer.parent = self
+        if layer.parent == None:
+            layer.parent = self
         self.layers.append(layer)
 
     def removeLayer(self, layer):

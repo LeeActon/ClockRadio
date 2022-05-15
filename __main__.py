@@ -128,7 +128,7 @@ class ClockRadio:
                 if (page != None):
                     rotaryId = int(parts[1])
                     value = int(parts[3].rstrip(", "))
-                    for p in [self.volumePage, self.fmPage, self.mainMenuPage, page]:
+                    for p in [self.volumePage, self.fmPage, page]:
                         if p.handleRotary(rotaryId, value):
                             break;
         elif (ch == 'F'):
@@ -180,6 +180,13 @@ class ClockRadio:
            self.printHelp()
            sys.exit(2)
 
+       for opt, arg in opts:
+           if opt == "--help":
+               self.printHelp()
+               sys.exit()
+           elif opt == "--debug":
+               self.waitForDebugger()
+
        pygame.font.init()
 
        settings = Settings.loadSettings("settings.json")
@@ -202,13 +209,21 @@ class ClockRadio:
        alarmPages = list(settings.alarmPages.values())
        for alarmPage in alarmPages:
            alarmPage.surface = self.surface
+           alarmPage.auxDevices = self.auxDevices
+           alarmPage.rotaryId = Page.menuRotaryId
 
        self.clockPage = clockPages[0]
+       if len(alarmPages) > 0:
+           self.clockPage.alarmIndicator1 = alarmPages[0].alarmIndicator
+       if len(alarmPages) > 1:
+           self.clockPage.alarmIndicator2 = alarmPages[1].alarmIndicator
 
        self.mainMenuPage = settings.menuPages["main"]
        self.mainMenuPage.surface = self.surface
-       self.mainMenuPage.rotaryId = 13
        self.mainMenuPage.auxDevices = self.auxDevices
+       self.mainMenuPage.rotaryId = Page.menuRotaryId
+
+       self.clockPage.menuPage = self.mainMenuPage
 
        #self.clockPage.linkUp([self.mainMenuPage])
        #self.mainMenuPage.linkUp(alarmPages)
@@ -246,12 +261,7 @@ class ClockRadio:
        Page.setCurrentPage(self.clockPage)
 
        for opt, arg in opts:
-           if opt == "--help":
-               self.printHelp()
-               sys.exit()
-           elif opt == "--debug":
-               self.waitForDebugger()
-           elif opt in ("-f", "--face"):
+           if opt in ("-f", "--face"):
                self.clockPage.backgroundImage = arg
                self.clockPage.clockFace = None
            elif opt == "--sweep":

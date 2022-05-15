@@ -8,6 +8,7 @@ from AlarmPage import AlarmPage
 from FontRef import FontRef
 from MenuItem import MenuItem
 from MenuPage import MenuPage
+from AnalogAlarmIndicator import AnalogAlarmIndicator
 
 class ForwardRef:
     def __init__(self, target, attrName, attrType, value):
@@ -22,6 +23,7 @@ class Settings:
     polygons_loader = lambda settings, values : settings.loadDict(Polygon, values)
     circles_loader = lambda settings, values : settings.loadDict(Circle, values)
     clockPages_loader = lambda settings, values : settings.loadDict(ClockPage, values)
+    alarmIndicators_loader = lambda settings, values : settings.loadDict(AnalogAlarmIndicator, values)
     alarmPages_loader = lambda settings, values : settings.loadDict(AlarmPage, values)
     menuItems_loader = lambda settings, values : settings.loadDict(MenuItem, values)
     menuPages_loader = lambda settings, values : settings.loadDict(MenuPage, values)
@@ -35,6 +37,7 @@ class Settings:
         self.polygons = None
         self.circles = None
         self.clockPages = None
+        self.alarmIndicators = None
         self.alarmPages = None
         self.menuItems = None
         self.menuPages = None

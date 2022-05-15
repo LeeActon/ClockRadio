@@ -3,12 +3,13 @@ from Style import Style
 from Polygon import Polygon
 import Points
 import math
+import datetime
 
 class AnalogAlarmIndicator(Layer):
 
     def __init__(self):
         super().__init__()
-        self._time = None
+        self._time = datetime.time(12,0)
         points = [[0, 0], [50, 10], [50, -10], [0, 0]]
         self.indicatorShape = Polygon(points)
         self.indicator = None

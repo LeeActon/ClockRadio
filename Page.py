@@ -12,11 +12,13 @@ class Page(Layer):
         super().__init__()
         self.surface = None
         self.auxDevices = None
+        self.menuPage = None
         self.pageUp = None
         self.pageDown = None
         self.pageLeft = None
         self.pageRight = None
         self.timeout = None
+        self.rotaryId = 0
 
     def __delete__(self):
         pass
@@ -104,13 +106,16 @@ class Page(Layer):
 
     def handleRotary(self, rotaryId, value):
         if rotaryId == Page.menuRotaryId:
-            d = value - Page.prevMenuRotaryValue
-            print(f"value = {value} prev = {Page.prevMenuRotaryValue} d = {d}")
-            Page.prevMenuRotaryValue = value
-            if d > 0:
-                self.up()
-            elif d < 0:
-                self.down()
+            if self.menuPage != None:
+                self.menuPage.handleRotary(rotaryId, value)
+            else:
+                d = value - Page.prevMenuRotaryValue
+                print(f"value = {value} prev = {Page.prevMenuRotaryValue} d = {d}")
+                Page.prevMenuRotaryValue = value
+                if d > 0:
+                    self.up()
+                elif d < 0:
+                    self.down()
             return True
 
         return False

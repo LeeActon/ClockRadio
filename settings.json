@@ -162,11 +162,27 @@
             }
         }
     },
+    "alarmIndicators":
+    {
+        "red":
+        {
+            "strokeColor" : "(255,0,0)",
+            "fillColor" : "(255,0,0)",
+            "radius" : "200"
+        },
+        "blue":
+        {
+            "strokeColor" : "(0,0,255)",
+            "fillColor" : "(0,0,255)",
+            "radius" : "200"
+        }
+    },
     "alarmPages":
     {
         "1":
         {
             "backgroundImage": "New Clock Face Dim.png",
+            "alarmIndicator" : "#alarmIndicators.red",
             "font": "#fonts.text_S+",
             "color": "(0, 0, 255)",
             "timeFont": "#fonts.SEG16_M",
@@ -177,6 +193,7 @@
         "2":
         {
             "backgroundImage": "New Clock Face Dim.png",
+            "alarmIndicator" : "#alarmIndicators.blue",
             "font": "#fonts.text_S+",
             "color": "(0, 0, 255)",
             "timeFont": "#fonts.SEG16_M",

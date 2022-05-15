@@ -16,17 +16,9 @@ class ClockPage(Page):
         self._backgroundImage = None
         self.clockFace = None
         self.clockHands = AnalogClockHands()
-        self.alarmIndicator1 = AnalogAlarmIndicator()
-        self.alarmIndicator1.style.strokeColor = (255,0,0)
-        self.alarmIndicator1.style.fillColor = (255,0,0)
-        self.alarmIndicator1.style.radius = 200
-        self.alarmIndicator1.time = datetime.time(6, 30)
+        self.alarmIndicator1 = None
 
-        self.alarmIndicator2 = AnalogAlarmIndicator()
-        self.alarmIndicator2.style.strokeColor = (192,0,255)
-        self.alarmIndicator2.style.fillColor = (192,0,255)
-        self.alarmIndicator2.style.radius = 200
-        self.alarmIndicator2.time = datetime.time(10, 30)
+        self.alarmIndicator2 = None
 
     def __str__(self):
         return f"ClockPage {{{self._backgroundImage}, {self.clockFace}, {self.clockHands}}}"
