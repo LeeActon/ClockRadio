@@ -3,7 +3,9 @@ from Layer import Layer
 
 class Page(Layer):
     prevMenuRotaryValue = 0
-    menuRotaryId = 13
+    volumeRotaryId = 11
+    FMRotaryId = 13
+    menuRotaryId = 12
     buttonDownTimes = {}
     buttonDownRepeats = {}
     buttonRepeatRate = {}

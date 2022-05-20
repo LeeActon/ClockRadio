@@ -104,7 +104,6 @@ class ClockRadio:
             self.sendAuxDevices("")
             self.sendAuxDevices("P") # power on the FM tuner
             self.fmPage.setMode(FMPage.MODE_PRESET)
-            self.sendAuxDevices(f"R 13 : 0, -8000, 8000, 0, 1") # For menu
         elif (ch == 'B'):
             # Button pressed/released report
             # B <n> : <s>
@@ -232,7 +231,7 @@ class ClockRadio:
        #alarmPages[1].linkUp(clockPages[1:])
 
        self.sleepPage = SleepPage()
-       self.sleepPage.rotaryId = 11
+       self.sleepPage.rotaryId = Page.volumeRotaryId
        self.sleepPage.auxDevices = self.auxDevices
        self.sleepPage.digitalValueFont = self.fontLED_XL
        self.sleepPage.textFont = self.font_M
@@ -240,7 +239,7 @@ class ClockRadio:
 
 
        self.volumePage = VolumePage()
-       self.volumePage.rotaryId = 11
+       self.volumePage.rotaryId = Page.volumeRotaryId
        self.volumePage.auxDevices = self.auxDevices
        self.volumePage.digitalValueFont = self.fontLED_XL
        self.volumePage.textFont = self.font_M
@@ -248,7 +247,7 @@ class ClockRadio:
        self.volumePage.sleepPage = self.sleepPage
 
        self.fmPage = FMPage()
-       self.fmPage.rotaryId = 12
+       self.fmPage.rotaryId = Page.FMRotaryId
        Page.setButtonRepeatRate(self.fmPage.rotaryId, 1000000000) # in ns this is one second
        self.fmPage.auxDevices = self.auxDevices
        self.fmPage.fmStations = settings.fmStations
